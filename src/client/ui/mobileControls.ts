@@ -19,21 +19,22 @@ export interface TerminalControlButton {
   id: ModifierKey | TerminalControlAction | "copy" | "paste";
   label: string;
   kind: "modifier" | "sequence" | "clipboard";
+  group: "main" | "arrow";
 }
 
 export const mobileControlButtons: TerminalControlButton[] = [
-  { id: "ctrl", label: "Ctrl", kind: "modifier" },
-  { id: "alt", label: "Alt", kind: "modifier" },
-  { id: "esc", label: "Esc", kind: "sequence" },
-  { id: "tab", label: "Tab", kind: "sequence" },
-  { id: "enter", label: "Enter", kind: "sequence" },
-  { id: "up", label: "Up", kind: "sequence" },
-  { id: "left", label: "Left", kind: "sequence" },
-  { id: "down", label: "Down", kind: "sequence" },
-  { id: "right", label: "Right", kind: "sequence" },
-  { id: "backspace", label: "Bksp", kind: "sequence" },
-  { id: "copy", label: "Copy", kind: "clipboard" },
-  { id: "paste", label: "Paste", kind: "clipboard" },
+  { id: "ctrl", label: "Ctrl", kind: "modifier", group: "main" },
+  { id: "alt", label: "Alt", kind: "modifier", group: "main" },
+  { id: "esc", label: "Esc", kind: "sequence", group: "main" },
+  { id: "tab", label: "Tab", kind: "sequence", group: "main" },
+  { id: "enter", label: "Enter", kind: "sequence", group: "main" },
+  { id: "backspace", label: "Bksp", kind: "sequence", group: "main" },
+  { id: "copy", label: "Copy", kind: "clipboard", group: "main" },
+  { id: "paste", label: "Paste", kind: "clipboard", group: "main" },
+  { id: "up", label: "↑", kind: "sequence", group: "arrow" },
+  { id: "left", label: "←", kind: "sequence", group: "arrow" },
+  { id: "down", label: "↓", kind: "sequence", group: "arrow" },
+  { id: "right", label: "→", kind: "sequence", group: "arrow" },
 ];
 
 const CONTROL_CHAR_MAP: Record<string, string> = {

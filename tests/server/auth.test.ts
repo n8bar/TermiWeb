@@ -41,6 +41,7 @@ describe("auth routes", () => {
     });
 
     expect(login.status).toBe(200);
+    expect(login.body.hostname).toEqual(expect.any(String));
     const cookies = login.headers["set-cookie"];
     expect(cookies).toBeTruthy();
     if (!cookies) {
@@ -67,5 +68,19 @@ describe("auth routes", () => {
     });
 
     expect(login.status).toBe(401);
+  });
+
+  it("reports hostname and auth state before login", async () => {
+    const { app } = await createHttpApp({
+      config,
+      authStore: new SessionStore(config.sessionTtlHours),
+      terminalManager: new TerminalManagerStub() as never,
+    });
+
+    const session = await request(app).get("/api/auth/session");
+
+    expect(session.status).toBe(200);
+    expect(session.body.authenticated).toBe(false);
+    expect(session.body.hostname).toEqual(expect.any(String));
   });
 });

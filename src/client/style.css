@@ -89,12 +89,34 @@ button {
   letter-spacing: 0.02em;
 }
 
+.host-name,
+.host-address {
+  margin: 0;
+}
+
+.host-name {
+  font-family: var(--mono-font);
+  font-size: 1.02rem;
+  font-weight: 650;
+  letter-spacing: 0.01em;
+}
+
+.host-name.compact {
+  font-size: 0.96rem;
+}
+
+.host-address {
+  font-family: var(--mono-font);
+  font-size: 0.84rem;
+}
+
 .lede,
 .side-panel-meta p,
 .field span,
 .form-message,
 .session-meta,
-.session-caption {
+.session-caption,
+.host-address {
   color: var(--muted);
 }
 
@@ -181,6 +203,11 @@ button {
   min-height: 2.45rem;
 }
 
+.ghost-button.compact {
+  min-height: 2.3rem;
+  padding-inline: 0.8rem;
+}
+
 .ghost-button,
 .control-button {
   background: rgba(255, 255, 255, 0.04);
@@ -231,9 +258,17 @@ button {
   align-items: center;
 }
 
+.panel-header-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.55rem;
+}
+
 .session-list {
   display: grid;
   gap: 0.65rem;
+  min-width: 0;
 }
 
 .session-card {
@@ -246,6 +281,7 @@ button {
   background: rgba(255, 255, 255, 0.03);
   color: inherit;
   text-align: left;
+  min-width: 0;
 }
 
 .session-card.is-active {
@@ -263,6 +299,10 @@ button {
 
 .session-title {
   font-weight: 650;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .session-meta,
@@ -325,8 +365,48 @@ button {
 
 .mobile-controls {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 0.55rem;
+}
+
+.control-group {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.control-group-main {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.control-group-arrows {
+  grid-template-columns: repeat(3, minmax(3.2rem, 3.6rem));
+  grid-template-areas:
+    ". up ."
+    "left down right";
+  justify-content: center;
+}
+
+.control-button[data-control-id="up"] {
+  grid-area: up;
+}
+
+.control-button[data-control-id="left"] {
+  grid-area: left;
+}
+
+.control-button[data-control-id="down"] {
+  grid-area: down;
+}
+
+.control-button[data-control-id="right"] {
+  grid-area: right;
+}
+
+.control-button.is-square {
+  aspect-ratio: 1;
+  border-radius: var(--radius-sm);
+  font-size: 1.2rem;
+  min-height: 0;
+  padding: 0;
 }
 
 .control-button.is-active {
@@ -355,6 +435,15 @@ button {
 .session-close {
   justify-self: end;
   padding-inline: 0.7rem;
+}
+
+.workspace-layout.is-sidebar-collapsed {
+  grid-template-columns: minmax(12.5rem, 15rem) minmax(0, 1fr);
+}
+
+.workspace-layout.is-sidebar-collapsed .side-panel-meta,
+.workspace-layout.is-sidebar-collapsed .session-caption {
+  display: none;
 }
 
 @media (max-width: 960px) {
@@ -394,6 +483,6 @@ button {
   }
 
   .mobile-controls {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.7rem;
   }
 }

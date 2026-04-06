@@ -21,8 +21,12 @@ V1 delivers a browser-based Windows terminal that supports:
 
 - Desktop and phone use the same web interface.
 - The active terminal tab is rendered with `xterm.js`.
+- The UI labels shared shells as instances rather than tabs.
+- The current machine hostname is visible before and after login.
+- The instance rail can collapse horizontally without hiding instance close controls.
 - Mobile controls must expose at least `Ctrl`, `Alt`, `Esc`, `Tab`, `Enter`, `Backspace`, and arrow keys.
 - Sticky modifiers must allow key combos to be composed from a phone.
+- Arrow-key controls should look like a compact cursor-key cluster rather than text buttons.
 
 ## Security
 

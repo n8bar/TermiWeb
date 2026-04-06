@@ -18,8 +18,9 @@
         <div class="brand-block">
           <span class="brand-mark">TW</span>
           <div>
-            <p class="eyebrow">Shared browser terminal</p>
             <h1>TermiWeb</h1>
+            <p id="login-hostname" class="host-name">Loading host…</p>
+            <p id="login-address" class="host-address">Connecting…</p>
             <p class="lede">
               One terminal session, served through the browser for both desk and phone.
             </p>
@@ -28,13 +29,13 @@
 
         <form id="login-form" class="auth-form">
           <label class="field">
-            <span>Shared password</span>
+            <span>Password</span>
             <input
               id="password-input"
               name="password"
               type="password"
               autocomplete="current-password"
-              placeholder="Enter the shared password"
+              placeholder="Enter password"
               required
             />
           </label>
@@ -48,28 +49,40 @@
           <div class="brand-block compact">
             <span class="brand-mark small">TW</span>
             <div>
-              <p class="eyebrow">Session of record</p>
               <h2>TermiWeb</h2>
+              <p id="app-hostname" class="host-name compact">Loading host…</p>
+              <p id="app-address" class="host-address">Connecting…</p>
             </div>
           </div>
 
           <div class="topbar-actions">
             <span id="connection-status" class="status-pill is-connecting">Connecting</span>
-            <button id="sync-button" class="ghost-button" type="button">Sync</button>
+            <button id="refresh-button" class="ghost-button" type="button">Refresh</button>
             <button id="logout-button" class="ghost-button" type="button">Logout</button>
           </div>
         </header>
 
-        <div class="workspace-layout">
+        <div id="workspace-layout" class="workspace-layout">
           <aside class="card side-panel">
             <div class="panel-header">
               <div>
-                <p class="eyebrow">Workspaces</p>
-                <h3>Shared tabs</h3>
+                <p class="eyebrow">Instances</p>
+                <h3>Shared shells</h3>
               </div>
-              <button id="new-session-button" class="primary-button compact" type="button">
-                New tab
-              </button>
+              <div class="panel-header-actions">
+                <button
+                  id="toggle-sidebar-button"
+                  class="ghost-button compact"
+                  type="button"
+                  aria-expanded="true"
+                  aria-controls="session-list"
+                >
+                  Collapse
+                </button>
+                <button id="new-session-button" class="primary-button compact" type="button">
+                  New instance
+                </button>
+              </div>
             </div>
 
             <div id="session-list" class="session-list" aria-live="polite"></div>
@@ -77,7 +90,7 @@
             <div class="side-panel-meta">
               <p id="shell-label">Shell: detecting…</p>
               <p>
-                Both desktop and phone use this same browser shell. Tabs persist; live shell
+                Both desktop and phone use this same browser shell. Instances persist; live shell
                 processes do not.
               </p>
             </div>
@@ -86,7 +99,7 @@
           <main class="card terminal-shell">
             <div class="terminal-header">
               <div>
-                <p class="eyebrow">Active tab</p>
+                <p class="eyebrow">Active instance</p>
                 <h3 id="active-session-title">Connecting…</h3>
               </div>
               <div class="terminal-header-actions">

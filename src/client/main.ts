@@ -33,6 +33,11 @@ const workspacePanel = mustQuery<HTMLElement>("#workspace-panel");
 const loginForm = mustQuery<HTMLFormElement>("#login-form");
 const passwordInput = mustQuery<HTMLInputElement>("#password-input");
 const loginMessage = mustQuery<HTMLElement>("#login-message");
+const loginHostname = mustQuery<HTMLElement>("#login-hostname");
+const loginAddress = mustQuery<HTMLElement>("#login-address");
+const appHostname = mustQuery<HTMLElement>("#app-hostname");
+const appAddress = mustQuery<HTMLElement>("#app-address");
+const workspaceLayout = mustQuery<HTMLElement>("#workspace-layout");
 const sessionList = mustQuery<HTMLElement>("#session-list");
 const shellLabel = mustQuery<HTMLElement>("#shell-label");
 const connectionStatus = mustQuery<HTMLElement>("#connection-status");
@@ -40,10 +45,11 @@ const activeSessionTitle = mustQuery<HTMLElement>("#active-session-title");
 const activeSessionStatus = mustQuery<HTMLElement>("#active-session-status");
 const terminalContainer = mustQuery<HTMLElement>("#terminal-container");
 const mobileControls = mustQuery<HTMLElement>("#mobile-controls");
-const syncButton = mustQuery<HTMLButtonElement>("#sync-button");
+const refreshButton = mustQuery<HTMLButtonElement>("#refresh-button");
 const logoutButton = mustQuery<HTMLButtonElement>("#logout-button");
 const newSessionButton = mustQuery<HTMLButtonElement>("#new-session-button");
 const focusTerminalButton = mustQuery<HTMLButtonElement>("#focus-terminal-button");
+const toggleSidebarButton = mustQuery<HTMLButtonElement>("#toggle-sidebar-button");
 
 const terminal = new Terminal({
   cursorBlink: true,
@@ -74,6 +80,7 @@ let authenticated = false;
 let sessions: SessionSummary[] = [];
 let activeSessionId: string | null = null;
 let modifierState: ModifierState = createModifierState();
+let sidebarCollapsed = false;
 
 const statusLabels: Record<SessionSummary["status"], string> = {
   stopped: "Stopped",
@@ -100,10 +107,27 @@ function setFormMessage(message: string, isError = false): void {
   loginMessage.classList.toggle("is-error", isError);
 }
 
+function setHostIdentity(hostname?: string): void {
+  const machineName = hostname?.trim() || window.location.hostname || "Unknown host";
+  const accessAddress = window.location.host || window.location.hostname || "Unknown address";
+
+  loginHostname.textContent = machineName;
+  appHostname.textContent = machineName;
+  loginAddress.textContent = accessAddress;
+  appAddress.textContent = accessAddress;
+}
+
 function setView(isAuthenticated: boolean): void {
   authenticated = isAuthenticated;
   loginPanel.classList.toggle("is-hidden", isAuthenticated);
   workspacePanel.classList.toggle("is-hidden", !isAuthenticated);
+}
+
+function setSidebarCollapsed(collapsed: boolean): void {
+  sidebarCollapsed = collapsed;
+  workspaceLayout.classList.toggle("is-sidebar-collapsed", collapsed);
+  toggleSidebarButton.textContent = collapsed ? "Expand" : "Collapse";
+  toggleSidebarButton.setAttribute("aria-expanded", String(!collapsed));
 }
 
 function sendEvent(event: unknown): void {
@@ -122,12 +146,21 @@ function currentSize() {
 
 function renderModifierControls(): void {
   mobileControls.innerHTML = "";
+  const mainControls = document.createElement("div");
+  mainControls.className = "control-group control-group-main";
+  const arrowControls = document.createElement("div");
+  arrowControls.className = "control-group control-group-arrows";
 
   for (const button of mobileControlButtons) {
     const element = document.createElement("button");
     element.type = "button";
     element.className = "control-button";
     element.textContent = button.label;
+    element.dataset.controlId = button.id;
+
+    if (button.group === "arrow") {
+      element.classList.add("is-square");
+    }
 
     if (button.kind === "modifier") {
       const modifierKey = button.id as ModifierKey;
@@ -185,13 +218,19 @@ function renderModifierControls(): void {
       });
     }
 
-    mobileControls.append(element);
+    if (button.group === "arrow") {
+      arrowControls.append(element);
+    } else {
+      mainControls.append(element);
+    }
   }
+
+  mobileControls.append(mainControls, arrowControls);
 }
 
 function updateActiveSessionMeta(): void {
   const active = sessions.find((session) => session.id === activeSessionId) ?? sessions[0];
-  activeSessionTitle.textContent = active?.title ?? "No active tab";
+  activeSessionTitle.textContent = active?.title ?? "No active instance";
   activeSessionStatus.textContent = active ? statusLabels[active.status] : "Idle";
   activeSessionStatus.className = `status-pill ${active ? `is-${active.status}` : ""}`.trim();
   shellLabel.textContent = `Shell: ${active?.shell ?? "detecting..."}`;
@@ -203,7 +242,7 @@ function renderSessions(): void {
   if (sessions.length === 0) {
     const empty = document.createElement("p");
     empty.className = "session-meta";
-    empty.textContent = "No sessions yet.";
+    empty.textContent = "No instances yet.";
     sessionList.append(empty);
     updateActiveSessionMeta();
     return;
@@ -362,7 +401,8 @@ async function refreshAuthState(): Promise<void> {
   const response = await fetch("/api/auth/session", {
     credentials: "same-origin",
   });
-  const body = (await response.json()) as { authenticated: boolean };
+  const body = (await response.json()) as { authenticated: boolean; hostname?: string };
+  setHostIdentity(body.hostname);
   setView(body.authenticated);
   if (body.authenticated) {
     setConnectionState("connecting");
@@ -387,12 +427,17 @@ loginForm.addEventListener("submit", async (event) => {
     }),
   });
 
-  const body = (await response.json()) as { authenticated?: boolean; error?: string };
+  const body = (await response.json()) as {
+    authenticated?: boolean;
+    error?: string;
+    hostname?: string;
+  };
   if (!response.ok) {
     setFormMessage(body.error ?? "Unable to authenticate.", true);
     return;
   }
 
+  setHostIdentity(body.hostname);
   passwordInput.value = "";
   setView(true);
   connectSocket();
@@ -415,7 +460,7 @@ logoutButton.addEventListener("click", async () => {
   setConnectionState("offline");
 });
 
-syncButton.addEventListener("click", () => {
+refreshButton.addEventListener("click", () => {
   sendEvent({ type: "session/list.request" });
 });
 
@@ -425,6 +470,10 @@ newSessionButton.addEventListener("click", () => {
 
 focusTerminalButton.addEventListener("click", () => {
   terminal.focus();
+});
+
+toggleSidebarButton.addEventListener("click", () => {
+  setSidebarCollapsed(!sidebarCollapsed);
 });
 
 terminal.onData((data) => {
@@ -455,5 +504,6 @@ const resizeObserver = new ResizeObserver(() => {
 });
 
 resizeObserver.observe(terminalContainer);
+setSidebarCollapsed(false);
 renderModifierControls();
 await refreshAuthState();
