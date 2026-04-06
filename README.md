@@ -1,12 +1,12 @@
 # TermiWeb
 
-TermiWeb is a browser-first shared terminal for Windows. The web UI is the session of record for both desktop and phone, so one live terminal session can be continued from either device without remoting the whole desktop.
+TermiWeb is a browser-first shared terminal for Windows. The web UI is the session of record for all devices, so one live terminal session can be continued from anywhere without remoting the whole desktop.
 
 ## Current shape
 
 - Node + TypeScript backend with WebSocket-driven terminal sessions
 - `xterm.js` client with touch-oriented terminal controls
-- Shared workspace tabs backed by Windows shell processes
+- Shared instances backed by Windows shell processes
 - Single shared-password login for local/LAN use
 - Local-only testing and verification workflow
 

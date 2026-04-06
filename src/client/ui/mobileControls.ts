@@ -16,9 +16,9 @@ export type TerminalControlAction =
   | "right";
 
 export interface TerminalControlButton {
-  id: ModifierKey | TerminalControlAction | "copy" | "paste";
+  id: ModifierKey | TerminalControlAction | "copy" | "paste" | "select";
   label: string;
-  kind: "modifier" | "sequence" | "clipboard";
+  kind: "modifier" | "sequence" | "clipboard" | "mode";
   group: "main" | "arrow";
 }
 
@@ -29,6 +29,7 @@ export const mobileControlButtons: TerminalControlButton[] = [
   { id: "tab", label: "Tab", kind: "sequence", group: "main" },
   { id: "enter", label: "Enter", kind: "sequence", group: "main" },
   { id: "backspace", label: "Bksp", kind: "sequence", group: "main" },
+  { id: "select", label: "Select", kind: "mode", group: "main" },
   { id: "copy", label: "Copy", kind: "clipboard", group: "main" },
   { id: "paste", label: "Paste", kind: "clipboard", group: "main" },
   { id: "up", label: "↑", kind: "sequence", group: "arrow" },

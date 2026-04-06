@@ -16,7 +16,7 @@ export type WorkspaceTab = z.infer<typeof workspaceTabSchema>;
 export type WorkspaceState = z.infer<typeof workspaceStateSchema>;
 
 function createDefaultTitle(index: number): string {
-  return `Terminal ${index}`;
+  return `Instance ${index}`;
 }
 
 export function createEmptyWorkspaceState(): WorkspaceState {

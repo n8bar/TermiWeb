@@ -31,10 +31,11 @@ describe("protocol parsing", () => {
   it("accepts a valid session list payload", () => {
     const event = parseServerEvent({
       type: "session/list",
+      activeSessionId: "54fd93ae-0f1d-4dc4-af4a-547e8b87d2af",
       sessions: [
         {
           id: "54fd93ae-0f1d-4dc4-af4a-547e8b87d2af",
-          title: "Terminal 1",
+          title: "Instance 1",
           status: "running",
           clientCount: 2,
           shell: "powershell.exe",
@@ -47,6 +48,7 @@ describe("protocol parsing", () => {
     if (event.type !== "session/list") {
       throw new Error("Expected session/list event");
     }
+    expect(event.activeSessionId).toBe("54fd93ae-0f1d-4dc4-af4a-547e8b87d2af");
     expect(event.sessions[0]?.clientCount).toBe(2);
   });
 });

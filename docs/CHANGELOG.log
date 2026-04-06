@@ -5,3 +5,4 @@
 2026-04-06 Changed the default TermiWeb web port from 4317 to 22443 to avoid common telemetry-port collisions and match the preferred app identity.
 2026-04-06 Added repo-root .env loading and fixed LAN host resolution so TERMIWEB_ALLOW_LAN=true works with the sample config.
 2026-04-06 Refined the browser UI with clearer host identity, instance terminology, a collapsible instance rail, and a keyboard-style arrow cluster for mobile controls.
+2026-04-06 Added shared-active-instance metadata, a select mode for copying terminal text, home-directory shell starts, and icon-based refresh/collapse controls.

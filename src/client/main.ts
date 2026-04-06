@@ -44,6 +44,10 @@ const connectionStatus = mustQuery<HTMLElement>("#connection-status");
 const activeSessionTitle = mustQuery<HTMLElement>("#active-session-title");
 const activeSessionStatus = mustQuery<HTMLElement>("#active-session-status");
 const terminalContainer = mustQuery<HTMLElement>("#terminal-container");
+const selectionPanel = mustQuery<HTMLElement>("#selection-panel");
+const selectionText = mustQuery<HTMLTextAreaElement>("#selection-text");
+const closeSelectionButton = mustQuery<HTMLButtonElement>("#close-selection-button");
+const copySelectionButton = mustQuery<HTMLButtonElement>("#copy-selection-button");
 const mobileControls = mustQuery<HTMLElement>("#mobile-controls");
 const refreshButton = mustQuery<HTMLButtonElement>("#refresh-button");
 const logoutButton = mustQuery<HTMLButtonElement>("#logout-button");
@@ -79,8 +83,11 @@ let reconnectTimer: number | undefined;
 let authenticated = false;
 let sessions: SessionSummary[] = [];
 let activeSessionId: string | null = null;
+let serverActiveSessionId: string | null = null;
 let modifierState: ModifierState = createModifierState();
 let sidebarCollapsed = false;
+let selectionMode = false;
+const sessionHistory = new Map<string, string>();
 
 const statusLabels: Record<SessionSummary["status"], string> = {
   stopped: "Stopped",
@@ -126,8 +133,13 @@ function setView(isAuthenticated: boolean): void {
 function setSidebarCollapsed(collapsed: boolean): void {
   sidebarCollapsed = collapsed;
   workspaceLayout.classList.toggle("is-sidebar-collapsed", collapsed);
-  toggleSidebarButton.textContent = collapsed ? "Expand" : "Collapse";
+  toggleSidebarButton.textContent = collapsed ? "»" : "«";
   toggleSidebarButton.setAttribute("aria-expanded", String(!collapsed));
+  toggleSidebarButton.setAttribute(
+    "aria-label",
+    collapsed ? "Expand instances" : "Collapse instances",
+  );
+  toggleSidebarButton.title = collapsed ? "Expand instances" : "Collapse instances";
 }
 
 function sendEvent(event: unknown): void {
@@ -142,6 +154,59 @@ function currentSize() {
     cols: Math.max(terminal.cols, 80),
     rows: Math.max(terminal.rows, 24),
   };
+}
+
+function getActiveHistory(): string {
+  if (!activeSessionId) {
+    return "";
+  }
+
+  return sessionHistory.get(activeSessionId) ?? "";
+}
+
+function syncSelectionText(): void {
+  if (!selectionMode) {
+    return;
+  }
+
+  selectionText.value = getActiveHistory();
+}
+
+function setSelectionMode(isOpen: boolean): void {
+  selectionMode = isOpen;
+  terminalContainer.classList.toggle("is-hidden", isOpen);
+  selectionPanel.classList.toggle("is-hidden", !isOpen);
+
+  if (isOpen) {
+    syncSelectionText();
+    selectionText.focus();
+  } else {
+    selectionText.blur();
+    terminal.focus();
+  }
+
+  renderModifierControls();
+}
+
+async function copyCurrentSelection(): Promise<void> {
+  const terminalSelection = terminal.getSelection();
+  const textareaSelection =
+    selectionText.selectionStart !== selectionText.selectionEnd
+      ? selectionText.value.slice(selectionText.selectionStart, selectionText.selectionEnd)
+      : "";
+  const textToCopy =
+    terminalSelection || textareaSelection || (selectionMode ? selectionText.value : "");
+
+  if (!textToCopy) {
+    setSelectionMode(true);
+    return;
+  }
+
+  try {
+    await navigator.clipboard.writeText(textToCopy);
+  } catch {
+    setConnectionState("error", "Clipboard blocked");
+  }
 }
 
 function renderModifierControls(): void {
@@ -170,6 +235,11 @@ function renderModifierControls(): void {
         renderModifierControls();
         terminal.focus();
       });
+    } else if (button.kind === "mode" && button.id === "select") {
+      element.classList.toggle("is-active", selectionMode);
+      element.addEventListener("click", () => {
+        setSelectionMode(!selectionMode);
+      });
     } else if (button.kind === "sequence") {
       const action = button.id as TerminalControlAction;
       element.addEventListener("click", () => {
@@ -189,14 +259,13 @@ function renderModifierControls(): void {
     } else if (button.id === "copy") {
       element.addEventListener("click", async () => {
         try {
-          const selection = terminal.getSelection();
-          if (selection) {
-            await navigator.clipboard.writeText(selection);
-          }
+          await copyCurrentSelection();
         } catch {
           setConnectionState("error", "Clipboard blocked");
         } finally {
-          terminal.focus();
+          if (!selectionMode) {
+            terminal.focus();
+          }
         }
       });
     } else if (button.id === "paste") {
@@ -281,7 +350,7 @@ function renderSessions(): void {
     caption.className = "session-caption";
     caption.textContent =
       session.lastExitCode === null
-        ? "Fresh shell when selected"
+        ? "Fresh shell when opened"
         : `Last exit code: ${session.lastExitCode}`;
 
     const close = document.createElement("button");
@@ -305,6 +374,7 @@ function renderSessions(): void {
 
 function attachToSession(sessionId: string): void {
   activeSessionId = sessionId;
+  setSelectionMode(false);
   terminal.reset();
   renderSessions();
 
@@ -318,6 +388,9 @@ function attachToSession(sessionId: string): void {
 function maybeAttachDefaultSession(): void {
   if (sessions.length === 0) {
     activeSessionId = null;
+    serverActiveSessionId = null;
+    sessionHistory.clear();
+    setSelectionMode(false);
     terminal.reset();
     renderSessions();
     return;
@@ -327,9 +400,13 @@ function maybeAttachDefaultSession(): void {
     return;
   }
 
-  const firstSession = sessions[0];
-  if (firstSession) {
-    attachToSession(firstSession.id);
+  const preferredSessionId =
+    serverActiveSessionId && sessions.some((session) => session.id === serverActiveSessionId)
+      ? serverActiveSessionId
+      : sessions[0]?.id;
+
+  if (preferredSessionId) {
+    attachToSession(preferredSessionId);
   }
 }
 
@@ -341,7 +418,13 @@ function handleServerEvent(event: ServerEvent): void {
       setConnectionState("error", event.message);
       return;
     case "session/list":
+      serverActiveSessionId = event.activeSessionId;
       sessions = event.sessions;
+      for (const sessionId of [...sessionHistory.keys()]) {
+        if (!sessions.some((session) => session.id === sessionId)) {
+          sessionHistory.delete(sessionId);
+        }
+      }
       renderSessions();
       maybeAttachDefaultSession();
       return;
@@ -350,6 +433,8 @@ function handleServerEvent(event: ServerEvent): void {
       return;
     case "session/snapshot":
       activeSessionId = event.snapshot.session.id;
+      sessionHistory.set(event.snapshot.session.id, event.snapshot.history);
+      setSelectionMode(false);
       terminal.reset();
       terminal.write(event.snapshot.history);
       renderSessions();
@@ -357,6 +442,7 @@ function handleServerEvent(event: ServerEvent): void {
       return;
     case "session/output":
       if (event.sessionId === activeSessionId) {
+        sessionHistory.set(event.sessionId, `${getActiveHistory()}${event.data}`);
         terminal.write(event.data);
       }
       return;
@@ -455,6 +541,9 @@ logoutButton.addEventListener("click", async () => {
   ws = null;
   sessions = [];
   activeSessionId = null;
+  serverActiveSessionId = null;
+  sessionHistory.clear();
+  setSelectionMode(false);
   terminal.reset();
   setView(false);
   setConnectionState("offline");
@@ -469,11 +558,20 @@ newSessionButton.addEventListener("click", () => {
 });
 
 focusTerminalButton.addEventListener("click", () => {
+  setSelectionMode(false);
   terminal.focus();
 });
 
 toggleSidebarButton.addEventListener("click", () => {
   setSidebarCollapsed(!sidebarCollapsed);
+});
+
+copySelectionButton.addEventListener("click", async () => {
+  await copyCurrentSelection();
+});
+
+closeSelectionButton.addEventListener("click", () => {
+  setSelectionMode(false);
 });
 
 terminal.onData((data) => {

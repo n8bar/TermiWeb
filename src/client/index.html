@@ -9,7 +9,7 @@
     <title>TermiWeb</title>
     <meta
       name="description"
-      content="A browser-first shared Windows terminal for desktop and phone."
+      content="A browser-first shared Windows terminal for all devices."
     />
   </head>
   <body>
@@ -22,7 +22,7 @@
             <p id="login-hostname" class="host-name">Loading host…</p>
             <p id="login-address" class="host-address">Connecting…</p>
             <p class="lede">
-              One terminal session, served through the browser for both desk and phone.
+              One terminal session, served through the browser for all devices.
             </p>
           </div>
         </div>
@@ -57,7 +57,6 @@
 
           <div class="topbar-actions">
             <span id="connection-status" class="status-pill is-connecting">Connecting</span>
-            <button id="refresh-button" class="ghost-button" type="button">Refresh</button>
             <button id="logout-button" class="ghost-button" type="button">Logout</button>
           </div>
         </header>
@@ -72,12 +71,23 @@
               <div class="panel-header-actions">
                 <button
                   id="toggle-sidebar-button"
-                  class="ghost-button compact"
+                  class="ghost-button compact icon-button"
                   type="button"
                   aria-expanded="true"
                   aria-controls="session-list"
+                  aria-label="Collapse instances"
+                  title="Collapse instances"
                 >
-                  Collapse
+                  «
+                </button>
+                <button
+                  id="refresh-button"
+                  class="ghost-button compact icon-button"
+                  type="button"
+                  aria-label="Refresh instances"
+                  title="Refresh instances"
+                >
+                  ↻
                 </button>
                 <button id="new-session-button" class="primary-button compact" type="button">
                   New instance
@@ -90,8 +100,8 @@
             <div class="side-panel-meta">
               <p id="shell-label">Shell: detecting…</p>
               <p>
-                Both desktop and phone use this same browser shell. Instances persist; live shell
-                processes do not.
+                All devices share this same browser shell. Instances persist; live shell processes
+                do not.
               </p>
             </div>
           </aside>
@@ -111,6 +121,32 @@
             </div>
 
             <div id="terminal-container" class="terminal-container" aria-label="Terminal"></div>
+            <section
+              id="selection-panel"
+              class="selection-panel is-hidden"
+              aria-label="Select terminal text"
+            >
+              <div class="selection-panel-header">
+                <div>
+                  <p class="eyebrow">Select text</p>
+                  <h3>Selection mode</h3>
+                </div>
+                <div class="selection-panel-actions">
+                  <button id="copy-selection-button" class="ghost-button" type="button">
+                    Copy
+                  </button>
+                  <button id="close-selection-button" class="ghost-button" type="button">
+                    Done
+                  </button>
+                </div>
+              </div>
+              <textarea
+                id="selection-text"
+                class="selection-text"
+                readonly
+                spellcheck="false"
+              ></textarea>
+            </section>
             <div id="mobile-controls" class="mobile-controls" aria-label="Terminal controls"></div>
           </main>
         </div>

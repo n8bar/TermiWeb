@@ -13,7 +13,7 @@ describe("workspace state", () => {
     const state = ensureWorkspaceHasTab(createEmptyWorkspaceState());
 
     expect(state.tabs).toHaveLength(1);
-    expect(state.tabs[0]?.title).toBe("Terminal 1");
+    expect(state.tabs[0]?.title).toBe("Instance 1");
     expect(state.lastActiveTabId).toBe(state.tabs[0]?.id ?? null);
   });
 
@@ -23,7 +23,7 @@ describe("workspace state", () => {
     const withDefault = addWorkspaceTab(withCustom.state);
 
     expect(withCustom.tab.title).toBe("Logs");
-    expect(withDefault.tab.title).toBe("Terminal 2");
+    expect(withDefault.tab.title).toBe("Instance 2");
   });
 
   it("selects a known tab and ignores unknown ones", () => {

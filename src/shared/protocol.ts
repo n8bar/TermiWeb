@@ -70,6 +70,7 @@ export const serverEventSchema = z.discriminatedUnion("type", [
   z.object({
     type: z.literal("session/list"),
     sessions: z.array(sessionSummarySchema),
+    activeSessionId: z.string().uuid().nullable(),
   }),
   z.object({
     type: z.literal("session/created"),

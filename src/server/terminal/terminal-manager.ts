@@ -41,6 +41,15 @@ export class TerminalManager extends EventEmitter<ManagerEvents> {
     return [...this.#sessions.values()].map((session) => session.getSummary());
   }
 
+  getActiveSessionId(): string | null {
+    const activeSessionId = this.#workspaceStore.getLastActiveTabId();
+    if (activeSessionId && this.#sessions.has(activeSessionId)) {
+      return activeSessionId;
+    }
+
+    return this.listSessions()[0]?.id ?? null;
+  }
+
   async createSession(title?: string): Promise<SessionSummary> {
     if (this.#sessions.size >= this.#config.maxSessions) {
       throw new Error(`Maximum session count (${this.#config.maxSessions}) reached.`);

@@ -1,3 +1,4 @@
+import os from "node:os";
 import { EventEmitter } from "node:events";
 
 import { spawn, type IPty } from "node-pty";
@@ -23,6 +24,10 @@ function defaultArgs(shell: string): string[] {
   }
 
   return [];
+}
+
+function defaultWorkingDirectory(): string {
+  return process.env.USERPROFILE ?? process.env.HOME ?? os.homedir() ?? process.cwd();
 }
 
 export class TerminalSession extends EventEmitter<TerminalSessionEvents> {
@@ -86,7 +91,7 @@ export class TerminalSession extends EventEmitter<TerminalSessionEvents> {
         name: "xterm-color",
         cols: this.#cols,
         rows: this.#rows,
-        cwd: process.cwd(),
+        cwd: defaultWorkingDirectory(),
         env: process.env as Record<string, string>,
         useConpty: true,
       });

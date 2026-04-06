@@ -93,7 +93,10 @@ export async function createHttpApp(options: CreateHttpAppOptions) {
   });
 
   app.get("/api/workspaces", requireAuth, (_request, response) => {
-    response.json({ sessions: options.terminalManager.listSessions() });
+    response.json({
+      sessions: options.terminalManager.listSessions(),
+      activeSessionId: options.terminalManager.getActiveSessionId(),
+    });
   });
 
   if (options.viteDevServer) {
@@ -132,11 +135,14 @@ export async function createHttpApp(options: CreateHttpAppOptions) {
     socket.send(JSON.stringify(event));
   };
 
+  const createSessionListEvent = (): ServerEvent => ({
+    type: "session/list",
+    sessions: options.terminalManager.listSessions(),
+    activeSessionId: options.terminalManager.getActiveSessionId(),
+  });
+
   const broadcastSessions = () => {
-    const event: ServerEvent = {
-      type: "session/list",
-      sessions: options.terminalManager.listSessions(),
-    };
+    const event = createSessionListEvent();
 
     for (const socket of clientSockets.values()) {
       send(socket, event);
@@ -168,10 +174,7 @@ export async function createHttpApp(options: CreateHttpAppOptions) {
   websocketServer.on("connection", (socket) => {
     const clientId = randomUUID();
     clientSockets.set(clientId, socket);
-    send(socket, {
-      type: "session/list",
-      sessions: options.terminalManager.listSessions(),
-    });
+    send(socket, createSessionListEvent());
 
     socket.on("message", async (raw) => {
       try {
@@ -181,10 +184,7 @@ export async function createHttpApp(options: CreateHttpAppOptions) {
             send(socket, { type: "pong" });
             return;
           case "session/list.request":
-            send(socket, {
-              type: "session/list",
-              sessions: options.terminalManager.listSessions(),
-            });
+            send(socket, createSessionListEvent());
             return;
           case "session/create": {
             const created = await options.terminalManager.createSession(parsed.title);

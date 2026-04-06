@@ -11,6 +11,10 @@ class TerminalManagerStub extends EventEmitter {
   listSessions() {
     return [];
   }
+
+  getActiveSessionId() {
+    return null;
+  }
 }
 
 const config: TermiWebConfig = {
@@ -54,6 +58,7 @@ describe("auth routes", () => {
 
     expect(authorized.status).toBe(200);
     expect(authorized.body.sessions).toEqual([]);
+    expect(authorized.body.activeSessionId).toBeNull();
   });
 
   it("rejects an incorrect shared password", async () => {

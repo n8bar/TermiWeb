@@ -39,7 +39,8 @@ body {
 }
 
 button,
-input {
+input,
+textarea {
   font: inherit;
 }
 
@@ -208,6 +209,12 @@ button {
   padding-inline: 0.8rem;
 }
 
+.icon-button {
+  min-width: 2.3rem;
+  padding: 0;
+  font-size: 1.15rem;
+}
+
 .ghost-button,
 .control-button {
   background: rgba(255, 255, 255, 0.04);
@@ -363,6 +370,58 @@ button {
   font-family: var(--mono-font);
 }
 
+.selection-panel {
+  min-height: 26rem;
+  display: grid;
+  gap: 0.8rem;
+  padding: 1rem;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(122, 255, 178, 0.12);
+  background:
+    linear-gradient(180deg, rgba(122, 255, 178, 0.03), transparent 18%),
+    rgba(5, 11, 16, 0.92);
+}
+
+.selection-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.selection-panel-header h3 {
+  margin: 0;
+  font-weight: 650;
+  letter-spacing: 0.02em;
+}
+
+.selection-panel-actions {
+  display: flex;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.selection-text {
+  width: 100%;
+  min-height: 19rem;
+  padding: 0.95rem 1rem;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(4, 8, 12, 0.82);
+  color: var(--text);
+  font-family: var(--mono-font);
+  font-size: 0.95rem;
+  line-height: 1.4;
+  resize: vertical;
+}
+
+.selection-text:focus {
+  outline: none;
+  border-color: rgba(122, 255, 178, 0.55);
+  box-shadow: 0 0 0 4px rgba(122, 255, 178, 0.12);
+}
+
 .mobile-controls {
   display: grid;
   gap: 0.55rem;
@@ -458,6 +517,10 @@ button {
   .terminal-container {
     min-height: 22rem;
   }
+
+  .selection-panel {
+    min-height: 22rem;
+  }
 }
 
 @media (max-width: 640px) {
@@ -478,6 +541,11 @@ button {
 
   .topbar,
   .terminal-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .selection-panel-header {
     align-items: flex-start;
     flex-direction: column;
   }
