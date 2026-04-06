@@ -3,3 +3,4 @@
 2026-04-06 Hardened shell resolution to prefer the default PowerShell 7 install path before PATH-based fallback behavior.
 2026-04-06 Updated shell resolution precedence so PowerShell 7 from PATH wins, with the default install path used as a fallback before Windows PowerShell.
 2026-04-06 Changed the default TermiWeb web port from 4317 to 22443 to avoid common telemetry-port collisions and match the preferred app identity.
+2026-04-06 Added repo-root .env loading and fixed LAN host resolution so TERMIWEB_ALLOW_LAN=true works with the sample config.

@@ -1,4 +1,7 @@
+import { loadDotEnvFile } from "./env.js";
 import { createTermiWebServer } from "./server.js";
+
+loadDotEnvFile();
 
 const server = await createTermiWebServer();
 await server.start();

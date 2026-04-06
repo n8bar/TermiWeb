@@ -1,15 +1,20 @@
 import path from "node:path";
 import { z } from "zod";
 
+const optionalTrimmedString = z.string().optional().transform((value) => {
+  const trimmed = value?.trim();
+  return trimmed && trimmed.length > 0 ? trimmed : undefined;
+});
+
 const envSchema = z.object({
-  TERMIWEB_HOST: z.string().min(1).optional(),
+  TERMIWEB_HOST: optionalTrimmedString,
   TERMIWEB_PORT: z.coerce.number().int().min(1).max(65535).default(22443),
   TERMIWEB_PASSWORD: z.string().min(1).default("change-me"),
   TERMIWEB_ALLOW_LAN: z
     .string()
     .optional()
     .transform((value) => value === "true"),
-  TERMIWEB_DEFAULT_SHELL: z.string().trim().optional(),
+  TERMIWEB_DEFAULT_SHELL: optionalTrimmedString,
   TERMIWEB_MAX_SESSIONS: z.coerce.number().int().min(1).max(32).default(8),
   TERMIWEB_SESSION_TTL_HOURS: z.coerce
     .number()
@@ -49,7 +54,7 @@ export function resolveConfig(
     port: parsed.TERMIWEB_PORT,
     password: parsed.TERMIWEB_PASSWORD,
     allowLan: parsed.TERMIWEB_ALLOW_LAN,
-    defaultShell: parsed.TERMIWEB_DEFAULT_SHELL || undefined,
+    defaultShell: parsed.TERMIWEB_DEFAULT_SHELL,
     maxSessions: parsed.TERMIWEB_MAX_SESSIONS,
     sessionTtlHours: parsed.TERMIWEB_SESSION_TTL_HOURS,
     dataDir: path.resolve(parsed.TERMIWEB_DATA_DIR),

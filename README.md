@@ -18,6 +18,12 @@ TermiWeb is a browser-first shared terminal for Windows. The web UI is the sessi
 4. Start the app with `npm run dev`.
 5. Open `http://127.0.0.1:22443`.
 
+## LAN Access
+
+- Set `TERMIWEB_ALLOW_LAN=true` in `.env`.
+- Leave `TERMIWEB_HOST` blank unless you want an explicit bind address.
+- Browse to `http://<your-pc-lan-ip>:22443` from your phone on the same network.
+
 ## Scripts
 
 - `npm run dev` starts the integrated dev server.

@@ -1,6 +1,9 @@
 import { createServer as createViteServer } from "vite";
 
+import { loadDotEnvFile } from "./env.js";
 import { createTermiWebServer } from "./server.js";
+
+loadDotEnvFile();
 
 const vite = await createViteServer({
   server: {

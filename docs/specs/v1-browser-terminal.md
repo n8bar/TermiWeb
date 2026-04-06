@@ -29,6 +29,8 @@ V1 delivers a browser-based Windows terminal that supports:
 - Access requires a configured shared password.
 - HTTP session state is cookie-based in v1.
 - WebSocket upgrades require a valid authenticated browser session.
+- Runtime configuration can come from process environment or a repo-root `.env` file.
+- LAN binding is enabled by setting `TERMIWEB_ALLOW_LAN=true` when no explicit `TERMIWEB_HOST` is set.
 
 ## Testing Guidance
 
