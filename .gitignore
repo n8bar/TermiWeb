@@ -4,6 +4,7 @@ dist/
 .env
 coverage/
 *.log
+!docs/CHANGELOG.log
 .DS_Store
 Thumbs.db
 .vite/

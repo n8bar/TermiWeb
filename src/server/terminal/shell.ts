@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 
+const POWERSHELL_7_DEFAULT_PATH = "C:\\Program Files\\PowerShell\\7\\pwsh.exe";
 const FALLBACK_SHELLS = ["pwsh.exe", "pwsh", "powershell.exe", "powershell"];
 
 function pathExtensions(): string[] {
@@ -48,7 +49,23 @@ export function resolveShellCommand(
     return preferred;
   }
 
+  if (exists("pwsh.exe", pathValue)) {
+    return "pwsh.exe";
+  }
+
+  if (exists("pwsh", pathValue)) {
+    return "pwsh";
+  }
+
+  if (preferred !== POWERSHELL_7_DEFAULT_PATH && exists(POWERSHELL_7_DEFAULT_PATH, pathValue)) {
+    return POWERSHELL_7_DEFAULT_PATH;
+  }
+
   for (const candidate of FALLBACK_SHELLS) {
+    if (candidate === "pwsh.exe" || candidate === "pwsh") {
+      continue;
+    }
+
     if (exists(candidate, pathValue)) {
       return candidate;
     }

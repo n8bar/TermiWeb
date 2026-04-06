@@ -11,7 +11,7 @@ TermiWeb provides a single browser-served terminal workflow that can be used fro
 - The app manages named workspace tabs rather than a single throwaway shell.
 - Authentication is a single shared password suitable for local/private deployments in v1.
 - The host platform is Windows-first.
-- The runtime prefers `pwsh` when available and falls back to Windows PowerShell on hosts where PowerShell 7 is not installed.
+- The runtime prefers PowerShell 7 from `PATH`, then the standard install path, and only then falls back to Windows PowerShell.
 
 ## V1 Constraints
 

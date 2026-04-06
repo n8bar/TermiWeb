@@ -36,4 +36,4 @@ TermiWeb is a browser-first shared terminal for Windows. The web UI is the sessi
 
 ## Shell behavior
 
-TermiWeb prefers `pwsh`/PowerShell 7 when available. If it is not installed, the runtime falls back to Windows PowerShell automatically so the app still works on the current machine.
+TermiWeb prefers PowerShell 7 from `PATH`, then falls back to the standard install path at `C:\Program Files\PowerShell\7\pwsh.exe`, and only then falls back to Windows PowerShell.

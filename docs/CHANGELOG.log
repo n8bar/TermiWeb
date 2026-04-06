@@ -1,0 +1,4 @@
+2026-04-06 Bootstrap project plan, product spec, README, and AGENTS guidance for the initial TermiWeb implementation.
+2026-04-06 Scaffolded the first working TermiWeb app with shared workspace tabs, cookie auth, mobile terminal controls, local tests, and a production build path.
+2026-04-06 Hardened shell resolution to prefer the default PowerShell 7 install path before PATH-based fallback behavior.
+2026-04-06 Updated shell resolution precedence so PowerShell 7 from PATH wins, with the default install path used as a fallback before Windows PowerShell.
