@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "types": [
+      "node"
+    ],
+    "noEmit": true
+  },
+  "include": [
+    "tests/**/*.ts",
+    "src/server/**/*.ts",
+    "src/shared/**/*.ts",
+    "src/client/**/*.ts"
+  ]
+}

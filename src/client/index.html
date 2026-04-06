@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <title>TermiWeb</title>
+    <meta
+      name="description"
+      content="A browser-first shared Windows terminal for desktop and phone."
+    />
+  </head>
+  <body>
+    <div class="app-shell">
+      <section id="login-panel" class="card auth-card">
+        <div class="brand-block">
+          <span class="brand-mark">TW</span>
+          <div>
+            <p class="eyebrow">Shared browser terminal</p>
+            <h1>TermiWeb</h1>
+            <p class="lede">
+              One terminal session, served through the browser for both desk and phone.
+            </p>
+          </div>
+        </div>
+
+        <form id="login-form" class="auth-form">
+          <label class="field">
+            <span>Shared password</span>
+            <input
+              id="password-input"
+              name="password"
+              type="password"
+              autocomplete="current-password"
+              placeholder="Enter the shared password"
+              required
+            />
+          </label>
+          <button class="primary-button" type="submit">Open terminal</button>
+          <p id="login-message" class="form-message" role="alert"></p>
+        </form>
+      </section>
+
+      <section id="workspace-panel" class="workspace-shell is-hidden">
+        <header class="topbar card">
+          <div class="brand-block compact">
+            <span class="brand-mark small">TW</span>
+            <div>
+              <p class="eyebrow">Session of record</p>
+              <h2>TermiWeb</h2>
+            </div>
+          </div>
+
+          <div class="topbar-actions">
+            <span id="connection-status" class="status-pill is-connecting">Connecting</span>
+            <button id="sync-button" class="ghost-button" type="button">Sync</button>
+            <button id="logout-button" class="ghost-button" type="button">Logout</button>
+          </div>
+        </header>
+
+        <div class="workspace-layout">
+          <aside class="card side-panel">
+            <div class="panel-header">
+              <div>
+                <p class="eyebrow">Workspaces</p>
+                <h3>Shared tabs</h3>
+              </div>
+              <button id="new-session-button" class="primary-button compact" type="button">
+                New tab
+              </button>
+            </div>
+
+            <div id="session-list" class="session-list" aria-live="polite"></div>
+
+            <div class="side-panel-meta">
+              <p id="shell-label">Shell: detecting…</p>
+              <p>
+                Both desktop and phone use this same browser shell. Tabs persist; live shell
+                processes do not.
+              </p>
+            </div>
+          </aside>
+
+          <main class="card terminal-shell">
+            <div class="terminal-header">
+              <div>
+                <p class="eyebrow">Active tab</p>
+                <h3 id="active-session-title">Connecting…</h3>
+              </div>
+              <div class="terminal-header-actions">
+                <span id="active-session-status" class="status-pill">Idle</span>
+                <button id="focus-terminal-button" class="ghost-button" type="button">
+                  Focus keyboard
+                </button>
+              </div>
+            </div>
+
+            <div id="terminal-container" class="terminal-container" aria-label="Terminal"></div>
+            <div id="mobile-controls" class="mobile-controls" aria-label="Terminal controls"></div>
+          </main>
+        </div>
+      </section>
+    </div>
+
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>

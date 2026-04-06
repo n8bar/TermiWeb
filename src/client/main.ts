@@ -1,0 +1,459 @@
+import "@xterm/xterm/css/xterm.css";
+import "./style.css";
+
+import { FitAddon } from "@xterm/addon-fit";
+import { Terminal } from "@xterm/xterm";
+
+import { parseServerEvent, type ServerEvent, type SessionSummary } from "../shared/protocol.js";
+import {
+  applyModifiersToInput,
+  createModifierState,
+  mobileControlButtons,
+  resetModifiers,
+  terminalSequence,
+  toggleModifier,
+  type ModifierKey,
+  type ModifierState,
+  type TerminalControlAction,
+} from "./ui/mobileControls.js";
+
+type ConnectionState = "connecting" | "connected" | "offline" | "error";
+
+function mustQuery<T extends Element>(selector: string): T {
+  const element = document.querySelector<T>(selector);
+  if (!element) {
+    throw new Error(`Missing required element: ${selector}`);
+  }
+
+  return element;
+}
+
+const loginPanel = mustQuery<HTMLElement>("#login-panel");
+const workspacePanel = mustQuery<HTMLElement>("#workspace-panel");
+const loginForm = mustQuery<HTMLFormElement>("#login-form");
+const passwordInput = mustQuery<HTMLInputElement>("#password-input");
+const loginMessage = mustQuery<HTMLElement>("#login-message");
+const sessionList = mustQuery<HTMLElement>("#session-list");
+const shellLabel = mustQuery<HTMLElement>("#shell-label");
+const connectionStatus = mustQuery<HTMLElement>("#connection-status");
+const activeSessionTitle = mustQuery<HTMLElement>("#active-session-title");
+const activeSessionStatus = mustQuery<HTMLElement>("#active-session-status");
+const terminalContainer = mustQuery<HTMLElement>("#terminal-container");
+const mobileControls = mustQuery<HTMLElement>("#mobile-controls");
+const syncButton = mustQuery<HTMLButtonElement>("#sync-button");
+const logoutButton = mustQuery<HTMLButtonElement>("#logout-button");
+const newSessionButton = mustQuery<HTMLButtonElement>("#new-session-button");
+const focusTerminalButton = mustQuery<HTMLButtonElement>("#focus-terminal-button");
+
+const terminal = new Terminal({
+  cursorBlink: true,
+  fontFamily: `"Cascadia Code", "Cascadia Mono", Consolas, monospace`,
+  fontSize: 15,
+  lineHeight: 1.18,
+  theme: {
+    background: "#050b10",
+    foreground: "#edf7f3",
+    selectionBackground: "rgba(122, 255, 178, 0.28)",
+    cursor: "#7affb2",
+    brightGreen: "#7affb2",
+    yellow: "#f4d35e",
+    brightYellow: "#ffd46f",
+  },
+  scrollback: 5_000,
+  allowTransparency: true,
+});
+
+const fitAddon = new FitAddon();
+terminal.loadAddon(fitAddon);
+terminal.open(terminalContainer);
+fitAddon.fit();
+
+let ws: WebSocket | null = null;
+let reconnectTimer: number | undefined;
+let authenticated = false;
+let sessions: SessionSummary[] = [];
+let activeSessionId: string | null = null;
+let modifierState: ModifierState = createModifierState();
+
+const statusLabels: Record<SessionSummary["status"], string> = {
+  stopped: "Stopped",
+  starting: "Starting",
+  running: "Running",
+  exited: "Exited",
+  error: "Error",
+};
+
+function setConnectionState(state: ConnectionState, label?: string): void {
+  connectionStatus.textContent =
+    label ??
+    {
+      connecting: "Connecting",
+      connected: "Connected",
+      offline: "Offline",
+      error: "Error",
+    }[state];
+  connectionStatus.className = `status-pill is-${state}`;
+}
+
+function setFormMessage(message: string, isError = false): void {
+  loginMessage.textContent = message;
+  loginMessage.classList.toggle("is-error", isError);
+}
+
+function setView(isAuthenticated: boolean): void {
+  authenticated = isAuthenticated;
+  loginPanel.classList.toggle("is-hidden", isAuthenticated);
+  workspacePanel.classList.toggle("is-hidden", !isAuthenticated);
+}
+
+function sendEvent(event: unknown): void {
+  if (ws?.readyState === WebSocket.OPEN) {
+    ws.send(JSON.stringify(event));
+  }
+}
+
+function currentSize() {
+  fitAddon.fit();
+  return {
+    cols: Math.max(terminal.cols, 80),
+    rows: Math.max(terminal.rows, 24),
+  };
+}
+
+function renderModifierControls(): void {
+  mobileControls.innerHTML = "";
+
+  for (const button of mobileControlButtons) {
+    const element = document.createElement("button");
+    element.type = "button";
+    element.className = "control-button";
+    element.textContent = button.label;
+
+    if (button.kind === "modifier") {
+      const modifierKey = button.id as ModifierKey;
+      element.classList.toggle("is-active", modifierState[modifierKey]);
+      element.addEventListener("click", () => {
+        modifierState = toggleModifier(modifierState, modifierKey);
+        renderModifierControls();
+        terminal.focus();
+      });
+    } else if (button.kind === "sequence") {
+      const action = button.id as TerminalControlAction;
+      element.addEventListener("click", () => {
+        if (!activeSessionId) {
+          return;
+        }
+
+        sendEvent({
+          type: "terminal/input",
+          sessionId: activeSessionId,
+          data: terminalSequence(action),
+        });
+        modifierState = resetModifiers();
+        renderModifierControls();
+        terminal.focus();
+      });
+    } else if (button.id === "copy") {
+      element.addEventListener("click", async () => {
+        try {
+          const selection = terminal.getSelection();
+          if (selection) {
+            await navigator.clipboard.writeText(selection);
+          }
+        } catch {
+          setConnectionState("error", "Clipboard blocked");
+        } finally {
+          terminal.focus();
+        }
+      });
+    } else if (button.id === "paste") {
+      element.addEventListener("click", async () => {
+        try {
+          const pasted = await navigator.clipboard.readText();
+          if (activeSessionId && pasted) {
+            sendEvent({
+              type: "terminal/input",
+              sessionId: activeSessionId,
+              data: pasted,
+            });
+          }
+        } catch {
+          setConnectionState("error", "Clipboard blocked");
+        } finally {
+          terminal.focus();
+        }
+      });
+    }
+
+    mobileControls.append(element);
+  }
+}
+
+function updateActiveSessionMeta(): void {
+  const active = sessions.find((session) => session.id === activeSessionId) ?? sessions[0];
+  activeSessionTitle.textContent = active?.title ?? "No active tab";
+  activeSessionStatus.textContent = active ? statusLabels[active.status] : "Idle";
+  activeSessionStatus.className = `status-pill ${active ? `is-${active.status}` : ""}`.trim();
+  shellLabel.textContent = `Shell: ${active?.shell ?? "detecting..."}`;
+}
+
+function renderSessions(): void {
+  sessionList.innerHTML = "";
+
+  if (sessions.length === 0) {
+    const empty = document.createElement("p");
+    empty.className = "session-meta";
+    empty.textContent = "No sessions yet.";
+    sessionList.append(empty);
+    updateActiveSessionMeta();
+    return;
+  }
+
+  for (const session of sessions) {
+    const card = document.createElement("div");
+    card.className = `session-card${session.id === activeSessionId ? " is-active" : ""}`;
+    card.tabIndex = 0;
+    card.role = "button";
+    card.addEventListener("click", () => {
+      attachToSession(session.id);
+    });
+    card.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        attachToSession(session.id);
+      }
+    });
+
+    const head = document.createElement("div");
+    head.className = "session-card-head";
+    const title = document.createElement("span");
+    title.className = "session-title";
+    title.textContent = session.title;
+    const status = document.createElement("span");
+    status.className = `status-pill is-${session.status}`;
+    status.textContent = statusLabels[session.status];
+    head.append(title, status);
+
+    const meta = document.createElement("div");
+    meta.className = "session-meta";
+    meta.textContent = `${session.clientCount} attached | ${session.shell ?? "shell pending"}`;
+
+    const caption = document.createElement("div");
+    caption.className = "session-caption";
+    caption.textContent =
+      session.lastExitCode === null
+        ? "Fresh shell when selected"
+        : `Last exit code: ${session.lastExitCode}`;
+
+    const close = document.createElement("button");
+    close.type = "button";
+    close.className = "ghost-button session-close";
+    close.textContent = "Close";
+    close.addEventListener("click", (event) => {
+      event.stopPropagation();
+      sendEvent({
+        type: "session/close",
+        sessionId: session.id,
+      });
+    });
+
+    card.append(head, meta, caption, close);
+    sessionList.append(card);
+  }
+
+  updateActiveSessionMeta();
+}
+
+function attachToSession(sessionId: string): void {
+  activeSessionId = sessionId;
+  terminal.reset();
+  renderSessions();
+
+  sendEvent({
+    type: "session/select",
+    sessionId,
+    ...currentSize(),
+  });
+}
+
+function maybeAttachDefaultSession(): void {
+  if (sessions.length === 0) {
+    activeSessionId = null;
+    terminal.reset();
+    renderSessions();
+    return;
+  }
+
+  if (activeSessionId && sessions.some((session) => session.id === activeSessionId)) {
+    return;
+  }
+
+  const firstSession = sessions[0];
+  if (firstSession) {
+    attachToSession(firstSession.id);
+  }
+}
+
+function handleServerEvent(event: ServerEvent): void {
+  switch (event.type) {
+    case "pong":
+      return;
+    case "error":
+      setConnectionState("error", event.message);
+      return;
+    case "session/list":
+      sessions = event.sessions;
+      renderSessions();
+      maybeAttachDefaultSession();
+      return;
+    case "session/created":
+      attachToSession(event.session.id);
+      return;
+    case "session/snapshot":
+      activeSessionId = event.snapshot.session.id;
+      terminal.reset();
+      terminal.write(event.snapshot.history);
+      renderSessions();
+      terminal.focus();
+      return;
+    case "session/output":
+      if (event.sessionId === activeSessionId) {
+        terminal.write(event.data);
+      }
+      return;
+  }
+}
+
+function connectSocket(): void {
+  if (!authenticated) {
+    return;
+  }
+
+  ws?.close();
+  setConnectionState("connecting");
+
+  const protocol = window.location.protocol === "https:" ? "wss" : "ws";
+  ws = new WebSocket(`${protocol}://${window.location.host}/ws`);
+
+  ws.addEventListener("open", () => {
+    setConnectionState("connected");
+    sendEvent({ type: "session/list.request" });
+    terminal.focus();
+  });
+
+  ws.addEventListener("message", (message) => {
+    const parsed = parseServerEvent(JSON.parse(message.data as string));
+    handleServerEvent(parsed);
+  });
+
+  ws.addEventListener("close", () => {
+    setConnectionState("offline");
+    if (!authenticated) {
+      return;
+    }
+
+    reconnectTimer = window.setTimeout(() => {
+      connectSocket();
+    }, 1_200);
+  });
+}
+
+async function refreshAuthState(): Promise<void> {
+  const response = await fetch("/api/auth/session", {
+    credentials: "same-origin",
+  });
+  const body = (await response.json()) as { authenticated: boolean };
+  setView(body.authenticated);
+  if (body.authenticated) {
+    setConnectionState("connecting");
+    connectSocket();
+  } else {
+    setConnectionState("offline");
+  }
+}
+
+loginForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  setFormMessage("");
+
+  const response = await fetch("/api/auth/login", {
+    method: "POST",
+    credentials: "same-origin",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      password: passwordInput.value,
+    }),
+  });
+
+  const body = (await response.json()) as { authenticated?: boolean; error?: string };
+  if (!response.ok) {
+    setFormMessage(body.error ?? "Unable to authenticate.", true);
+    return;
+  }
+
+  passwordInput.value = "";
+  setView(true);
+  connectSocket();
+});
+
+logoutButton.addEventListener("click", async () => {
+  authenticated = false;
+  await fetch("/api/auth/logout", {
+    method: "POST",
+    credentials: "same-origin",
+  });
+
+  window.clearTimeout(reconnectTimer);
+  ws?.close();
+  ws = null;
+  sessions = [];
+  activeSessionId = null;
+  terminal.reset();
+  setView(false);
+  setConnectionState("offline");
+});
+
+syncButton.addEventListener("click", () => {
+  sendEvent({ type: "session/list.request" });
+});
+
+newSessionButton.addEventListener("click", () => {
+  sendEvent({ type: "session/create" });
+});
+
+focusTerminalButton.addEventListener("click", () => {
+  terminal.focus();
+});
+
+terminal.onData((data) => {
+  if (!activeSessionId) {
+    return;
+  }
+
+  const transformed = applyModifiersToInput(data, modifierState);
+  modifierState = transformed.nextState;
+  renderModifierControls();
+
+  sendEvent({
+    type: "terminal/input",
+    sessionId: activeSessionId,
+    data: transformed.data,
+  });
+});
+
+const resizeObserver = new ResizeObserver(() => {
+  const size = currentSize();
+  if (activeSessionId) {
+    sendEvent({
+      type: "terminal/resize",
+      sessionId: activeSessionId,
+      ...size,
+    });
+  }
+});
+
+resizeObserver.observe(terminalContainer);
+renderModifierControls();
+await refreshAuthState();
