@@ -3,7 +3,7 @@ import { z } from "zod";
 
 const envSchema = z.object({
   TERMIWEB_HOST: z.string().min(1).optional(),
-  TERMIWEB_PORT: z.coerce.number().int().min(1).max(65535).default(4317),
+  TERMIWEB_PORT: z.coerce.number().int().min(1).max(65535).default(22443),
   TERMIWEB_PASSWORD: z.string().min(1).default("change-me"),
   TERMIWEB_ALLOW_LAN: z
     .string()

@@ -16,7 +16,7 @@ TermiWeb is a browser-first shared terminal for Windows. The web UI is the sessi
 2. Set `TERMIWEB_PASSWORD`.
 3. Install dependencies with `npm install`.
 4. Start the app with `npm run dev`.
-5. Open `http://127.0.0.1:4317`.
+5. Open `http://127.0.0.1:22443`.
 
 ## Scripts
 

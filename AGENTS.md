@@ -62,7 +62,7 @@ npm run build
 ```
 
 ## Environment Notes
-- The default local URL is `http://127.0.0.1:4317`.
+- The default local URL is `http://127.0.0.1:22443`.
 - Runtime configuration lives in `.env`; start from `.env.example`.
 - Local state belongs under `.termiweb/` and must stay untracked.
 - This project currently assumes a Windows host. If cross-platform support is introduced, update the specs and AGENTS guidance together.
