@@ -407,10 +407,6 @@ async function copyCurrentSelection(): Promise<void> {
 
 function renderModifierControls(): void {
   mobileControls.innerHTML = "";
-  const mainControls = document.createElement("div");
-  mainControls.className = "control-group control-group-main";
-  const arrowControls = document.createElement("div");
-  arrowControls.className = "control-group control-group-arrows";
 
   for (const button of mobileControlButtons) {
     const element = document.createElement("button");
@@ -501,14 +497,8 @@ function renderModifierControls(): void {
       });
     }
 
-    if (button.group === "arrow") {
-      arrowControls.append(element);
-    } else {
-      mainControls.append(element);
-    }
+    mobileControls.append(element);
   }
-
-  mobileControls.append(mainControls, arrowControls);
 }
 
 function updateActiveSessionMeta(): void {

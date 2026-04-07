@@ -28,22 +28,22 @@ export interface TerminalControlButton {
 }
 
 export const mobileControlButtons: TerminalControlButton[] = [
-  { id: "ctrl", label: "Ctrl", kind: "modifier", group: "main" },
-  { id: "alt", label: "Alt", kind: "modifier", group: "main" },
   { id: "esc", label: "Esc", kind: "sequence", group: "main" },
-  { id: "tab", label: "Tab", kind: "sequence", group: "main" },
-  { id: "enter", label: "Enter", kind: "sequence", group: "main" },
   { id: "backspace", label: "Bksp", kind: "sequence", group: "main" },
   { id: "delete", label: "Del", kind: "sequence", group: "main" },
-  { id: "select", label: "Select", kind: "mode", group: "main" },
-  { id: "copy", label: "Copy", kind: "clipboard", group: "main" },
-  { id: "paste", label: "Paste", kind: "clipboard", group: "main" },
   { id: "home", label: "Home", kind: "sequence", group: "arrow" },
   { id: "up", label: "↑", kind: "sequence", group: "arrow" },
   { id: "end", label: "End", kind: "sequence", group: "arrow" },
+  { id: "tab", label: "Tab", kind: "sequence", group: "main" },
+  { id: "select", label: "Select", kind: "mode", group: "main" },
+  { id: "copy", label: "Copy", kind: "clipboard", group: "main" },
   { id: "left", label: "←", kind: "sequence", group: "arrow" },
   { id: "down", label: "↓", kind: "sequence", group: "arrow" },
   { id: "right", label: "→", kind: "sequence", group: "arrow" },
+  { id: "ctrl", label: "Ctrl", kind: "modifier", group: "main" },
+  { id: "alt", label: "Alt", kind: "modifier", group: "main" },
+  { id: "paste", label: "Paste", kind: "clipboard", group: "main" },
+  { id: "enter", label: "Enter", kind: "sequence", group: "main" },
 ];
 
 const CONTROL_CHAR_MAP: Record<string, string> = {

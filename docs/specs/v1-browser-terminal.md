@@ -38,6 +38,7 @@ V1 delivers a browser-based Windows terminal that supports:
 - Terminal width stays fixed at 80 columns across clients so switching devices does not change line wrapping, but the rendered terminal should still scale to use the available width and let the visible row count change with height.
 - The sidebar stays outside the scaled stage so instance controls remain finger-sized.
 - The keyboard control tray stays outside the scaled stage so terminal-specific buttons remain finger-sized.
+- The keyboard control tray stays anchored inside the outer terminal shell, directly below the scaled stage.
 - The right-hand workspace stage should top-align within its viewport and should never present narrower than a 4:3 aspect ratio.
 - When the viewport is narrower than 4:3, the stage should keep the full available width and reduce height instead of scaling the entire workspace down.
 - The workspace shell should follow the live visual viewport height so the control tray remains visible above the on-screen keyboard.
@@ -51,6 +52,7 @@ V1 delivers a browser-based Windows terminal that supports:
 - The cursor-key cluster should sit beside the main control rows instead of stacking beneath them.
 - The main control strip should prefer three taller rows over two cramped rows when that keeps touch targets usable.
 - Non-arrow terminal buttons should match the cursor-key button height.
+- The main control-strip order should be `Esc`, `Bksp`, `Del`; then `Tab`, `Select`, `Copy`; then `Ctrl`, `Alt`, `Paste`, with `Enter` under the cursor-key cluster.
 - A select mode must exist so touch devices can copy terminal text reliably.
 - Select mode should replace the terminal viewport in-place with a read-only monospace text view derived from the rendered terminal buffer instead of the raw PTY stream.
 - The select snapshot should reflect what is currently visible in the terminal buffer, so text cleared by commands like `cls` does not reappear there.

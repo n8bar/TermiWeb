@@ -37,6 +37,7 @@ TermiWeb provides a single browser-served terminal workflow that can be used fro
 - `Ctrl` and `Alt` should arm on a single tap, lock on a double tap, and visibly distinguish armed from locked states.
 - The sidebar should stay outside any scaled workspace stage so instance targets remain finger-sized.
 - The keyboard control tray should also stay outside the scaled workspace stage so its controls remain finger-sized.
+- The keyboard control tray should stay anchored inside the outer terminal shell, below the scaled stage, rather than floating against the screen edge.
 - The main header and the active-terminal header should be merged to preserve vertical space.
 - The terminal workspace stage should never present narrower than a 4:3 aspect ratio and should top-align so portrait phones leave slack below for the on-screen keyboard.
 - When the viewport is narrower than 4:3, the stage should preserve its full available width and reduce visible height rather than scaling the whole workspace down.
@@ -45,3 +46,4 @@ TermiWeb provides a single browser-served terminal workflow that can be used fro
 - The control tray should keep the cursor-key cluster aligned beside the main button rows instead of stacking it below them.
 - The main key strip should favor three taller rows over two cramped rows when that keeps touch targets usable.
 - Non-arrow terminal buttons should match the cursor-key button height.
+- The main key strip order should be `Esc`, `Bksp`, `Del`; then `Tab`, `Select`, `Copy`; then `Ctrl`, `Alt`, `Paste`, with `Enter` placed under the cursor-key cluster.

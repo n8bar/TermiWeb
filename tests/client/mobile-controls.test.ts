@@ -4,6 +4,7 @@ import {
   advanceModifierState,
   applyModifiersToInput,
   createModifierState,
+  mobileControlButtons,
   terminalSequence,
 } from "../../src/client/ui/mobileControls.js";
 
@@ -60,5 +61,26 @@ describe("mobile control modifiers", () => {
     expect(terminalSequence("end")).toBe("\u001b[F");
     expect(terminalSequence("backspace")).toBe("\u007f");
     expect(terminalSequence("delete")).toBe("\u001b[3~");
+  });
+
+  it("keeps the touch-control order aligned with the intended three-row layout", () => {
+    expect(mobileControlButtons.map((button) => button.id)).toEqual([
+      "esc",
+      "backspace",
+      "delete",
+      "home",
+      "up",
+      "end",
+      "tab",
+      "select",
+      "copy",
+      "left",
+      "down",
+      "right",
+      "ctrl",
+      "alt",
+      "paste",
+      "enter",
+    ]);
   });
 });
