@@ -32,3 +32,4 @@ TermiWeb provides a single browser-served terminal workflow that can be used fro
 - Workstation and device browsers should use the same core layout rather than switching into a separate mobile-specific arrangement.
 - The page should fit the device viewport by default instead of forcing the whole UI onto an oversized horizontally panning canvas.
 - Mobile browsers should default to a desktop-style layout viewport so the UI initially behaves more like the browser's "Desktop Site" mode without requiring a per-device toggle.
+- That desktop-style mobile viewport should leave the browser free to choose the initial fit instead of pinning the page to a forced `initial-scale=1.0`.

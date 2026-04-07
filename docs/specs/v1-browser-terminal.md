@@ -25,6 +25,7 @@ V1 delivers a browser-based Windows terminal that supports:
 - The browser UI should keep one shared layout model across device classes and prefer horizontal overflow over rearranging major panels into a different mobile-specific structure.
 - The overall page should still fit within the browser viewport by default; horizontal overflow should stay local to the terminal surface or other narrow components rather than making the whole app an oversized canvas.
 - On phones and other narrow browsers, the page should default to a desktop-style layout viewport so users are not forced to enable the browser's separate "Desktop Site" setting just to get a zoomed-out overview.
+- That desktop-style viewport should not force a fixed initial scale; the browser should be allowed to choose the initial zoomed-out fit.
 - The active terminal instance is rendered with `xterm.js`.
 - The UI labels shared shells as instances rather than tabs.
 - The current machine hostname is visible before and after login.
