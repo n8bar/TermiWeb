@@ -63,6 +63,7 @@ const shellLabel = mustQuery<HTMLElement>("#shell-label");
 const connectionStatus = mustQuery<HTMLElement>("#connection-status");
 const activeSessionTitle = mustQuery<HTMLElement>("#active-session-title");
 const activeSessionStatus = mustQuery<HTMLElement>("#active-session-status");
+const terminalShell = mustQuery<HTMLElement>("#terminal-shell");
 const terminalContainer = mustQuery<HTMLElement>("#terminal-container");
 const workspaceStageViewport = mustQuery<HTMLElement>("#workspace-stage-viewport");
 const workspaceStage = mustQuery<HTMLElement>("#workspace-stage");
@@ -70,11 +71,13 @@ const selectionPanel = mustQuery<HTMLElement>("#selection-panel");
 const selectionText = mustQuery<HTMLTextAreaElement>("#selection-text");
 const closeSelectionButton = mustQuery<HTMLButtonElement>("#close-selection-button");
 const copySelectionButton = mustQuery<HTMLButtonElement>("#copy-selection-button");
+const controlTray = mustQuery<HTMLElement>("#control-tray");
 const mobileControls = mustQuery<HTMLElement>("#mobile-controls");
 const refreshButton = mustQuery<HTMLButtonElement>("#refresh-button");
 const logoutButton = mustQuery<HTMLButtonElement>("#logout-button");
 const newSessionButton = mustQuery<HTMLButtonElement>("#new-session-button");
 const focusTerminalButton = mustQuery<HTMLButtonElement>("#focus-terminal-button");
+const toggleControlsButton = mustQuery<HTMLButtonElement>("#toggle-controls-button");
 const toggleSidebarButton = mustQuery<HTMLButtonElement>("#toggle-sidebar-button");
 const viewportMeta = document.querySelector<HTMLMetaElement>('meta[name="viewport"]');
 
@@ -112,7 +115,6 @@ let sessions: SessionSummary[] = [];
 let activeSessionId: string | null = null;
 let workspaceActiveSessionId: string | null = null;
 let modifierState: ModifierState = createModifierState();
-let lastControlPointerType: string | null = null;
 let lastViewportOrientation: "portrait" | "landscape" | null = null;
 let hadLiveSocketConnection = false;
 let recoveryReloadRequested = false;
@@ -124,9 +126,11 @@ let lastModifierTap:
   | null = null;
 let sidebarCollapsed = false;
 let sidebarPreferenceMode: "auto" | "manual" = "auto";
+let controlsCollapsed = false;
 let selectionMode = false;
 let fixedCols = 80;
 const sidebarStorageKey = "termiweb.sidebar-collapsed";
+const controlsStorageKey = "termiweb.controls-collapsed";
 const modifierDoubleTapWindowMs = 360;
 const defaultTerminalFontSize = 15;
 
@@ -202,6 +206,32 @@ function setSidebarCollapsed(
   if (options.persist ?? true) {
     try {
       window.localStorage.setItem(sidebarStorageKey, String(collapsed));
+    } catch {
+      // Ignore local storage failures and keep the state in-memory for this device.
+    }
+  }
+}
+
+function setControlsCollapsed(
+  collapsed: boolean,
+  options: {
+    persist?: boolean;
+  } = {},
+): void {
+  controlsCollapsed = collapsed;
+  terminalShell.classList.toggle("is-controls-collapsed", collapsed);
+  controlTray.classList.toggle("is-collapsed", collapsed);
+  toggleControlsButton.textContent = collapsed ? "⌃" : "⌄";
+  toggleControlsButton.setAttribute("aria-expanded", String(!collapsed));
+  toggleControlsButton.setAttribute(
+    "aria-label",
+    collapsed ? "Expand keyboard controls" : "Collapse keyboard controls",
+  );
+  toggleControlsButton.title = collapsed ? "Expand keyboard controls" : "Collapse keyboard controls";
+
+  if (options.persist ?? true) {
+    try {
+      window.localStorage.setItem(controlsStorageKey, String(collapsed));
     } catch {
       // Ignore local storage failures and keep the state in-memory for this device.
     }
@@ -298,28 +328,23 @@ function syncDesktopViewportMeta(force = false): void {
   );
 }
 
-function isTouchLikePointer(pointerType: string | null | undefined): boolean {
-  return pointerType === "touch" || pointerType === "pen";
-}
-
 function registerControlButtonFocusBehavior(element: HTMLButtonElement): void {
-  const preserveTerminalFocus = (pointerType: string | null | undefined, event: Event) => {
-    lastControlPointerType = pointerType ?? null;
+  const preserveTerminalFocus = (event: Event) => {
     if (event.cancelable) {
       event.preventDefault();
     }
   };
 
   element.addEventListener("pointerdown", (event) => {
-    preserveTerminalFocus(event.pointerType, event);
+    preserveTerminalFocus(event);
   }, { passive: false });
 
   element.addEventListener("mousedown", (event) => {
-    preserveTerminalFocus("mouse", event);
+    preserveTerminalFocus(event);
   }, { passive: false });
 
   element.addEventListener("touchstart", (event) => {
-    preserveTerminalFocus("touch", event);
+    preserveTerminalFocus(event);
   }, { passive: false });
 
   element.addEventListener("focus", () => {
@@ -386,14 +411,9 @@ function bindControlButtonActivation(
   });
 }
 
-function resetControlPointerType(): void {
-  lastControlPointerType = null;
-}
-
 function maybeRefocusTerminalAfterControl(): void {
   const shouldFocusTerminal =
     !selectionMode && document.activeElement !== terminal.textarea;
-  resetControlPointerType();
   if (shouldFocusTerminal) {
     window.requestAnimationFrame(() => {
       terminal.focus();
@@ -522,6 +542,24 @@ function initializeSidebarPreference(): void {
 
   sidebarPreferenceMode = "auto";
   updateAutoSidebarPreference();
+}
+
+function initializeControlsPreference(): void {
+  try {
+    const stored = window.localStorage.getItem(controlsStorageKey);
+    if (stored === "true" || stored === "false") {
+      setControlsCollapsed(stored === "true", {
+        persist: false,
+      });
+      return;
+    }
+  } catch {
+    // Fall through to default expanded state.
+  }
+
+  setControlsCollapsed(false, {
+    persist: false,
+  });
 }
 
 function sendEvent(event: unknown): void {
@@ -717,13 +755,11 @@ function renderModifierControls(): void {
       element.classList.toggle("is-active", selectionMode);
       bindControlButtonActivation(element, () => {
         setSelectionMode(!selectionMode);
-        resetControlPointerType();
       });
     } else if (button.kind === "sequence") {
       const action = button.id as TerminalControlAction;
       bindControlButtonActivation(element, () => {
         if (!activeSessionId) {
-          resetControlPointerType();
           return;
         }
 
@@ -754,8 +790,6 @@ function renderModifierControls(): void {
         } finally {
           if (!selectionMode) {
             maybeRefocusTerminalAfterControl();
-          } else {
-            resetControlPointerType();
           }
         }
       });
@@ -1086,6 +1120,15 @@ toggleSidebarButton.addEventListener("click", () => {
   syncWorkspaceStage();
 });
 
+registerControlButtonFocusBehavior(toggleControlsButton);
+bindControlButtonActivation(toggleControlsButton, () => {
+  setControlsCollapsed(!controlsCollapsed);
+  syncViewportLayout({
+    sendResize: true,
+  });
+  maybeRefocusTerminalAfterControl();
+});
+
 copySelectionButton.addEventListener("click", async () => {
   await copyCurrentSelection();
 });
@@ -1150,6 +1193,7 @@ window.addEventListener("orientationchange", () => {
 });
 
 initializeSidebarPreference();
+initializeControlsPreference();
 renderModifierControls();
 syncDesktopViewportMeta(true);
 syncViewportLayout();

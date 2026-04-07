@@ -121,7 +121,7 @@
           </aside>
 
           <section class="workspace-main">
-            <main class="card terminal-shell">
+            <main id="terminal-shell" class="card terminal-shell">
               <section id="workspace-stage-viewport" class="workspace-stage-viewport">
                 <div id="workspace-stage" class="workspace-stage">
                   <div class="terminal-stage">
@@ -156,11 +156,30 @@
                   </div>
                 </div>
               </section>
-              <div
-                id="mobile-controls"
-                class="control-tray mobile-controls"
-                aria-label="Terminal controls"
-              ></div>
+              <section id="control-tray" class="control-tray" aria-label="Terminal controls">
+                <div class="control-tray-header">
+                  <div class="control-tray-copy">
+                    <p class="eyebrow">Keyboard</p>
+                    <h3>Keyboard</h3>
+                  </div>
+                  <button
+                    id="toggle-controls-button"
+                    class="ghost-button compact icon-button"
+                    type="button"
+                    aria-expanded="true"
+                    aria-controls="mobile-controls"
+                    aria-label="Collapse keyboard controls"
+                    title="Collapse keyboard controls"
+                  >
+                    ⌄
+                  </button>
+                </div>
+                <div
+                  id="mobile-controls"
+                  class="mobile-controls"
+                  aria-label="Keyboard controls"
+                ></div>
+              </section>
             </main>
           </section>
         </div>

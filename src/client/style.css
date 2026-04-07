@@ -323,8 +323,35 @@ button {
 }
 
 .control-tray {
+  display: grid;
+  gap: 0.9rem;
   padding-top: 0.9rem;
   border-top: 1px solid rgba(122, 255, 178, 0.1);
+}
+
+.control-tray-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.control-tray-copy {
+  min-width: 0;
+}
+
+.control-tray-copy h3 {
+  margin: 0;
+  font-weight: 650;
+  letter-spacing: 0.02em;
+}
+
+.control-tray.is-collapsed {
+  gap: 0;
+}
+
+.control-tray.is-collapsed .mobile-controls {
+  display: none;
 }
 
 .panel-header {
