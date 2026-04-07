@@ -11,6 +11,8 @@ export type TerminalControlAction =
   | "enter"
   | "backspace"
   | "delete"
+  | "home"
+  | "end"
   | "up"
   | "down"
   | "left"
@@ -34,7 +36,9 @@ export const mobileControlButtons: TerminalControlButton[] = [
   { id: "select", label: "Select", kind: "mode", group: "main" },
   { id: "copy", label: "Copy", kind: "clipboard", group: "main" },
   { id: "paste", label: "Paste", kind: "clipboard", group: "main" },
+  { id: "home", label: "Home", kind: "sequence", group: "arrow" },
   { id: "up", label: "↑", kind: "sequence", group: "arrow" },
+  { id: "end", label: "End", kind: "sequence", group: "arrow" },
   { id: "left", label: "←", kind: "sequence", group: "arrow" },
   { id: "down", label: "↓", kind: "sequence", group: "arrow" },
   { id: "right", label: "→", kind: "sequence", group: "arrow" },
@@ -57,6 +61,8 @@ const SEQUENCES: Record<TerminalControlAction, string> = {
   enter: "\r",
   backspace: "\u007f",
   delete: "\u001b[3~",
+  home: "\u001b[H",
+  end: "\u001b[F",
   up: "\u001b[A",
   down: "\u001b[B",
   right: "\u001b[C",

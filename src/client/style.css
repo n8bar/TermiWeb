@@ -479,7 +479,7 @@ button {
 .control-group-arrows {
   grid-template-columns: repeat(3, minmax(2.8rem, 3rem));
   grid-template-areas:
-    ". up ."
+    "home up end"
     "left down right";
   justify-content: center;
 }
@@ -489,8 +489,16 @@ button {
   font-size: 0.82rem;
 }
 
+.control-button[data-control-id="home"] {
+  grid-area: home;
+}
+
 .control-button[data-control-id="up"] {
   grid-area: up;
+}
+
+.control-button[data-control-id="end"] {
+  grid-area: end;
 }
 
 .control-button[data-control-id="left"] {
