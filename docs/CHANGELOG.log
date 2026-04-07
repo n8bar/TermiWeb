@@ -28,3 +28,4 @@
 2026-04-06 Tightened the first findings batch by giving on-screen Home and End a fallback sequence path and by reapplying the fitted desktop-style mobile viewport scale after orientation changes.
 2026-04-06 Replaced the restart-time websocket reconnect flap with server recovery polling so live pages wait for the server and refresh themselves once it is back.
 2026-04-06 Moved the control tray off synthetic mobile click handling onto direct touch/pointer activation, and increased the control tray key height while keeping the cursor cluster square.
+2026-04-07 Reframed the docs around TermiWeb as a workstation-first tool, added deployment-philosophy guidance for trusted-network defaults plus operator-managed remote deployments, and aligned the 0.1 specs with that direction without claiming unshipped features.

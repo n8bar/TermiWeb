@@ -2,7 +2,7 @@
 
 ## Current Focus
 
-Dogfood the first usable 0.1 browser terminal, close the current findings batch, and keep the live-session workflow stable while polishing interaction details.
+Dogfood the first usable 0.1 browser terminal, keep the workstation-first deployment story clear, and continue polishing live-session behavior from real use.
 
 ## Milestones
 
@@ -13,4 +13,4 @@ Dogfood the first usable 0.1 browser terminal, close the current findings batch,
 
 ## Next Action
 
-Continue dogfooding the live app in real work, log the next findings in `docs/FINDINGS.md`, and batch follow-up polish once another useful set of issues accumulates.
+Continue dogfooding the live app in real work, log the next findings in `docs/FINDINGS.md`, keep the simple trusted-network path as the default in the docs, and only expand remote-deployment guidance where it stays honest about current `0.1` behavior.

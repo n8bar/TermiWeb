@@ -1,6 +1,13 @@
 # TermiWeb
 
-TermiWeb is a browser-first shared terminal for Windows. The browser UI is the same live interface on your workstation and any other device, so one terminal session can be continued anywhere without remoting the whole desktop.
+TermiWeb is a workstation-first shared terminal for Windows. The browser UI is the live interface on your workstation and any other device you use to reach it, so one terminal session can be continued without remoting the whole desktop.
+
+## Product direction
+
+- The default TermiWeb story is one trusted Windows machine on a private network.
+- The product should stay practical for a single user or small trusted group without assuming a homelab or a full self-hosted access stack.
+- Advanced remote access is still part of the direction, but in `0.1` that means operator-managed deployment guidance, not built-in internet-ready hosting features.
+- TermiWeb does not currently ship multi-user auth, built-in TLS termination, or turnkey public exposure.
 
 ## What's Working
 
@@ -29,6 +36,12 @@ TermiWeb is a browser-first shared terminal for Windows. The browser UI is the s
 - Leave `TERMIWEB_HOST` blank unless you want an explicit bind address.
 - Browse to `http://<your-pc-lan-ip>:22443` from another device, such as your phone, on the same network.
 
+## Advanced deployments
+
+- The supported default is still a trusted private network.
+- If you want remote access across the internet or across sites, layer TermiWeb behind infrastructure you already manage, such as a private VPN, a mesh network, or a reverse proxy with TLS and external auth.
+- Those deployment patterns are valid directionally, but they are not built-in `0.1` product features.
+
 ## Scripts
 
 - `npm run dev` starts the integrated dev server.
@@ -42,6 +55,7 @@ TermiWeb is a browser-first shared terminal for Windows. The browser UI is the s
 
 - [Project plan](docs/PLAN.md)
 - [Product spec](docs/PRODUCT_SPEC.md)
+- [Deployment philosophy](docs/DEPLOYMENT_PHILOSOPHY.md)
 - [Findings log](docs/FINDINGS.md)
 - [0.1 browser terminal spec](docs/specs/v0.1-browser-terminal.md)
 - [Change log](docs/CHANGELOG.log)

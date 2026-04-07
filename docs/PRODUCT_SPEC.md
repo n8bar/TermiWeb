@@ -2,7 +2,14 @@
 
 ## Goal
 
-TermiWeb provides a single browser-served terminal workflow that can be used from a workstation and other devices without remoting an entire desktop environment.
+TermiWeb provides a workstation-first browser terminal workflow that can also be reached from other devices without remoting an entire desktop environment.
+
+## Product Direction
+
+- The default product story is simple: one Windows workstation, one private network, and one trusted operator or small trusted group.
+- The product should remain useful without requiring a homelab or a complex self-hosted access stack.
+- Advanced remote or internet-enabled deployments are valid operator-managed use cases, but they are not the default posture and should not be documented as if TermiWeb already ships a complete remote-access platform.
+- Documentation should clearly separate current product behavior from deployment patterns users may layer around the app themselves.
 
 ## Core Behavior
 
@@ -12,17 +19,21 @@ TermiWeb provides a single browser-served terminal workflow that can be used fro
 - The UI refers to those shared shells as instances.
 - Auto-generated instance names should reuse the lowest available `Instance N` and normalize legacy `Terminal N` names forward to `Instance N`.
 - If a browser session reaches an empty workspace on login or reconnect, the app should seed `Instance 1` automatically.
-- Authentication is a single shared password suitable for local/private deployments in v1.
+- Authentication is a single shared password suitable for trusted private deployments in `0.1`.
 - The host platform is Windows-first.
 - Runtime configuration is read from process environment and an optional repo-root `.env` file.
 - Terminal width is fixed at 80 columns by default so concurrent clients target the same line width, while the rendered terminal scales to use the available width and lets the visible row count change with height.
 - The runtime prefers PowerShell 7 from `PATH`, then the standard install path, and only then falls back to Windows PowerShell.
 
-## V1 Constraints
+## 0.1 Constraints
 
-- No public internet exposure assumptions.
+- The supported default is localhost, LAN, or another trusted private network.
+- No built-in claims of safe direct public internet exposure.
+- Advanced remote deployments may be layered around the app by operators who manage their own VPN, proxy, TLS, and authentication story.
 - LAN binding is enabled by default and uses the LAN default host when no explicit `TERMIWEB_HOST` is set.
 - No full account system.
+- No built-in multi-user authorization model beyond the shared password gate.
+- No built-in TLS termination.
 - No PTY/session resurrection after process or server restart.
 - Persist only the workspace metadata needed to restore the instance list and session labels.
 - Mobile users must have access to terminal-essential keys even when the OS keyboard is limited.
