@@ -20,15 +20,15 @@ describe("workspace stage layout", () => {
     expect(layout.slackHeight).toBe(0);
   });
 
-  it("scales the stage down when the available area is narrower than 4:3", () => {
+  it("preserves full width and trims height when the available area is narrower than 4:3", () => {
     const layout = computeStageLayout({
       availableWidth: 600,
       availableHeight: 900,
     });
 
-    expect(layout.baseWidth).toBe(1200);
-    expect(layout.baseHeight).toBe(900);
-    expect(layout.scale).toBe(0.5);
+    expect(layout.baseWidth).toBe(600);
+    expect(layout.baseHeight).toBe(450);
+    expect(layout.scale).toBe(1);
     expect(layout.renderedWidth).toBe(600);
     expect(layout.renderedHeight).toBe(450);
     expect(layout.slackHeight).toBe(450);

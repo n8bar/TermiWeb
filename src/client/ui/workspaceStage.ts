@@ -30,11 +30,12 @@ export function computeStageLayout(options: {
     };
   }
 
-  const baseHeight = availableHeight;
-  const baseWidth = Math.max(availableWidth, baseHeight * minAspectRatio);
-  const scale = Math.min(availableWidth / baseWidth, 1);
-  const renderedWidth = baseWidth * scale;
-  const renderedHeight = baseHeight * scale;
+  const maxHeightAtAvailableWidth = availableWidth / minAspectRatio;
+  const baseWidth = availableWidth;
+  const baseHeight = Math.min(availableHeight, maxHeightAtAvailableWidth);
+  const scale = 1;
+  const renderedWidth = baseWidth;
+  const renderedHeight = baseHeight;
 
   return {
     baseWidth,
