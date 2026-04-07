@@ -2,7 +2,7 @@
 
 ## Current Focus
 
-Bootstrap v1 of the shared browser terminal: docs, repo workflow, auth gate, instance/session management, terminal backend, and a usable all-device browser shell.
+Stabilize the first usable v1 browser terminal: multi-device instance behavior, copy/select workflow, and the mobile-first shell layout.
 
 ## Milestones
 
@@ -13,4 +13,4 @@ Bootstrap v1 of the shared browser terminal: docs, repo workflow, auth gate, ins
 
 ## Next Action
 
-Run real multi-device/manual UX checks against the live browser terminal, then tighten shared-instance following, selection mode, and fixed-width ergonomics based on what feels bad in practice.
+Run real workstation/device validation against the live app, especially per-device instance selection, the rendered select snapshot after `cls`, and the 40-column mobile layout before adding more features.

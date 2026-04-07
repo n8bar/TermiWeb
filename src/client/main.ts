@@ -16,6 +16,8 @@ import {
   type ModifierState,
   type TerminalControlAction,
 } from "./ui/mobileControls.js";
+import { resolvePreferredSessionId } from "./ui/sessionSelection.js";
+import { captureVisibleTerminalText } from "./ui/terminalSnapshot.js";
 
 type ConnectionState = "connecting" | "connected" | "offline" | "error";
 
@@ -82,12 +84,12 @@ let reconnectTimer: number | undefined;
 let authenticated = false;
 let sessions: SessionSummary[] = [];
 let activeSessionId: string | null = null;
-let serverActiveSessionId: string | null = null;
+let workspaceActiveSessionId: string | null = null;
 let modifierState: ModifierState = createModifierState();
 let sidebarCollapsed = false;
 let selectionMode = false;
-let fixedCols = 120;
-const sessionHistory = new Map<string, string>();
+let fixedCols = 40;
+const sidebarStorageKey = "termiweb.sidebar-collapsed";
 
 const statusLabels: Record<SessionSummary["status"], string> = {
   stopped: "Stopped",
@@ -146,6 +148,12 @@ function setSidebarCollapsed(collapsed: boolean): void {
     collapsed ? "Expand instances" : "Collapse instances",
   );
   toggleSidebarButton.title = collapsed ? "Expand instances" : "Collapse instances";
+
+  try {
+    window.localStorage.setItem(sidebarStorageKey, String(collapsed));
+  } catch {
+    // Ignore local storage failures and keep the state in-memory for this device.
+  }
 }
 
 function sendEvent(event: unknown): void {
@@ -199,20 +207,12 @@ function currentSize() {
   };
 }
 
-function getActiveHistory(): string {
-  if (!activeSessionId) {
-    return "";
-  }
-
-  return sessionHistory.get(activeSessionId) ?? "";
-}
-
 function syncSelectionText(): void {
   if (!selectionMode) {
     return;
   }
 
-  selectionText.value = getActiveHistory();
+  selectionText.value = captureVisibleTerminalText(terminal);
 }
 
 function setSelectionMode(isOpen: boolean): void {
@@ -398,8 +398,10 @@ function renderSessions(): void {
 
     const close = document.createElement("button");
     close.type = "button";
-    close.className = "ghost-button session-close";
-    close.textContent = "Close";
+    close.className = "ghost-button compact icon-button session-close";
+    close.textContent = "×";
+    close.setAttribute("aria-label", `Close ${session.title}`);
+    close.title = `Close ${session.title}`;
     close.addEventListener("click", (event) => {
       event.stopPropagation();
       sendEvent({
@@ -431,35 +433,24 @@ function attachToSession(sessionId: string): void {
 function maybeAttachDefaultSession(): void {
   if (sessions.length === 0) {
     activeSessionId = null;
-    serverActiveSessionId = null;
-    sessionHistory.clear();
+    workspaceActiveSessionId = null;
     setSelectionMode(false);
     terminal.reset();
     renderSessions();
     return;
   }
 
-  if (
-    serverActiveSessionId &&
-    sessions.some((session) => session.id === serverActiveSessionId) &&
-    activeSessionId !== serverActiveSessionId
-  ) {
-    attachToSession(serverActiveSessionId);
+  const preferredSessionId = resolvePreferredSessionId({
+    sessions,
+    localSessionId: activeSessionId,
+    workspaceActiveSessionId,
+  });
+
+  if (!preferredSessionId || preferredSessionId === activeSessionId) {
     return;
   }
 
-  if (activeSessionId && sessions.some((session) => session.id === activeSessionId)) {
-    return;
-  }
-
-  const preferredSessionId =
-    serverActiveSessionId && sessions.some((session) => session.id === serverActiveSessionId)
-      ? serverActiveSessionId
-      : sessions[0]?.id;
-
-  if (preferredSessionId) {
-    attachToSession(preferredSessionId);
-  }
+  attachToSession(preferredSessionId);
 }
 
 function handleServerEvent(event: ServerEvent): void {
@@ -470,13 +461,8 @@ function handleServerEvent(event: ServerEvent): void {
       setConnectionState("error", event.message);
       return;
     case "session/list":
-      serverActiveSessionId = event.activeSessionId;
+      workspaceActiveSessionId = event.activeSessionId;
       sessions = event.sessions;
-      for (const sessionId of [...sessionHistory.keys()]) {
-        if (!sessions.some((session) => session.id === sessionId)) {
-          sessionHistory.delete(sessionId);
-        }
-      }
       renderSessions();
       maybeAttachDefaultSession();
       return;
@@ -484,8 +470,9 @@ function handleServerEvent(event: ServerEvent): void {
       attachToSession(event.session.id);
       return;
     case "session/snapshot":
-      activeSessionId = event.snapshot.session.id;
-      sessionHistory.set(event.snapshot.session.id, event.snapshot.history);
+      if (event.snapshot.session.id !== activeSessionId) {
+        return;
+      }
       setSelectionMode(false);
       terminal.reset();
       terminal.write(event.snapshot.history);
@@ -494,7 +481,6 @@ function handleServerEvent(event: ServerEvent): void {
       return;
     case "session/output":
       if (event.sessionId === activeSessionId) {
-        sessionHistory.set(event.sessionId, `${getActiveHistory()}${event.data}`);
         terminal.write(event.data);
       }
       return;
@@ -600,8 +586,7 @@ logoutButton.addEventListener("click", async () => {
   ws = null;
   sessions = [];
   activeSessionId = null;
-  serverActiveSessionId = null;
-  sessionHistory.clear();
+  workspaceActiveSessionId = null;
   setSelectionMode(false);
   terminal.reset();
   setView(false);
@@ -661,7 +646,11 @@ const resizeObserver = new ResizeObserver(() => {
 });
 
 resizeObserver.observe(terminalContainer);
-setSidebarCollapsed(false);
+try {
+  setSidebarCollapsed(window.localStorage.getItem(sidebarStorageKey) === "true");
+} catch {
+  setSidebarCollapsed(false);
+}
 renderModifierControls();
 currentSize();
 await refreshAuthState();

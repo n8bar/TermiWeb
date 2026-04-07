@@ -21,9 +21,7 @@
             <h1>TermiWeb</h1>
             <p id="login-hostname" class="host-name">Loading host…</p>
             <p id="login-address" class="host-address">Connecting…</p>
-            <p class="lede">
-              One terminal session, shared between your workstation and any device.
-            </p>
+            <p class="lede">One browser terminal for your workstation and other devices.</p>
           </div>
         </div>
 
@@ -64,9 +62,9 @@
         <div id="workspace-layout" class="workspace-layout">
           <aside class="card side-panel">
             <div class="panel-header">
-              <div>
+              <div class="panel-header-copy">
                 <p class="eyebrow">Instances</p>
-                <h3>Shared shells</h3>
+                <h3>Instances</h3>
               </div>
               <div class="panel-header-actions">
                 <button
@@ -89,8 +87,15 @@
                 >
                   «
                 </button>
-                <button id="new-session-button" class="primary-button compact" type="button">
-                  New instance
+                <button
+                  id="new-session-button"
+                  class="primary-button compact"
+                  type="button"
+                  aria-label="Create instance"
+                  title="Create instance"
+                >
+                  <span class="button-icon" aria-hidden="true">+</span>
+                  <span class="button-label">New instance</span>
                 </button>
               </div>
             </div>
@@ -100,8 +105,8 @@
             <div class="side-panel-meta">
               <p id="shell-label">Shell: detecting…</p>
               <p>
-                Your workstation and any device share this same browser shell. Instances persist;
-                live shell processes do not.
+                Your workstation and other devices can attach to the same browser shell.
+                Instances persist; live shell processes do not.
               </p>
             </div>
           </aside>
@@ -145,6 +150,7 @@
                 class="selection-text"
                 readonly
                 spellcheck="false"
+                wrap="off"
               ></textarea>
             </section>
             <div id="mobile-controls" class="mobile-controls" aria-label="Terminal controls"></div>

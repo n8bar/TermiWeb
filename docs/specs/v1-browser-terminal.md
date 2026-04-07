@@ -16,7 +16,8 @@ V1 delivers a browser-based Windows terminal that supports:
 - Instances persist across app restarts as lightweight metadata only.
 - An instance starts a fresh shell when activated if no live process exists.
 - Output history is replayed to newly attached clients so a second browser can catch up to the current terminal buffer.
-- The globally active instance should be the default attach target for newly connected clients.
+- The workspace's last active instance should be the default attach target for newly connected clients that do not already have a local selection.
+- After that initial attach, each device keeps its own selected instance until the user changes it or the instance disappears.
 
 ## Terminal UX
 
@@ -24,14 +25,17 @@ V1 delivers a browser-based Windows terminal that supports:
 - The active terminal instance is rendered with `xterm.js`.
 - The UI labels shared shells as instances rather than tabs.
 - The current machine hostname is visible before and after login.
-- The instance rail can collapse horizontally without hiding instance close controls.
+- The instance rail can collapse horizontally into a narrow action-first layout that preserves minimal instance identity and close controls.
+- The sidebar collapse state is local to each browser and must not sync through shared session metadata.
 - New instances start in the user's home directory rather than the repository working directory.
-- Terminal width stays fixed at 120 columns across clients so switching devices does not change line wrapping.
+- Terminal width stays fixed at 40 columns across clients so switching devices does not change line wrapping.
 - Mobile controls must expose at least `Ctrl`, `Alt`, `Esc`, `Tab`, `Enter`, `Backspace`, and arrow keys.
 - Mobile controls must also expose a `Del` key.
 - Sticky modifiers must allow key combos to be composed from a phone.
 - Arrow-key controls should look like a compact cursor-key cluster rather than text buttons.
 - A select mode must exist so touch devices can copy terminal text reliably.
+- Select mode should replace the terminal viewport in-place with a read-only monospace text view derived from the rendered terminal buffer instead of the raw PTY stream.
+- The select snapshot should reflect what is currently visible in the terminal buffer, so text cleared by commands like `cls` does not reappear there.
 
 ## Security
 

@@ -7,3 +7,4 @@
 2026-04-06 Refined the browser UI with clearer host identity, instance terminology, a collapsible instance rail, and a keyboard-style arrow cluster for mobile controls.
 2026-04-06 Added shared-active-instance metadata, a select mode for copying terminal text, home-directory shell starts, and icon-based refresh/collapse controls.
 2026-04-06 Made LAN binding the default path, added a fixed 120-column terminal width, swapped the rail icons, and exposed a Del key for mobile control.
+2026-04-06 Stopped cross-device instance auto-following, made sidebar collapse local to each browser, switched select mode to a rendered viewport snapshot, narrowed the collapsed rail and control cluster, and changed the shared terminal width default to 40 columns.

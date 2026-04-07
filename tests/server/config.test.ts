@@ -32,11 +32,11 @@ describe("resolveConfig", () => {
     expect(config.host).toBe("192.168.68.68");
   });
 
-  it("defaults to a fixed 120-column terminal width", () => {
+  it("defaults to a fixed 40-column terminal width", () => {
     const config = resolveConfig({
       TERMIWEB_PASSWORD: "let-me-in",
     });
 
-    expect(config.fixedCols).toBe(120);
+    expect(config.fixedCols).toBe(40);
   });
 });
