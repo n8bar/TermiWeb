@@ -16,6 +16,11 @@ import {
   type TerminalControlAction,
 } from "./ui/mobileControls.js";
 import { resolvePreferredSessionId } from "./ui/sessionSelection.js";
+import {
+  buildDesktopViewportContent,
+  computeDesktopViewportScale,
+  DESKTOP_LAYOUT_VIEWPORT_WIDTH,
+} from "./ui/mobileViewport.js";
 import { captureVisibleTerminalText } from "./ui/terminalSnapshot.js";
 import {
   computeStageLayout,
@@ -68,6 +73,7 @@ const logoutButton = mustQuery<HTMLButtonElement>("#logout-button");
 const newSessionButton = mustQuery<HTMLButtonElement>("#new-session-button");
 const focusTerminalButton = mustQuery<HTMLButtonElement>("#focus-terminal-button");
 const toggleSidebarButton = mustQuery<HTMLButtonElement>("#toggle-sidebar-button");
+const viewportMeta = document.querySelector<HTMLMetaElement>('meta[name="viewport"]');
 
 const terminal = new Terminal({
   cursorBlink: false,
@@ -103,6 +109,7 @@ let activeSessionId: string | null = null;
 let workspaceActiveSessionId: string | null = null;
 let modifierState: ModifierState = createModifierState();
 let lastControlPointerType: string | null = null;
+let lastViewportOrientation: "portrait" | "landscape" | null = null;
 let lastModifierTap:
   | {
       key: ModifierKey;
@@ -239,6 +246,52 @@ function currentTerminalFontSize(): number {
     : defaultTerminalFontSize;
 }
 
+function isCoarsePointerDevice(): boolean {
+  return (
+    window.matchMedia?.("(pointer: coarse)").matches === true ||
+    window.matchMedia?.("(hover: none)").matches === true
+  );
+}
+
+function resolveViewportOrientation(): "portrait" | "landscape" {
+  const viewportWidth = window.visualViewport?.width ?? window.innerWidth;
+  const viewportHeight = window.visualViewport?.height ?? window.innerHeight;
+
+  return viewportWidth >= viewportHeight ? "landscape" : "portrait";
+}
+
+function syncDesktopViewportMeta(force = false): void {
+  if (!viewportMeta || !isCoarsePointerDevice()) {
+    return;
+  }
+
+  const nextOrientation = resolveViewportOrientation();
+  if (!force && nextOrientation === lastViewportOrientation) {
+    return;
+  }
+
+  lastViewportOrientation = nextOrientation;
+
+  const effectiveViewportWidth = resolveEffectiveViewportWidth({
+    layoutWidth: window.innerWidth,
+    visualWidth: window.visualViewport?.width ?? null,
+    screenWidth: window.screen?.width ?? null,
+  });
+
+  const initialScale = computeDesktopViewportScale({
+    effectiveViewportWidth,
+    layoutViewportWidth: DESKTOP_LAYOUT_VIEWPORT_WIDTH,
+  });
+
+  viewportMeta.setAttribute(
+    "content",
+    buildDesktopViewportContent({
+      layoutViewportWidth: DESKTOP_LAYOUT_VIEWPORT_WIDTH,
+      initialScale,
+    }),
+  );
+}
+
 function isTouchLikePointer(pointerType: string | null | undefined): boolean {
   return pointerType === "touch" || pointerType === "pen";
 }
@@ -339,6 +392,7 @@ function syncViewportLayout(options: {
   sendResize?: boolean;
   scrollToOrigin?: boolean;
 } = {}): void {
+  syncDesktopViewportMeta();
   syncAppViewportHeight();
   updateAutoSidebarPreference();
   syncWorkspaceStage();
@@ -362,10 +416,14 @@ function scheduleViewportLayoutSync(
   options: {
     sendResize?: boolean;
     scrollToOrigin?: boolean;
+    forceViewportMeta?: boolean;
   } = {},
 ): void {
   window.clearTimeout(viewportRefitTimer);
   viewportRefitTimer = window.setTimeout(() => {
+    if (options.forceViewportMeta) {
+      syncDesktopViewportMeta(true);
+    }
     syncViewportLayout(options);
   }, delayMs);
 }
@@ -537,6 +595,7 @@ function renderModifierControls(): void {
         const transformed = applyModifiersToInput(
           terminalSequence(action, {
             applicationCursorKeysMode: terminal.modes.applicationCursorKeysMode,
+            includeHomeEndFallback: action === "home" || action === "end",
           }),
           modifierState,
         );
@@ -919,6 +978,7 @@ window.addEventListener("resize", handleViewportResize);
 window.visualViewport?.addEventListener("resize", handleViewportResize);
 window.visualViewport?.addEventListener("scroll", handleViewportResize);
 window.addEventListener("orientationchange", () => {
+  syncDesktopViewportMeta(true);
   syncViewportLayout({
     sendResize: true,
     scrollToOrigin: true,
@@ -926,10 +986,12 @@ window.addEventListener("orientationchange", () => {
   scheduleViewportLayoutSync(260, {
     sendResize: true,
     scrollToOrigin: true,
+    forceViewportMeta: true,
   });
 });
 
 initializeSidebarPreference();
 renderModifierControls();
+syncDesktopViewportMeta(true);
 syncViewportLayout();
 await refreshAuthState();

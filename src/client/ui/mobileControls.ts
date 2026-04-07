@@ -29,6 +29,7 @@ export interface TerminalControlButton {
 
 export interface TerminalSequenceOptions {
   applicationCursorKeysMode?: boolean;
+  includeHomeEndFallback?: boolean;
 }
 
 export const mobileControlButtons: TerminalControlButton[] = [
@@ -109,27 +110,48 @@ export function terminalSequence(
   options: TerminalSequenceOptions = {},
 ): string {
   const applicationCursorKeysMode = options.applicationCursorKeysMode ?? false;
+  const includeHomeEndFallback = options.includeHomeEndFallback ?? false;
+
+  let sequence = SEQUENCES[action];
 
   if (applicationCursorKeysMode) {
     switch (action) {
       case "home":
-        return "\u001bOH";
+        sequence = "\u001bOH";
+        break;
       case "end":
-        return "\u001bOF";
+        sequence = "\u001bOF";
+        break;
       case "up":
-        return "\u001bOA";
+        sequence = "\u001bOA";
+        break;
       case "down":
-        return "\u001bOB";
+        sequence = "\u001bOB";
+        break;
       case "right":
-        return "\u001bOC";
+        sequence = "\u001bOC";
+        break;
       case "left":
-        return "\u001bOD";
+        sequence = "\u001bOD";
+        break;
       default:
         break;
     }
   }
 
-  return SEQUENCES[action];
+  if (includeHomeEndFallback && (action === "home" || action === "end")) {
+    const fallback = applicationCursorKeysMode
+      ? SEQUENCES[action]
+      : action === "home"
+        ? "\u001bOH"
+        : "\u001bOF";
+
+    if (fallback !== sequence) {
+      return `${sequence}${fallback}`;
+    }
+  }
+
+  return sequence;
 }
 
 export function applyModifiersToInput(

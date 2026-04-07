@@ -71,6 +71,23 @@ describe("mobile control modifiers", () => {
     expect(terminalSequence("right", { applicationCursorKeysMode: true })).toBe("\u001bOC");
   });
 
+  it("adds a home/end fallback sequence when requested", () => {
+    expect(terminalSequence("home", { includeHomeEndFallback: true })).toBe("\u001b[H\u001bOH");
+    expect(terminalSequence("end", { includeHomeEndFallback: true })).toBe("\u001b[F\u001bOF");
+    expect(
+      terminalSequence("home", {
+        applicationCursorKeysMode: true,
+        includeHomeEndFallback: true,
+      }),
+    ).toBe("\u001bOH\u001b[H");
+    expect(
+      terminalSequence("end", {
+        applicationCursorKeysMode: true,
+        includeHomeEndFallback: true,
+      }),
+    ).toBe("\u001bOF\u001b[F");
+  });
+
   it("keeps the touch-control order aligned with the intended three-row layout", () => {
     expect(mobileControlButtons.map((button) => button.id)).toEqual([
       "esc",

@@ -29,7 +29,7 @@ None yet.
 - First seen: `2026-04-06`
 - Area: `mobile`
 - Summary: The `Home` and `End` buttons did not take effect on the first press and had to be pressed twice.
-- Notes: Fixed by making on-screen navigation buttons respect xterm application cursor mode instead of always sending normal-mode sequences.
+- Notes: Fixed by giving on-screen `Home` and `End` a fallback navigation sequence so they work on the first press even when the shell and terminal disagree about cursor-mode interpretation.
 
 ### Finding 2: Cursor keys toggle keyboard visibility on mobile
 - Status: `Closed`
@@ -43,7 +43,7 @@ None yet.
 - First seen: `2026-04-06`
 - Area: `mobile`
 - Summary: Rotating to landscape and then back to portrait could leave the layout wider than the screen.
-- Notes: Fixed by forcing terminal and stage refits on viewport and orientation changes so the layout settles without a manual refresh.
+- Notes: Fixed by forcing terminal and stage refits on viewport changes and by reapplying the desktop-style mobile viewport scale after orientation changes so the layout settles without a manual refresh.
 
 ### Finding 4: A second flashing cursor appears at the last updated character
 - Status: `Closed`

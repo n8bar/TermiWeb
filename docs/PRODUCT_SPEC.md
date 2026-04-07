@@ -38,6 +38,7 @@ TermiWeb provides a single browser-served terminal workflow that can be used fro
 - Mobile browsers should default to a desktop-style layout viewport so the UI initially behaves more like the browser's "Desktop Site" mode without requiring a per-device toggle.
 - That desktop-style mobile viewport should leave the browser free to choose the initial fit instead of pinning the page to a forced `initial-scale=1.0`.
 - The mobile key cluster should include `Home` and `End` near the cursor keys, not only in the main action strip.
+- On-screen `Home` and `End` should work on the first press at the shell prompt instead of requiring a second press.
 - `Ctrl` and `Alt` should arm on a single tap, lock on a double tap, and visibly distinguish armed from locked states.
 - On-screen `Home`, `End`, and cursor keys should emit application-cursor sequences when the terminal is in application cursor mode.
 - Touch use of the control tray should not blur the terminal or toggle the OS keyboard unexpectedly.
@@ -49,6 +50,7 @@ TermiWeb provides a single browser-served terminal workflow that can be used fro
 - When the viewport is narrower than 4:3, the stage should preserve its full available width and reduce visible height rather than scaling the whole workspace down.
 - The workspace shell should follow the live visual viewport height so the control tray stays attached to the terminal area instead of dropping behind the on-screen keyboard.
 - Viewport and orientation changes should fully refit the terminal shell without requiring a browser refresh.
+- On coarse-pointer browsers using the desktop-style viewport, orientation changes should also reapply the fitted viewport scale so the page does not stay stuck at the previous orientation width.
 - When no manual sidebar preference is stored for a device, narrow viewports should default to a collapsed sidebar.
 - The control tray should keep the cursor-key cluster aligned beside the main button rows instead of stacking it below them.
 - The main key strip should favor three taller rows over two cramped rows when that keeps touch targets usable.
