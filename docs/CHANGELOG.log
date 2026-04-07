@@ -26,3 +26,4 @@
 2026-04-06 Added a findings log for dogfood issues and updated the repo workflow/docs to batch polish work from recorded findings.
 2026-04-06 Fixed the first findings batch by making on-screen navigation keys application-cursor aware, stabilizing touch control focus and viewport refits, switching to a single solid terminal cursor, and auto-seeding Instance 1 when a login reaches an empty workspace.
 2026-04-06 Tightened the first findings batch by giving on-screen Home and End a fallback sequence path and by reapplying the fitted desktop-style mobile viewport scale after orientation changes.
+2026-04-06 Replaced the restart-time websocket reconnect flap with server recovery polling so live pages wait for the server and refresh themselves once it is back.

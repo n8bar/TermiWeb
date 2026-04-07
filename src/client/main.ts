@@ -35,6 +35,9 @@ import {
 } from "./ui/terminalSizing.js";
 
 type ConnectionState = "connecting" | "connected" | "offline" | "error";
+type ManagedWebSocket = WebSocket & {
+  intentionalClose?: boolean;
+};
 
 function mustQuery<T extends Element>(selector: string): T {
   const element = document.querySelector<T>(selector);
@@ -103,6 +106,7 @@ terminal.open(terminalContainer);
 let ws: WebSocket | null = null;
 let reconnectTimer: number | undefined;
 let viewportRefitTimer: number | undefined;
+let recoveryPollTimer: number | undefined;
 let authenticated = false;
 let sessions: SessionSummary[] = [];
 let activeSessionId: string | null = null;
@@ -110,6 +114,8 @@ let workspaceActiveSessionId: string | null = null;
 let modifierState: ModifierState = createModifierState();
 let lastControlPointerType: string | null = null;
 let lastViewportOrientation: "portrait" | "landscape" | null = null;
+let hadLiveSocketConnection = false;
+let recoveryReloadRequested = false;
 let lastModifierTap:
   | {
       key: ModifierKey;
@@ -297,18 +303,40 @@ function isTouchLikePointer(pointerType: string | null | undefined): boolean {
 }
 
 function registerControlButtonFocusBehavior(element: HTMLButtonElement): void {
-  element.addEventListener(
-    "pointerdown",
-    (event) => {
-      lastControlPointerType = event.pointerType || null;
-      if (isTouchLikePointer(event.pointerType)) {
-        event.preventDefault();
+  const preserveTerminalFocus = (pointerType: string | null | undefined, event: Event) => {
+    lastControlPointerType = pointerType ?? null;
+    if (event.cancelable) {
+      event.preventDefault();
+    }
+  };
+
+  element.addEventListener("pointerdown", (event) => {
+    preserveTerminalFocus(event.pointerType, event);
+  }, { passive: false });
+
+  element.addEventListener("mousedown", (event) => {
+    preserveTerminalFocus("mouse", event);
+  }, { passive: false });
+
+  element.addEventListener("touchstart", (event) => {
+    preserveTerminalFocus("touch", event);
+  }, { passive: false });
+
+  element.addEventListener("focus", () => {
+    if (selectionMode) {
+      return;
+    }
+
+    if (document.activeElement !== element) {
+      return;
+    }
+
+    window.requestAnimationFrame(() => {
+      if (document.activeElement === element) {
+        terminal.focus();
       }
-    },
-    {
-      passive: false,
-    },
-  );
+    });
+  });
 }
 
 function resetControlPointerType(): void {
@@ -316,10 +344,13 @@ function resetControlPointerType(): void {
 }
 
 function maybeRefocusTerminalAfterControl(): void {
-  const shouldFocusTerminal = !isTouchLikePointer(lastControlPointerType);
+  const shouldFocusTerminal =
+    !selectionMode && document.activeElement !== terminal.textarea;
   resetControlPointerType();
   if (shouldFocusTerminal) {
-    terminal.focus();
+    window.requestAnimationFrame(() => {
+      terminal.focus();
+    });
   }
 }
 
@@ -450,6 +481,63 @@ function sendEvent(event: unknown): void {
   if (ws?.readyState === WebSocket.OPEN) {
     ws.send(JSON.stringify(event));
   }
+}
+
+function clearReconnectTimer(): void {
+  window.clearTimeout(reconnectTimer);
+  reconnectTimer = undefined;
+}
+
+function clearRecoveryPollTimer(): void {
+  window.clearTimeout(recoveryPollTimer);
+  recoveryPollTimer = undefined;
+}
+
+function closeSocket(intentional = false): void {
+  if (!ws) {
+    return;
+  }
+
+  const managedSocket = ws as ManagedWebSocket;
+  managedSocket.intentionalClose = intentional;
+  ws.close();
+  ws = null;
+}
+
+async function checkServerRecovery(): Promise<void> {
+  if (!authenticated || recoveryReloadRequested) {
+    return;
+  }
+
+  try {
+    const response = await fetch(`/api/health?ts=${Date.now()}`, {
+      cache: "no-store",
+      credentials: "same-origin",
+    });
+
+    if (!response.ok) {
+      throw new Error("Server unavailable");
+    }
+
+    recoveryReloadRequested = true;
+    setConnectionState("connecting", "Refreshing");
+    window.location.reload();
+  } catch {
+    recoveryPollTimer = window.setTimeout(() => {
+      void checkServerRecovery();
+    }, 1_200);
+  }
+}
+
+function beginServerRecovery(): void {
+  if (!authenticated || recoveryReloadRequested) {
+    return;
+  }
+
+  clearReconnectTimer();
+  clearRecoveryPollTimer();
+  setConnectionState("offline", "Waiting for server");
+  void checkServerRecovery();
 }
 
 function currentSize() {
@@ -807,29 +895,48 @@ function connectSocket(): void {
     return;
   }
 
-  ws?.close();
+  clearReconnectTimer();
+  clearRecoveryPollTimer();
+  closeSocket(true);
   setConnectionState("connecting");
 
   const protocol = window.location.protocol === "https:" ? "wss" : "ws";
-  ws = new WebSocket(`${protocol}://${window.location.host}/ws`);
+  const socket = new WebSocket(`${protocol}://${window.location.host}/ws`) as ManagedWebSocket;
+  ws = socket;
 
-  ws.addEventListener("open", () => {
+  socket.addEventListener("open", () => {
+    if (ws !== socket) {
+      return;
+    }
+
+    hadLiveSocketConnection = true;
+    recoveryReloadRequested = false;
+    clearRecoveryPollTimer();
     setConnectionState("connected");
     sendEvent({ type: "session/list.request" });
     terminal.focus();
   });
 
-  ws.addEventListener("message", (message) => {
+  socket.addEventListener("message", (message) => {
     const parsed = parseServerEvent(JSON.parse(message.data as string));
     handleServerEvent(parsed);
   });
 
-  ws.addEventListener("close", () => {
-    setConnectionState("offline");
-    if (!authenticated) {
+  socket.addEventListener("close", () => {
+    if (ws === socket) {
+      ws = null;
+    }
+
+    if (socket.intentionalClose || !authenticated) {
       return;
     }
 
+    if (hadLiveSocketConnection) {
+      beginServerRecovery();
+      return;
+    }
+
+    setConnectionState("offline");
     reconnectTimer = window.setTimeout(() => {
       connectSocket();
     }, 1_200);
@@ -849,9 +956,12 @@ async function refreshAuthState(): Promise<void> {
   setFixedCols(body.fixedCols);
   setView(body.authenticated);
   if (body.authenticated) {
+    recoveryReloadRequested = false;
     setConnectionState("connecting");
     connectSocket();
   } else {
+    clearReconnectTimer();
+    clearRecoveryPollTimer();
     setConnectionState("offline");
   }
 }
@@ -896,9 +1006,11 @@ logoutButton.addEventListener("click", async () => {
     credentials: "same-origin",
   });
 
-  window.clearTimeout(reconnectTimer);
-  ws?.close();
-  ws = null;
+  clearReconnectTimer();
+  clearRecoveryPollTimer();
+  recoveryReloadRequested = false;
+  hadLiveSocketConnection = false;
+  closeSocket(true);
   sessions = [];
   activeSessionId = null;
   workspaceActiveSessionId = null;

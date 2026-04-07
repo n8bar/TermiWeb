@@ -49,6 +49,7 @@ V1 delivers a browser-based Windows terminal that supports:
 - The workspace shell should follow the live visual viewport height so the control tray remains visible above the on-screen keyboard.
 - Viewport and orientation changes should force a terminal refit so the layout does not require a refresh after rotating a device.
 - On coarse-pointer browsers using the desktop-style viewport, orientation changes should also reapply the fitted viewport scale so the page does not remain stuck at the prior orientation width.
+- After a page has had a live websocket connection, a later server restart should put it into a waiting state and refresh the page once the server health endpoint responds again.
 - Mobile controls must expose at least `Ctrl`, `Alt`, `Esc`, `Tab`, `Enter`, `Backspace`, and arrow keys.
 - Mobile controls must also expose a `Del` key.
 - Mobile controls must also expose `Home` and `End`.
