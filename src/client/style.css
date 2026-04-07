@@ -18,6 +18,8 @@
   --radius-sm: 12px;
   --ui-font: "Bahnschrift", "Segoe UI Variable", "Segoe UI", sans-serif;
   --mono-font: "Cascadia Code", "Cascadia Mono", Consolas, "Courier New", monospace;
+  --control-key-height: 4.5rem;
+  --cursor-key-size: 4.5rem;
 }
 
 * {
@@ -532,7 +534,7 @@ button {
 
 .mobile-controls {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr)) repeat(3, 3rem);
+  grid-template-columns: repeat(3, minmax(0, 1fr)) repeat(3, var(--cursor-key-size));
   grid-template-areas:
     "esc backspace delete home up end"
     "tab select copy left down right"
@@ -542,9 +544,10 @@ button {
 }
 
 .control-button {
-  min-height: 3rem;
+  min-height: var(--control-key-height);
   padding-inline: 0.35rem;
-  font-size: 0.82rem;
+  font-size: 0.95rem;
+  touch-action: manipulation;
 }
 
 .control-button[data-control-id="esc"] {
@@ -612,17 +615,17 @@ button {
 }
 
 .control-button.is-square {
-  width: 3rem;
-  height: 3rem;
+  width: var(--cursor-key-size);
+  height: var(--cursor-key-size);
   border-radius: var(--radius-sm);
   font-size: 1.2rem;
-  min-height: 3rem;
+  min-height: var(--cursor-key-size);
   padding: 0;
 }
 
 .control-button[data-control-id="home"],
 .control-button[data-control-id="end"] {
-  font-size: 0.82rem;
+  font-size: 0.95rem;
 }
 
 .control-button.is-active {

@@ -42,6 +42,7 @@ TermiWeb provides a single browser-served terminal workflow that can be used fro
 - `Ctrl` and `Alt` should arm on a single tap, lock on a double tap, and visibly distinguish armed from locked states.
 - On-screen `Home`, `End`, and cursor keys should emit application-cursor sequences when the terminal is in application cursor mode.
 - Touch use of the control tray should not blur the terminal or toggle the OS keyboard unexpectedly.
+- The control tray should activate reliably from direct touch interaction on coarse-pointer browsers instead of depending on synthetic mobile click behavior.
 - The sidebar should stay outside any scaled workspace stage so instance targets remain finger-sized.
 - The keyboard control tray should also stay outside the scaled workspace stage so its controls remain finger-sized.
 - The keyboard control tray should stay anchored inside the outer terminal shell, below the scaled stage, rather than floating against the screen edge.
@@ -55,6 +56,7 @@ TermiWeb provides a single browser-served terminal workflow that can be used fro
 - When no manual sidebar preference is stored for a device, narrow viewports should default to a collapsed sidebar.
 - The control tray should keep the cursor-key cluster aligned beside the main button rows instead of stacking it below them.
 - The main key strip should favor three taller rows over two cramped rows when that keeps touch targets usable.
+- The main key strip should prioritize taller touch targets over extra horizontal density.
 - Non-arrow terminal buttons should match the cursor-key button height.
 - The main key strip order should be `Esc`, `Bksp`, `Del`; then `Tab`, `Select`, `Copy`; then `Ctrl`, `Alt`, `Paste`, with `Enter` placed under the cursor-key cluster.
 - The rendered terminal cursor should present as a single solid insertion cursor rather than showing an extra blinking cursor artifact.

@@ -339,6 +339,53 @@ function registerControlButtonFocusBehavior(element: HTMLButtonElement): void {
   });
 }
 
+function bindControlButtonActivation(
+  element: HTMLButtonElement,
+  handler: () => void,
+): void {
+  const activate = (event: Event) => {
+    if (event.cancelable) {
+      event.preventDefault();
+    }
+
+    handler();
+  };
+
+  element.addEventListener("pointerup", (event) => {
+    if (event.button !== 0) {
+      return;
+    }
+
+    activate(event);
+  });
+
+  if (!("PointerEvent" in window)) {
+    element.addEventListener("mouseup", (event) => {
+      if (event.button !== 0) {
+        return;
+      }
+
+      activate(event);
+    });
+
+    element.addEventListener(
+      "touchend",
+      (event) => {
+        activate(event);
+      },
+      { passive: false },
+    );
+  }
+
+  element.addEventListener("keydown", (event) => {
+    if (event.key !== "Enter" && event.key !== " ") {
+      return;
+    }
+
+    activate(event);
+  });
+}
+
 function resetControlPointerType(): void {
   lastControlPointerType = null;
 }
@@ -653,7 +700,7 @@ function renderModifierControls(): void {
       element.classList.toggle("is-active", mode !== "off");
       element.classList.toggle("is-armed", mode === "armed");
       element.classList.toggle("is-locked", mode === "locked");
-      element.addEventListener("click", () => {
+      bindControlButtonActivation(element, () => {
         const now = window.performance.now();
         const isDoubleTap =
           lastModifierTap?.key === modifierKey &&
@@ -668,13 +715,13 @@ function renderModifierControls(): void {
       });
     } else if (button.kind === "mode" && button.id === "select") {
       element.classList.toggle("is-active", selectionMode);
-      element.addEventListener("click", () => {
+      bindControlButtonActivation(element, () => {
         setSelectionMode(!selectionMode);
         resetControlPointerType();
       });
     } else if (button.kind === "sequence") {
       const action = button.id as TerminalControlAction;
-      element.addEventListener("click", () => {
+      bindControlButtonActivation(element, () => {
         if (!activeSessionId) {
           resetControlPointerType();
           return;
@@ -699,7 +746,7 @@ function renderModifierControls(): void {
         maybeRefocusTerminalAfterControl();
       });
     } else if (button.id === "copy") {
-      element.addEventListener("click", async () => {
+      bindControlButtonActivation(element, async () => {
         try {
           await copyCurrentSelection();
         } catch {
@@ -713,7 +760,7 @@ function renderModifierControls(): void {
         }
       });
     } else if (button.id === "paste") {
-      element.addEventListener("click", async () => {
+      bindControlButtonActivation(element, async () => {
         try {
           const pasted = await navigator.clipboard.readText();
           if (activeSessionId && pasted) {

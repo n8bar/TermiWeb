@@ -43,7 +43,7 @@ TermiWeb is a browser-first shared terminal for Windows. The browser UI is the s
 - [Project plan](docs/PLAN.md)
 - [Product spec](docs/PRODUCT_SPEC.md)
 - [Findings log](docs/FINDINGS.md)
-- [V1 browser terminal spec](docs/specs/v1-browser-terminal.md)
+- [0.1 browser terminal spec](docs/specs/v0.1-browser-terminal.md)
 - [Change log](docs/CHANGELOG.log)
 
 ## Shell behavior

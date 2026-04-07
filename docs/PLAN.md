@@ -2,7 +2,7 @@
 
 ## Current Focus
 
-Dogfood the first usable v1 browser terminal, close the current findings batch, and keep the live-session workflow stable while polishing interaction details.
+Dogfood the first usable 0.1 browser terminal, close the current findings batch, and keep the live-session workflow stable while polishing interaction details.
 
 ## Milestones
 
