@@ -34,6 +34,13 @@ This document tracks dogfood findings that are worth fixing later, without inter
 - Summary: Pressing the on-screen cursor keys causes the mobile keyboard to show or hide unexpectedly.
 - Notes: When the keyboard visibility changes, the keyboard control tray shifts position, which makes the controls feel unstable during navigation.
 
+### Finding 3: Returning from landscape leaves the UI too wide
+- Status: `Open`
+- First seen: `2026-04-06`
+- Area: `mobile`
+- Summary: On mobile, rotating to landscape and then back to portrait can leave the layout wider than the screen.
+- Notes: The right side of the UI becomes inaccessible until the page is refreshed.
+
 ## Closed
 
 None yet.
