@@ -35,3 +35,7 @@ TermiWeb provides a single browser-served terminal workflow that can be used fro
 - That desktop-style mobile viewport should leave the browser free to choose the initial fit instead of pinning the page to a forced `initial-scale=1.0`.
 - The mobile key cluster should include `Home` and `End` near the cursor keys, not only in the main action strip.
 - `Ctrl` and `Alt` should arm on a single tap, lock on a double tap, and visibly distinguish armed from locked states.
+- The sidebar should stay outside any scaled workspace stage so instance targets remain finger-sized.
+- The main header and the active-terminal header should be merged to preserve vertical space.
+- The terminal workspace stage should never present narrower than a 4:3 aspect ratio and should top-align so portrait phones leave slack below for the on-screen keyboard.
+- When no manual sidebar preference is stored for a device, narrow viewports should default to a collapsed sidebar.

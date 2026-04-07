@@ -17,6 +17,11 @@ import {
 } from "./ui/mobileControls.js";
 import { resolvePreferredSessionId } from "./ui/sessionSelection.js";
 import { captureVisibleTerminalText } from "./ui/terminalSnapshot.js";
+import {
+  computeStageLayout,
+  resolveEffectiveViewportWidth,
+  shouldAutoCollapseSidebar,
+} from "./ui/workspaceStage.js";
 
 type ConnectionState = "connecting" | "connected" | "offline" | "error";
 
@@ -45,6 +50,8 @@ const connectionStatus = mustQuery<HTMLElement>("#connection-status");
 const activeSessionTitle = mustQuery<HTMLElement>("#active-session-title");
 const activeSessionStatus = mustQuery<HTMLElement>("#active-session-status");
 const terminalContainer = mustQuery<HTMLElement>("#terminal-container");
+const workspaceStageViewport = mustQuery<HTMLElement>("#workspace-stage-viewport");
+const workspaceStage = mustQuery<HTMLElement>("#workspace-stage");
 const selectionPanel = mustQuery<HTMLElement>("#selection-panel");
 const selectionText = mustQuery<HTMLTextAreaElement>("#selection-text");
 const closeSelectionButton = mustQuery<HTMLButtonElement>("#close-selection-button");
@@ -92,6 +99,7 @@ let lastModifierTap:
     }
   | null = null;
 let sidebarCollapsed = false;
+let sidebarPreferenceMode: "auto" | "manual" = "auto";
 let selectionMode = false;
 let fixedCols = 80;
 const sidebarStorageKey = "termiweb.sidebar-collapsed";
@@ -142,9 +150,22 @@ function setView(isAuthenticated: boolean): void {
   authenticated = isAuthenticated;
   loginPanel.classList.toggle("is-hidden", isAuthenticated);
   workspacePanel.classList.toggle("is-hidden", !isAuthenticated);
+
+  if (isAuthenticated) {
+    window.requestAnimationFrame(() => {
+      updateAutoSidebarPreference();
+      syncWorkspaceStage();
+      currentSize();
+    });
+  }
 }
 
-function setSidebarCollapsed(collapsed: boolean): void {
+function setSidebarCollapsed(
+  collapsed: boolean,
+  options: {
+    persist?: boolean;
+  } = {},
+): void {
   sidebarCollapsed = collapsed;
   workspaceLayout.classList.toggle("is-sidebar-collapsed", collapsed);
   toggleSidebarButton.textContent = collapsed ? "»" : "«";
@@ -155,11 +176,58 @@ function setSidebarCollapsed(collapsed: boolean): void {
   );
   toggleSidebarButton.title = collapsed ? "Expand instances" : "Collapse instances";
 
-  try {
-    window.localStorage.setItem(sidebarStorageKey, String(collapsed));
-  } catch {
-    // Ignore local storage failures and keep the state in-memory for this device.
+  if (options.persist ?? true) {
+    try {
+      window.localStorage.setItem(sidebarStorageKey, String(collapsed));
+    } catch {
+      // Ignore local storage failures and keep the state in-memory for this device.
+    }
   }
+}
+
+function syncWorkspaceStage(): void {
+  const layout = computeStageLayout({
+    availableWidth: workspaceStageViewport.clientWidth,
+    availableHeight: workspaceStageViewport.clientHeight,
+  });
+
+  workspaceStage.style.width = `${Math.ceil(layout.baseWidth)}px`;
+  workspaceStage.style.height = `${Math.ceil(layout.baseHeight)}px`;
+  workspaceStage.style.transform = `scale(${layout.scale})`;
+}
+
+function updateAutoSidebarPreference(): void {
+  if (sidebarPreferenceMode !== "auto") {
+    return;
+  }
+
+  const effectiveViewportWidth = resolveEffectiveViewportWidth({
+    layoutWidth: window.innerWidth,
+    visualWidth: window.visualViewport?.width ?? null,
+    screenWidth: window.screen?.width ?? null,
+  });
+
+  setSidebarCollapsed(shouldAutoCollapseSidebar(effectiveViewportWidth), {
+    persist: false,
+  });
+}
+
+function initializeSidebarPreference(): void {
+  try {
+    const stored = window.localStorage.getItem(sidebarStorageKey);
+    if (stored === "true" || stored === "false") {
+      sidebarPreferenceMode = "manual";
+      setSidebarCollapsed(stored === "true", {
+        persist: false,
+      });
+      return;
+    }
+  } catch {
+    // Fall through to auto mode.
+  }
+
+  sidebarPreferenceMode = "auto";
+  updateAutoSidebarPreference();
 }
 
 function sendEvent(event: unknown): void {
@@ -635,7 +703,9 @@ focusTerminalButton.addEventListener("click", () => {
 });
 
 toggleSidebarButton.addEventListener("click", () => {
+  sidebarPreferenceMode = "manual";
   setSidebarCollapsed(!sidebarCollapsed);
+  syncWorkspaceStage();
 });
 
 copySelectionButton.addEventListener("click", async () => {
@@ -675,11 +745,22 @@ const resizeObserver = new ResizeObserver(() => {
 });
 
 resizeObserver.observe(terminalContainer);
-try {
-  setSidebarCollapsed(window.localStorage.getItem(sidebarStorageKey) === "true");
-} catch {
-  setSidebarCollapsed(false);
-}
+const stageViewportObserver = new ResizeObserver(() => {
+  syncWorkspaceStage();
+});
+
+stageViewportObserver.observe(workspaceStageViewport);
+
+const handleViewportResize = () => {
+  updateAutoSidebarPreference();
+  syncWorkspaceStage();
+};
+
+window.addEventListener("resize", handleViewportResize);
+window.visualViewport?.addEventListener("resize", handleViewportResize);
+
+initializeSidebarPreference();
 renderModifierControls();
+syncWorkspaceStage();
 currentSize();
 await refreshAuthState();

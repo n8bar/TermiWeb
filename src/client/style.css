@@ -50,15 +50,16 @@ button {
 }
 
 .app-shell {
+  --shell-pad-top: max(0.8rem, env(safe-area-inset-top), 1.2rem);
+  --shell-pad-right: max(0.8rem, env(safe-area-inset-right), 1.2rem);
+  --shell-pad-bottom: max(0.8rem, env(safe-area-inset-bottom), 1.2rem);
+  --shell-pad-left: max(0.8rem, env(safe-area-inset-left), 1.2rem);
   min-height: 100vh;
   width: 100%;
-  padding:
-    max(0.8rem, env(safe-area-inset-top), 1.2rem)
-    max(0.8rem, env(safe-area-inset-right), 1.2rem)
-    max(0.8rem, env(safe-area-inset-bottom), 1.2rem)
-    max(0.8rem, env(safe-area-inset-left), 1.2rem);
+  padding: var(--shell-pad-top) var(--shell-pad-right) var(--shell-pad-bottom)
+    var(--shell-pad-left);
   display: grid;
-  align-items: center;
+  align-items: stretch;
 }
 
 .card {
@@ -75,6 +76,7 @@ button {
   padding: 2.2rem;
   display: grid;
   gap: 1.75rem;
+  align-self: center;
 }
 
 .brand-block {
@@ -90,7 +92,7 @@ button {
 .brand-block h1,
 .brand-block h2,
 .panel-header h3,
-.terminal-header h3 {
+.topbar-session h3 {
   margin: 0;
   font-weight: 650;
   letter-spacing: 0.02em;
@@ -230,30 +232,53 @@ button {
 
 .workspace-shell {
   display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
   gap: 1rem;
   width: 100%;
   min-width: 0;
+  min-height: calc(100dvh - var(--shell-pad-top) - var(--shell-pad-bottom));
 }
 
 .is-hidden {
   display: none !important;
 }
 
-.topbar,
-.terminal-header {
-  display: flex;
-  justify-content: space-between;
+.topbar {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
-  gap: 1rem;
+  gap: 1.2rem;
   padding: 1rem 1.2rem;
+}
+
+.topbar-session {
+  min-width: 0;
+  display: grid;
+  gap: 0.2rem;
+}
+
+.topbar-session h3,
+.topbar-shell {
+  margin: 0;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.topbar-shell {
+  color: var(--muted);
+  font-size: 0.9rem;
 }
 
 .workspace-layout {
   display: grid;
   grid-template-columns: clamp(10.5rem, 24vw, 18rem) minmax(0, 1fr);
   gap: 1rem;
-  min-height: 76vh;
+  min-height: 0;
+  height: 100%;
   min-width: 0;
+  align-items: stretch;
 }
 
 .side-panel,
@@ -266,6 +291,21 @@ button {
   display: grid;
   gap: 1rem;
   align-content: start;
+}
+
+.workspace-stage-viewport {
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  position: relative;
+}
+
+.workspace-stage {
+  transform-origin: top left;
+  will-change: transform;
 }
 
 .panel-header {
@@ -384,12 +424,14 @@ button {
 
 .terminal-shell {
   display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
   gap: 0.9rem;
   min-height: 0;
+  height: 100%;
 }
 
 .terminal-container {
-  min-height: 26rem;
+  min-height: 0;
   height: 100%;
   border-radius: var(--radius-md);
   border: 1px solid rgba(122, 255, 178, 0.12);
@@ -408,7 +450,8 @@ button {
 }
 
 .selection-panel {
-  min-height: 26rem;
+  min-height: 0;
+  height: 100%;
   display: grid;
   grid-template-rows: auto minmax(0, 1fr);
   gap: 0.8rem;
@@ -537,12 +580,13 @@ button {
   color: var(--accent-hot);
 }
 
-.terminal-header-actions,
 .topbar-actions {
   display: flex;
   gap: 0.65rem;
   flex-wrap: wrap;
   align-items: center;
+  justify-content: flex-end;
+  justify-self: end;
 }
 
 .form-message {

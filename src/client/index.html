@@ -53,7 +53,17 @@
             </div>
           </div>
 
+          <div class="topbar-session">
+            <p class="eyebrow">Active instance</p>
+            <h3 id="active-session-title">Connecting…</h3>
+            <p id="shell-label" class="topbar-shell">Shell: detecting…</p>
+          </div>
+
           <div class="topbar-actions">
+            <span id="active-session-status" class="status-pill">Idle</span>
+            <button id="focus-terminal-button" class="ghost-button" type="button">
+              Focus keyboard
+            </button>
             <span id="connection-status" class="status-pill is-connecting">Connecting</span>
             <button id="logout-button" class="ghost-button" type="button">Logout</button>
           </div>
@@ -103,7 +113,6 @@
             <div id="session-list" class="session-list" aria-live="polite"></div>
 
             <div class="side-panel-meta">
-              <p id="shell-label">Shell: detecting…</p>
               <p>
                 Your workstation and other devices can attach to the same browser shell.
                 Instances persist; live shell processes do not.
@@ -111,50 +120,45 @@
             </div>
           </aside>
 
-          <main class="card terminal-shell">
-            <div class="terminal-header">
-              <div>
-                <p class="eyebrow">Active instance</p>
-                <h3 id="active-session-title">Connecting…</h3>
-              </div>
-              <div class="terminal-header-actions">
-                <span id="active-session-status" class="status-pill">Idle</span>
-                <button id="focus-terminal-button" class="ghost-button" type="button">
-                  Focus keyboard
-                </button>
-              </div>
+          <section id="workspace-stage-viewport" class="workspace-stage-viewport">
+            <div id="workspace-stage" class="workspace-stage">
+              <main class="card terminal-shell">
+                <div id="terminal-container" class="terminal-container" aria-label="Terminal"></div>
+                <section
+                  id="selection-panel"
+                  class="selection-panel is-hidden"
+                  aria-label="Select terminal text"
+                >
+                  <div class="selection-panel-header">
+                    <div>
+                      <p class="eyebrow">Select text</p>
+                      <h3>Selection mode</h3>
+                    </div>
+                    <div class="selection-panel-actions">
+                      <button id="copy-selection-button" class="ghost-button" type="button">
+                        Copy
+                      </button>
+                      <button id="close-selection-button" class="ghost-button" type="button">
+                        Done
+                      </button>
+                    </div>
+                  </div>
+                  <textarea
+                    id="selection-text"
+                    class="selection-text"
+                    readonly
+                    spellcheck="false"
+                    wrap="off"
+                  ></textarea>
+                </section>
+                <div
+                  id="mobile-controls"
+                  class="mobile-controls"
+                  aria-label="Terminal controls"
+                ></div>
+              </main>
             </div>
-
-            <div id="terminal-container" class="terminal-container" aria-label="Terminal"></div>
-            <section
-              id="selection-panel"
-              class="selection-panel is-hidden"
-              aria-label="Select terminal text"
-            >
-              <div class="selection-panel-header">
-                <div>
-                  <p class="eyebrow">Select text</p>
-                  <h3>Selection mode</h3>
-                </div>
-                <div class="selection-panel-actions">
-                  <button id="copy-selection-button" class="ghost-button" type="button">
-                    Copy
-                  </button>
-                  <button id="close-selection-button" class="ghost-button" type="button">
-                    Done
-                  </button>
-                </div>
-              </div>
-              <textarea
-                id="selection-text"
-                class="selection-text"
-                readonly
-                spellcheck="false"
-                wrap="off"
-              ></textarea>
-            </section>
-            <div id="mobile-controls" class="mobile-controls" aria-label="Terminal controls"></div>
-          </main>
+          </section>
         </div>
       </section>
     </div>
