@@ -41,3 +41,5 @@ TermiWeb provides a single browser-served terminal workflow that can be used fro
 - The terminal workspace stage should never present narrower than a 4:3 aspect ratio and should top-align so portrait phones leave slack below for the on-screen keyboard.
 - When no manual sidebar preference is stored for a device, narrow viewports should default to a collapsed sidebar.
 - The control tray should keep the cursor-key cluster aligned beside the main button rows instead of stacking it below them.
+- The main key strip should favor three taller rows over two cramped rows when that keeps touch targets usable.
+- Non-arrow terminal buttons should match the cursor-key button height.

@@ -47,6 +47,8 @@ V1 delivers a browser-based Windows terminal that supports:
 - Arrow-key controls should look like a compact cursor-key cluster rather than text buttons.
 - `Home` should sit above `←` and `End` should sit above `→` in that cluster.
 - The cursor-key cluster should sit beside the main control rows instead of stacking beneath them.
+- The main control strip should prefer three taller rows over two cramped rows when that keeps touch targets usable.
+- Non-arrow terminal buttons should match the cursor-key button height.
 - A select mode must exist so touch devices can copy terminal text reliably.
 - Select mode should replace the terminal viewport in-place with a read-only monospace text view derived from the rendered terminal buffer instead of the raw PTY stream.
 - The select snapshot should reflect what is currently visible in the terminal buffer, so text cleared by commands like `cls` does not reappear there.
