@@ -13,4 +13,4 @@ Stabilize the first usable v1 browser terminal: multi-device instance behavior, 
 
 ## Next Action
 
-Run real workstation/device validation against the live app, especially the width-fitted 80-column terminal, the now-elastic row count, the width-first 4:3 stage behavior on phones, the larger instance rail targets, and the normalized auto-generated instance naming.
+Dogfood the live app in real work, log issues in `docs/FINDINGS.md`, and batch the next implementation pass once a useful set of findings has accumulated.
