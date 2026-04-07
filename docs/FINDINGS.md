@@ -41,6 +41,13 @@ This document tracks dogfood findings that are worth fixing later, without inter
 - Summary: On mobile, rotating to landscape and then back to portrait can leave the layout wider than the screen.
 - Notes: The right side of the UI becomes inaccessible until the page is refreshed.
 
+### Finding 4: A second flashing cursor appears at the last updated character
+- Status: `Open`
+- First seen: `2026-04-06`
+- Area: `UI`
+- Summary: A flashing cursor appears at the last updated character in addition to the real input cursor.
+- Notes: The duplicate cursor is visually distracting because it competes with the actual insertion point.
+
 ## Closed
 
 None yet.
