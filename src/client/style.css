@@ -341,8 +341,13 @@ button {
   min-height: 2.4rem;
   padding-inline: 0.8rem;
   border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.18);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.28);
   touch-action: manipulation;
+  white-space: pre-line;
+  line-height: 0.58;
+  font-size: 0.92rem;
 }
 
 .terminal-shell.is-controls-collapsed .tray-toggle-button {

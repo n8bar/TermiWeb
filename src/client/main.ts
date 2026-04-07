@@ -221,7 +221,7 @@ function setControlsCollapsed(
   controlsCollapsed = collapsed;
   terminalShell.classList.toggle("is-controls-collapsed", collapsed);
   controlTray.classList.toggle("is-collapsed", collapsed);
-  toggleControlsButton.textContent = collapsed ? "⌃" : "⌄";
+  toggleControlsButton.textContent = collapsed ? "⌃\n⌃" : "⌄\n⌄";
   toggleControlsButton.setAttribute("aria-expanded", String(!collapsed));
   toggleControlsButton.setAttribute(
     "aria-label",
