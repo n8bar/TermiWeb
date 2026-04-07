@@ -518,7 +518,9 @@ button {
 
 .mobile-controls {
   display: grid;
-  gap: 0.55rem;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.85rem;
+  align-items: end;
 }
 
 .control-group {
@@ -527,7 +529,7 @@ button {
 }
 
 .control-group-main {
-  grid-template-columns: repeat(10, minmax(0, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
 }
 
 .control-group-arrows {
@@ -535,7 +537,8 @@ button {
   grid-template-areas:
     "home up end"
     "left down right";
-  justify-content: center;
+  justify-content: end;
+  align-self: end;
 }
 
 .control-button {
@@ -573,6 +576,11 @@ button {
   font-size: 1.2rem;
   min-height: 0;
   padding: 0;
+}
+
+.control-button[data-control-id="home"],
+.control-button[data-control-id="end"] {
+  font-size: 0.82rem;
 }
 
 .control-button.is-active {

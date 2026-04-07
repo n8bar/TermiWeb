@@ -13,4 +13,4 @@ Stabilize the first usable v1 browser terminal: multi-device instance behavior, 
 
 ## Next Action
 
-Run real workstation/device validation against the live app, especially the 4:3 stage behavior on phones, the merged header, and the unscaled sidebar and keyboard tray on narrow viewports.
+Run real workstation/device validation against the live app, especially the width-fitted 80-column terminal, the now-elastic row count, the 4:3 stage behavior on phones, and the right-aligned cursor-key cluster.

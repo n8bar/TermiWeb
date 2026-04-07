@@ -22,6 +22,12 @@ import {
   resolveEffectiveViewportWidth,
   shouldAutoCollapseSidebar,
 } from "./ui/workspaceStage.js";
+import {
+  computeTerminalVisibleWidth,
+  fitFontSizeToWidth,
+  resolveTerminalRows,
+  type TerminalRenderMetrics,
+} from "./ui/terminalSizing.js";
 
 type ConnectionState = "connecting" | "connected" | "offline" | "error";
 
@@ -104,6 +110,7 @@ let selectionMode = false;
 let fixedCols = 80;
 const sidebarStorageKey = "termiweb.sidebar-collapsed";
 const modifierDoubleTapWindowMs = 360;
+const defaultTerminalFontSize = 15;
 
 const statusLabels: Record<SessionSummary["status"], string> = {
   stopped: "Stopped",
@@ -212,6 +219,65 @@ function updateAutoSidebarPreference(): void {
   });
 }
 
+function currentTerminalFontSize(): number {
+  return typeof terminal.options.fontSize === "number"
+    ? terminal.options.fontSize
+    : defaultTerminalFontSize;
+}
+
+function readTerminalRenderMetrics(): TerminalRenderMetrics | null {
+  const terminalElement = terminal.element;
+  const renderDimensions = (
+    terminal as Terminal & {
+      _core?: {
+        _renderService?: {
+          dimensions?: {
+            css?: {
+              cell?: {
+                width?: number;
+              };
+            };
+          };
+        };
+      };
+    }
+  )._core?._renderService?.dimensions;
+
+  const cellWidth = renderDimensions?.css?.cell?.width;
+  if (!terminalElement || typeof cellWidth !== "number" || !Number.isFinite(cellWidth) || cellWidth <= 0) {
+    return null;
+  }
+
+  const terminalStyles = window.getComputedStyle(terminalElement);
+  const paddingWidth =
+    parseFloat(terminalStyles.getPropertyValue("padding-left")) +
+    parseFloat(terminalStyles.getPropertyValue("padding-right"));
+
+  return {
+    cellWidth,
+    paddingWidth,
+    scrollbarWidth: 14,
+  };
+}
+
+function fitTerminalWidth(): void {
+  const targetWidth = terminalContainer.clientWidth;
+  const metrics = readTerminalRenderMetrics();
+  if (!metrics || targetWidth <= 0) {
+    return;
+  }
+
+  const nextFontSize = fitFontSizeToWidth({
+    currentFontSize: currentTerminalFontSize(),
+    currentVisibleWidth: computeTerminalVisibleWidth(fixedCols, metrics),
+    targetWidth,
+  });
+
+  if (Math.abs(nextFontSize - currentTerminalFontSize()) >= 0.1) {
+    terminal.options.fontSize = nextFontSize;
+  }
+}
+
 function initializeSidebarPreference(): void {
   try {
     const stored = window.localStorage.getItem(sidebarStorageKey);
@@ -237,42 +303,43 @@ function sendEvent(event: unknown): void {
 }
 
 function currentSize() {
-  const proposed = fitAddon.proposeDimensions();
-  const rows = Math.max(proposed?.rows ?? terminal.rows, 24);
+  const targetWidth = terminalContainer.clientWidth;
+  const targetHeight = terminalContainer.clientHeight;
   const nextCols = fixedCols;
+  const terminalElement = terminal.element;
+
+  if (terminalElement) {
+    terminalElement.style.width = "";
+  }
+
+  if (targetWidth <= 0 || targetHeight <= 0) {
+    return {
+      cols: nextCols,
+      rows: Math.max(terminal.rows, 1),
+    };
+  }
+
+  fitTerminalWidth();
+
+  let proposed = fitAddon.proposeDimensions();
+  let rows = resolveTerminalRows({
+    proposedRows: proposed?.rows,
+    fallbackRows: terminal.rows,
+  });
 
   if (terminal.cols !== nextCols || terminal.rows !== rows) {
     terminal.resize(nextCols, rows);
   }
 
-  const terminalElement = terminal.element;
-  const renderDimensions = (
-    terminal as Terminal & {
-      _core?: {
-        _renderService?: {
-          dimensions?: {
-            css?: {
-              cell?: {
-                width?: number;
-              };
-            };
-          };
-        };
-      };
-    }
-  )._core?._renderService?.dimensions;
-
-  if (terminalElement && renderDimensions?.css?.cell?.width) {
-    const terminalStyles = window.getComputedStyle(terminalElement);
-    const paddingWidth =
-      parseInt(terminalStyles.getPropertyValue("padding-left"), 10) +
-      parseInt(terminalStyles.getPropertyValue("padding-right"), 10);
-    const scrollbarWidth =
-      terminal.options.scrollback === 0 ? 0 : terminal.options.overviewRuler?.width || 14;
-    const visibleWidth =
-      nextCols * renderDimensions.css.cell.width + paddingWidth + scrollbarWidth;
-
-    terminalElement.style.width = `${Math.ceil(visibleWidth)}px`;
+  fitTerminalWidth();
+  proposed = fitAddon.proposeDimensions();
+  const refinedRows = resolveTerminalRows({
+    proposedRows: proposed?.rows,
+    fallbackRows: rows,
+  });
+  if (refinedRows !== rows) {
+    rows = refinedRows;
+    terminal.resize(nextCols, rows);
   }
 
   return {

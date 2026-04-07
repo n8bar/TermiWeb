@@ -13,7 +13,7 @@ TermiWeb provides a single browser-served terminal workflow that can be used fro
 - Authentication is a single shared password suitable for local/private deployments in v1.
 - The host platform is Windows-first.
 - Runtime configuration is read from process environment and an optional repo-root `.env` file.
-- Terminal width is fixed at 80 columns by default so concurrent clients target the same line width.
+- Terminal width is fixed at 80 columns by default so concurrent clients target the same line width, while the rendered terminal scales to use the available width and lets the visible row count change with height.
 - The runtime prefers PowerShell 7 from `PATH`, then the standard install path, and only then falls back to Windows PowerShell.
 
 ## V1 Constraints
@@ -40,3 +40,4 @@ TermiWeb provides a single browser-served terminal workflow that can be used fro
 - The main header and the active-terminal header should be merged to preserve vertical space.
 - The terminal workspace stage should never present narrower than a 4:3 aspect ratio and should top-align so portrait phones leave slack below for the on-screen keyboard.
 - When no manual sidebar preference is stored for a device, narrow viewports should default to a collapsed sidebar.
+- The control tray should keep the cursor-key cluster aligned beside the main button rows instead of stacking it below them.

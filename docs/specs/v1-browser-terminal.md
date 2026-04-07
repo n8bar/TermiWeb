@@ -35,7 +35,7 @@ V1 delivers a browser-based Windows terminal that supports:
 - The sidebar collapse state is local to each browser and must not sync through shared session metadata.
 - If no local sidebar preference exists for a browser, narrow viewports should auto-collapse the sidebar by default.
 - New instances start in the user's home directory rather than the repository working directory.
-- Terminal width stays fixed at 80 columns across clients so switching devices does not change line wrapping.
+- Terminal width stays fixed at 80 columns across clients so switching devices does not change line wrapping, but the rendered terminal should still scale to use the available width and let the visible row count change with height.
 - The sidebar stays outside the scaled stage so instance controls remain finger-sized.
 - The keyboard control tray stays outside the scaled stage so terminal-specific buttons remain finger-sized.
 - The right-hand workspace stage should top-align within its viewport and should never present narrower than a 4:3 aspect ratio.
@@ -46,7 +46,7 @@ V1 delivers a browser-based Windows terminal that supports:
 - `Ctrl` and `Alt` should arm for the next key on single tap, lock on double tap, and clear on a later tap when locked.
 - Arrow-key controls should look like a compact cursor-key cluster rather than text buttons.
 - `Home` should sit above `←` and `End` should sit above `→` in that cluster.
-- The main control strip should stay dense enough to fit roughly twice the current button count per row when space allows.
+- The cursor-key cluster should sit beside the main control rows instead of stacking beneath them.
 - A select mode must exist so touch devices can copy terminal text reliably.
 - Select mode should replace the terminal viewport in-place with a read-only monospace text view derived from the rendered terminal buffer instead of the raw PTY stream.
 - The select snapshot should reflect what is currently visible in the terminal buffer, so text cleared by commands like `cls` does not reappear there.
