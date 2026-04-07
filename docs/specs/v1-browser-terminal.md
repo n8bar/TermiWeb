@@ -40,6 +40,7 @@ V1 delivers a browser-based Windows terminal that supports:
 - The keyboard control tray stays outside the scaled stage so terminal-specific buttons remain finger-sized.
 - The right-hand workspace stage should top-align within its viewport and should never present narrower than a 4:3 aspect ratio.
 - When the viewport is narrower than 4:3, the stage should keep the full available width and reduce height instead of scaling the entire workspace down.
+- The workspace shell should follow the live visual viewport height so the control tray remains visible above the on-screen keyboard.
 - Mobile controls must expose at least `Ctrl`, `Alt`, `Esc`, `Tab`, `Enter`, `Backspace`, and arrow keys.
 - Mobile controls must also expose a `Del` key.
 - Mobile controls must also expose `Home` and `End`.

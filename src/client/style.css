@@ -1,5 +1,6 @@
 :root {
   color-scheme: dark;
+  --app-viewport-height: 100dvh;
   --bg: #09131d;
   --bg-elevated: rgba(10, 21, 30, 0.88);
   --panel: rgba(13, 27, 38, 0.92);
@@ -54,7 +55,8 @@ button {
   --shell-pad-right: max(0.8rem, env(safe-area-inset-right), 1.2rem);
   --shell-pad-bottom: max(0.8rem, env(safe-area-inset-bottom), 1.2rem);
   --shell-pad-left: max(0.8rem, env(safe-area-inset-left), 1.2rem);
-  min-height: 100vh;
+  min-height: var(--app-viewport-height);
+  height: var(--app-viewport-height);
   width: 100%;
   padding: var(--shell-pad-top) var(--shell-pad-right) var(--shell-pad-bottom)
     var(--shell-pad-left);
@@ -236,7 +238,8 @@ button {
   gap: 1rem;
   width: 100%;
   min-width: 0;
-  min-height: calc(100dvh - var(--shell-pad-top) - var(--shell-pad-bottom));
+  min-height: 100%;
+  height: 100%;
 }
 
 .is-hidden {

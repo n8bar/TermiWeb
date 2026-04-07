@@ -160,6 +160,7 @@ function setView(isAuthenticated: boolean): void {
 
   if (isAuthenticated) {
     window.requestAnimationFrame(() => {
+      syncAppViewportHeight();
       updateAutoSidebarPreference();
       syncWorkspaceStage();
       currentSize();
@@ -189,6 +190,17 @@ function setSidebarCollapsed(
     } catch {
       // Ignore local storage failures and keep the state in-memory for this device.
     }
+  }
+}
+
+function syncAppViewportHeight(): void {
+  const viewportHeight = Math.max(
+    0,
+    Math.floor(window.visualViewport?.height ?? window.innerHeight),
+  );
+
+  if (viewportHeight > 0) {
+    document.documentElement.style.setProperty("--app-viewport-height", `${viewportHeight}px`);
   }
 }
 
@@ -819,6 +831,7 @@ const stageViewportObserver = new ResizeObserver(() => {
 stageViewportObserver.observe(workspaceStageViewport);
 
 const handleViewportResize = () => {
+  syncAppViewportHeight();
   updateAutoSidebarPreference();
   syncWorkspaceStage();
 };
@@ -828,6 +841,7 @@ window.visualViewport?.addEventListener("resize", handleViewportResize);
 
 initializeSidebarPreference();
 renderModifierControls();
+syncAppViewportHeight();
 syncWorkspaceStage();
 currentSize();
 await refreshAuthState();
