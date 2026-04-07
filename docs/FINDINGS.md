@@ -20,7 +20,19 @@ This document tracks dogfood findings that are worth fixing later, without inter
 
 ## Open
 
-None yet.
+### Finding 1: Home and End require a double press
+- Status: `Open`
+- First seen: `2026-04-06`
+- Area: `mobile`
+- Summary: The `Home` and `End` buttons do not take effect on the first press and currently have to be pressed twice.
+- Notes: The issue appears specific to the on-screen control buttons rather than general terminal input.
+
+### Finding 2: Cursor keys toggle keyboard visibility on mobile
+- Status: `Open`
+- First seen: `2026-04-06`
+- Area: `mobile`
+- Summary: Pressing the on-screen cursor keys causes the mobile keyboard to show or hide unexpectedly.
+- Notes: When the keyboard visibility changes, the keyboard control tray shifts position, which makes the controls feel unstable during navigation.
 
 ## Closed
 
