@@ -20,7 +20,12 @@ This document tracks dogfood findings that are worth fixing later, without inter
 
 ## Open
 
-None yet.
+### Finding 5: Long-running CLI output can leave ghost text behind
+- Status: `Open`
+- First seen: `2026-04-06`
+- Area: `terminal`
+- Summary: While using full-screen or highly interactive CLI tools such as Claude Code or Codex, the terminal can leave ghost text behind in odd positions and sometimes shifts visible text upward when it should not.
+- Notes: A normal browser refresh clears the artifact and restores the terminal view, but the in-session rendering looks dirty and unpolished when it happens.
 
 ## Closed
 
