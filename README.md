@@ -49,6 +49,9 @@ TermiWeb is a workstation-first shared terminal for Windows. The browser UI is t
 - `npm run dev` starts the integrated dev server.
 - `npm run build` builds the client and server output into `dist/`.
 - `npm run start` runs the production server from `dist/`.
+- `npm run start:hidden` starts the built Windows server in the background without spawning an extra console window.
+- `npm run restart:hidden` restarts that hidden Windows background server.
+- `npm run stop:hidden` stops that hidden Windows background server.
 - `npm run typecheck` runs both client and server TypeScript checks.
 - `npm test` runs the local test suite.
 - `npm run lint` runs the repo lint rules.

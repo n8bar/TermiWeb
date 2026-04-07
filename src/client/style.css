@@ -332,18 +332,8 @@ button {
 .control-tray-header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-}
-
-.control-tray-copy {
-  min-width: 0;
-}
-
-.control-tray-copy h3 {
-  margin: 0;
-  font-weight: 650;
-  letter-spacing: 0.02em;
+  justify-content: flex-end;
+  gap: 0.6rem;
 }
 
 .control-tray.is-collapsed {
