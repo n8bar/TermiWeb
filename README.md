@@ -10,7 +10,8 @@ TermiWeb is a browser-first shared terminal for Windows. The browser UI is the s
 - Single shared-password login for local/LAN use
 - Device-local instance selection after initial attach
 - Rendered-text select mode for reliable copying after screen clears
-- Fixed 40-column terminal width across clients
+- Fixed 80-column terminal width across clients
+- One shared layout across workstation and device browsers
 - Local-only testing and verification workflow
 
 ## Quick start

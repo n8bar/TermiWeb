@@ -15,7 +15,7 @@ const envSchema = z.object({
     .optional()
     .transform((value) => (value === undefined ? true : value === "true")),
   TERMIWEB_DEFAULT_SHELL: optionalTrimmedString,
-  TERMIWEB_FIXED_COLS: z.coerce.number().int().min(20).max(240).default(40),
+  TERMIWEB_FIXED_COLS: z.coerce.number().int().min(20).max(240).default(80),
   TERMIWEB_MAX_SESSIONS: z.coerce.number().int().min(1).max(32).default(8),
   TERMIWEB_SESSION_TTL_HOURS: z.coerce
     .number()

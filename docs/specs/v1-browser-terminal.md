@@ -22,17 +22,20 @@ V1 delivers a browser-based Windows terminal that supports:
 ## Terminal UX
 
 - All devices use the same web interface.
+- The browser UI should keep one shared layout model across device classes and prefer horizontal overflow over rearranging major panels into a different mobile-specific structure.
 - The active terminal instance is rendered with `xterm.js`.
 - The UI labels shared shells as instances rather than tabs.
 - The current machine hostname is visible before and after login.
 - The instance rail can collapse horizontally into a narrow action-first layout that preserves minimal instance identity and close controls.
+- In collapsed mode, the instance close control must remain physically separate from the instance card hit target.
 - The sidebar collapse state is local to each browser and must not sync through shared session metadata.
 - New instances start in the user's home directory rather than the repository working directory.
-- Terminal width stays fixed at 40 columns across clients so switching devices does not change line wrapping.
+- Terminal width stays fixed at 80 columns across clients so switching devices does not change line wrapping.
 - Mobile controls must expose at least `Ctrl`, `Alt`, `Esc`, `Tab`, `Enter`, `Backspace`, and arrow keys.
 - Mobile controls must also expose a `Del` key.
 - Sticky modifiers must allow key combos to be composed from a phone.
 - Arrow-key controls should look like a compact cursor-key cluster rather than text buttons.
+- The main control strip should stay dense enough to fit roughly twice the current button count per row when space allows.
 - A select mode must exist so touch devices can copy terminal text reliably.
 - Select mode should replace the terminal viewport in-place with a read-only monospace text view derived from the rendered terminal buffer instead of the raw PTY stream.
 - The select snapshot should reflect what is currently visible in the terminal buffer, so text cleared by commands like `cls` does not reappear there.

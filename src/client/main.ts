@@ -88,7 +88,7 @@ let workspaceActiveSessionId: string | null = null;
 let modifierState: ModifierState = createModifierState();
 let sidebarCollapsed = false;
 let selectionMode = false;
-let fixedCols = 40;
+let fixedCols = 80;
 const sidebarStorageKey = "termiweb.sidebar-collapsed";
 
 const statusLabels: Record<SessionSummary["status"], string> = {
@@ -361,6 +361,9 @@ function renderSessions(): void {
   }
 
   for (const session of sessions) {
+    const row = document.createElement("div");
+    row.className = "session-row";
+
     const card = document.createElement("div");
     card.className = `session-card${session.id === activeSessionId ? " is-active" : ""}`;
     card.tabIndex = 0;
@@ -410,8 +413,9 @@ function renderSessions(): void {
       });
     });
 
-    card.append(head, meta, caption, close);
-    sessionList.append(card);
+    card.append(head, meta, caption);
+    row.append(card, close);
+    sessionList.append(row);
   }
 
   updateActiveSessionMeta();

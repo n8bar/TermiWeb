@@ -40,7 +40,7 @@ export class TerminalSession extends EventEmitter<TerminalSessionEvents> {
   #history = "";
   #status: TerminalStatus = "stopped";
   #lastExitCode: number | null = null;
-  #cols = 40;
+  #cols = 80;
   #rows = 32;
 
   constructor(options: TerminalSessionOptions) {
