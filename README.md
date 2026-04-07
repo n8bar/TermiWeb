@@ -4,10 +4,10 @@ TermiWeb is a workstation-first shared terminal for Windows. The browser UI is t
 
 ## Product direction
 
-- The default TermiWeb story is one trusted Windows machine on a private network.
-- The product should stay practical for a single user or small trusted group without assuming a homelab or a full self-hosted access stack.
-- Advanced remote access is still part of the direction, but in `0.1` that means operator-managed deployment guidance, not built-in internet-ready hosting features.
-- TermiWeb does not currently ship multi-user auth, built-in TLS termination, or turnkey public exposure.
+- The default TermiWeb story is still one trusted Windows machine on a private network.
+- Careful WAN exposure is also a legitimate advanced use case for people who want to reach their own workstation remotely.
+- In `0.1`, TermiWeb expects operators to supply the outer deployment controls around WAN access rather than trying to be the entire remote-access stack by itself.
+- TermiWeb does not currently ship multi-user auth, built-in TLS termination, or a turnkey public-exposure workflow.
 
 ## What's Working
 
@@ -39,8 +39,9 @@ TermiWeb is a workstation-first shared terminal for Windows. The browser UI is t
 ## Advanced deployments
 
 - The supported default is still a trusted private network.
-- If you want remote access across the internet or across sites, layer TermiWeb behind infrastructure you already manage, such as a private VPN, a mesh network, or a reverse proxy with TLS and external auth.
-- Those deployment patterns are valid directionally, but they are not built-in `0.1` product features.
+- If you want remote access across the internet or across sites, expose it deliberately behind controls you already trust, such as TLS termination, external auth, a reverse proxy, a VPN or mesh network, IP restrictions, or equivalent safeguards.
+- Those are real deployment patterns for `0.1`, but they are operator-managed patterns around the app rather than built-in product features.
+- The shared-password gate is part of the access story, not the whole WAN hardening story by itself.
 
 ## Scripts
 

@@ -7,8 +7,9 @@ TermiWeb provides a workstation-first browser terminal workflow that can also be
 ## Product Direction
 
 - The default product story is simple: one Windows workstation, one private network, and one trusted operator or small trusted group.
+- Careful WAN exposure is a legitimate advanced use case for people managing their own workstations remotely.
 - The product should remain useful without requiring a homelab or a complex self-hosted access stack.
-- Advanced remote or internet-enabled deployments are valid operator-managed use cases, but they are not the default posture and should not be documented as if TermiWeb already ships a complete remote-access platform.
+- Advanced remote or internet-enabled deployments should be documented as operator-managed patterns around the app rather than treated as misuse.
 - Documentation should clearly separate current product behavior from deployment patterns users may layer around the app themselves.
 
 ## Core Behavior
@@ -28,8 +29,9 @@ TermiWeb provides a workstation-first browser terminal workflow that can also be
 ## 0.1 Constraints
 
 - The supported default is localhost, LAN, or another trusted private network.
-- No built-in claims of safe direct public internet exposure.
-- Advanced remote deployments may be layered around the app by operators who manage their own VPN, proxy, TLS, and authentication story.
+- Careful WAN exposure is allowed as an operator-managed deployment pattern around the app.
+- `0.1` expects operators to provide the surrounding WAN controls they need, such as TLS, external auth, ingress policy, VPN or mesh access, or equivalent safeguards.
+- No built-in claim that the shared-password gate by itself is a complete public-internet security story.
 - LAN binding is enabled by default and uses the LAN default host when no explicit `TERMIWEB_HOST` is set.
 - No full account system.
 - No built-in multi-user authorization model beyond the shared password gate.

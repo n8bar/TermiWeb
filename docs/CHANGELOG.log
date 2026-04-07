@@ -29,3 +29,4 @@
 2026-04-06 Replaced the restart-time websocket reconnect flap with server recovery polling so live pages wait for the server and refresh themselves once it is back.
 2026-04-06 Moved the control tray off synthetic mobile click handling onto direct touch/pointer activation, and increased the control tray key height while keeping the cursor cluster square.
 2026-04-07 Reframed the docs around TermiWeb as a workstation-first tool, added deployment-philosophy guidance for trusted-network defaults plus operator-managed remote deployments, and aligned the 0.1 specs with that direction without claiming unshipped features.
+2026-04-07 Corrected the deployment docs so careful WAN exposure is treated as a legitimate advanced TermiWeb use case, while keeping the trusted-network default and the current 0.1 security boundaries explicit.

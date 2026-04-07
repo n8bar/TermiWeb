@@ -13,37 +13,39 @@ The default deployment story should stay simple:
 
 That is the product's normal operating mode in `0.1`. It should not require a homelab, reverse proxy stack, or internet-facing setup to make sense.
 
-## Advanced Remote Access
+## Advanced WAN Access
 
-Some users will still want to reach their workstation from farther away. The docs should make room for that without pretending TermiWeb already ships a full remote-access platform.
+Some users will still want to reach their workstation from farther away. That is a legitimate use case, not misuse.
 
-In practice, advanced operators may choose to layer TermiWeb behind infrastructure they already trust, such as:
+In `0.1`, TermiWeb should make room for careful WAN exposure by operators who already manage their own edge controls. Common patterns include:
 
+- TLS termination
+- external authentication
+- a reverse proxy
 - a private VPN or mesh network
-- a reverse proxy with TLS
-- an external authentication layer
-- a hardened self-hosted ingress path they already manage
+- IP restrictions or equivalent ingress policy
+- other hardened ingress paths the operator already trusts
 
-Those are deployment choices around TermiWeb, not built-in `0.1` product features.
+Those are real deployment patterns for TermiWeb. They are not built into the app itself, but the docs should support them clearly.
 
-## What 0.1 Does Not Claim
+## 0.1 Boundaries
 
 Version `0.1` does not ship:
 
 - multi-user identity and authorization
 - built-in TLS termination
-- internet-ready hardening or turnkey public exposure
-- claims of safe direct exposure to the public internet
+- turnkey public exposure
+- a claim that the shared-password gate alone is a complete WAN security posture
 
-If users deploy it beyond a trusted private network, they are responsible for the surrounding security model.
+That does not mean WAN exposure is off-limits. It means the surrounding deployment and security model is operator-managed in `0.1`.
 
 ## Product Direction
 
-TermiWeb should keep the simple trusted-network path as the default while staying compatible with more advanced operator-managed deployments over time.
+TermiWeb should keep the simple trusted-network path as the default while also staying compatible with careful operator-managed WAN deployments over time.
 
 That means:
 
 - keep the workstation-first flow clean
 - do not assume every user runs a homelab
-- do not block serious remote-access users from layering TermiWeb into their own infrastructure
+- actively support serious remote-access users in the docs without pretending the app already ships every edge/security feature itself
 - document the difference between current product behavior and operator-managed deployment patterns clearly

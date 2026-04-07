@@ -13,4 +13,4 @@ Dogfood the first usable 0.1 browser terminal, keep the workstation-first deploy
 
 ## Next Action
 
-Continue dogfooding the live app in real work, log the next findings in `docs/FINDINGS.md`, keep the simple trusted-network path as the default in the docs, and only expand remote-deployment guidance where it stays honest about current `0.1` behavior.
+Continue dogfooding the live app in real work, log the next findings in `docs/FINDINGS.md`, keep the simple trusted-network path as the default in the docs, and document careful operator-managed WAN exposure as a legitimate advanced path without overstating current `0.1` features.
