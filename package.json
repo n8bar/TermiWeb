@@ -4,7 +4,7 @@
   "private": true,
   "license": "MIT",
   "type": "module",
-  "description": "Browser-first shared Windows terminal for desktop and phone.",
+  "description": "Browser-first shared Windows terminal for workstations and other devices.",
   "engines": {
     "node": ">=22"
   },

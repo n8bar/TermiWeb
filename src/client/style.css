@@ -276,7 +276,7 @@ button {
 
 .workspace-layout {
   display: grid;
-  grid-template-columns: clamp(10.5rem, 24vw, 18rem) minmax(0, 1fr);
+  grid-template-columns: clamp(13rem, 28vw, 22rem) minmax(0, 1fr);
   gap: 1rem;
   min-height: 0;
   height: 100%;
@@ -366,15 +366,16 @@ button {
 .session-row {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
-  gap: 0.45rem;
+  gap: 0.6rem;
   align-items: stretch;
 }
 
 .session-card {
   display: grid;
-  gap: 0.55rem;
+  gap: 0.7rem;
   width: 100%;
-  padding: 0.85rem 0.95rem;
+  min-height: 4.2rem;
+  padding: 1.1rem 1.15rem;
   border-radius: var(--radius-md);
   border: 1px solid rgba(255, 255, 255, 0.07);
   background: rgba(255, 255, 255, 0.03);
@@ -659,14 +660,15 @@ button {
 }
 
 .session-close {
-  align-self: start;
-  min-width: 2rem;
+  align-self: stretch;
+  min-width: 2.6rem;
+  min-height: 2.6rem;
   padding: 0;
   line-height: 1;
 }
 
 .workspace-layout.is-sidebar-collapsed {
-  grid-template-columns: 4.5rem minmax(0, 1fr);
+  grid-template-columns: 5.5rem minmax(0, 1fr);
 }
 
 .workspace-layout.is-sidebar-collapsed .panel-header-copy,
@@ -679,7 +681,7 @@ button {
 }
 
 .workspace-layout.is-sidebar-collapsed .side-panel {
-  padding-inline: 0.45rem;
+  padding-inline: 0.65rem;
 }
 
 .workspace-layout.is-sidebar-collapsed .panel-header {
@@ -690,19 +692,28 @@ button {
 
 .workspace-layout.is-sidebar-collapsed .panel-header-actions {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: 1fr;
   justify-content: stretch;
 }
 
+.workspace-layout.is-sidebar-collapsed #toggle-sidebar-button {
+  order: 1;
+}
+
+.workspace-layout.is-sidebar-collapsed #refresh-button {
+  order: 2;
+}
+
 .workspace-layout.is-sidebar-collapsed #new-session-button {
-  grid-column: 1 / -1;
+  order: 3;
   justify-content: center;
   padding-inline: 0;
 }
 
 .workspace-layout.is-sidebar-collapsed .session-card {
-  padding: 0.5rem 0.35rem;
-  gap: 0.4rem;
+  min-height: 4.8rem;
+  padding: 0.8rem 0.45rem;
+  gap: 0.55rem;
   justify-items: center;
 }
 
@@ -729,6 +740,6 @@ button {
 .workspace-layout.is-sidebar-collapsed .session-close {
   justify-self: center;
   align-self: center;
-  min-width: 1.8rem;
-  min-height: 1.8rem;
+  min-width: 2.2rem;
+  min-height: 2.2rem;
 }

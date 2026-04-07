@@ -26,9 +26,11 @@ export class WorkspaceStore {
 
     try {
       const raw = await readFile(this.#stateFile, "utf8");
-      this.#state = ensureWorkspaceHasTab(
-        workspaceStateSchema.parse(JSON.parse(raw)),
-      );
+      const parsed = workspaceStateSchema.parse(JSON.parse(raw));
+      this.#state = ensureWorkspaceHasTab(parsed);
+      if (JSON.stringify(parsed) !== JSON.stringify(this.#state)) {
+        await this.#persist();
+      }
     } catch {
       this.#state = ensureWorkspaceHasTab(createEmptyWorkspaceState());
       await this.#persist();

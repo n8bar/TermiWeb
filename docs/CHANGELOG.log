@@ -21,3 +21,5 @@
 2026-04-06 Changed the 4:3 stage behavior to keep full width and trim height instead of scaling the entire workspace down on narrow viewports.
 2026-04-06 Tied the workspace shell to the live visual viewport height so the control tray stays above the on-screen keyboard on phones.
 2026-04-06 Moved the control tray inside the outer terminal shell and reordered the main keys to Esc/Bksp/Del, Tab/Select/Copy, and Ctrl/Alt/Paste with Enter under the cursor cluster.
+2026-04-06 Reused the lowest available auto-generated instance number, normalized legacy Terminal-style instance names forward to Instance naming, and enlarged the instance rail targets.
+2026-04-06 Stacked the collapsed rail actions vertically so the collapse toggle sits above refresh instead of beside it.

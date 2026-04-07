@@ -14,6 +14,8 @@ V1 delivers a browser-based Windows terminal that supports:
 
 - Shared instances are global to the app instance.
 - Instances persist across app restarts as lightweight metadata only.
+- Auto-generated instance names should reuse the lowest available `Instance N` rather than monotonically climbing forever.
+- Legacy auto-generated `Terminal N` names should normalize forward to `Instance N`.
 - An instance starts a fresh shell when activated if no live process exists.
 - Output history is replayed to newly attached clients so a second browser can catch up to the current terminal buffer.
 - The workspace's last active instance should be the default attach target for newly connected clients that do not already have a local selection.
@@ -31,6 +33,8 @@ V1 delivers a browser-based Windows terminal that supports:
 - The UI labels shared shells as instances rather than tabs.
 - The current machine hostname is visible before and after login.
 - The instance rail can collapse horizontally into a narrow action-first layout that preserves minimal instance identity and close controls.
+- The instance rail should prefer larger tap targets over squeezing in the smallest possible cards.
+- In collapsed mode, the collapse toggle should sit above refresh instead of sharing a row with it.
 - In collapsed mode, the instance close control must remain physically separate from the instance card hit target.
 - The sidebar collapse state is local to each browser and must not sync through shared session metadata.
 - If no local sidebar preference exists for a browser, narrow viewports should auto-collapse the sidebar by default.

@@ -10,6 +10,7 @@ TermiWeb provides a single browser-served terminal workflow that can be used fro
 - Multiple clients can attach to the same terminal session and type into it concurrently.
 - The app manages named shared instances rather than a single throwaway shell.
 - The UI refers to those shared shells as instances.
+- Auto-generated instance names should reuse the lowest available `Instance N` and normalize legacy `Terminal N` names forward to `Instance N`.
 - Authentication is a single shared password suitable for local/private deployments in v1.
 - The host platform is Windows-first.
 - Runtime configuration is read from process environment and an optional repo-root `.env` file.
@@ -26,6 +27,8 @@ TermiWeb provides a single browser-served terminal workflow that can be used fro
 - Mobile users must have access to terminal-essential keys even when the OS keyboard is limited.
 - The host machine identity should remain visible before and after login.
 - The instance rail can collapse horizontally, but instance selection and close actions must remain available.
+- The instance rail should favor larger touch targets over maximum density.
+- In collapsed mode, the collapse toggle should sit above refresh instead of sharing a row with it.
 - A device chooses its active instance locally after initial attach; switching on one device must not force-switch another device.
 - Sidebar collapse is a per-device browser preference and must not propagate through shared session state.
 - Select mode replaces the live terminal viewport with a read-only rendered-text snapshot suitable for copying.

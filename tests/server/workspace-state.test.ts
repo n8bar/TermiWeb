@@ -6,6 +6,7 @@ import {
   ensureWorkspaceHasTab,
   removeWorkspaceTab,
   selectWorkspaceTab,
+  workspaceStateSchema,
 } from "../../src/server/workspace/workspace-state.js";
 
 describe("workspace state", () => {
@@ -24,6 +25,46 @@ describe("workspace state", () => {
 
     expect(withCustom.tab.title).toBe("Logs");
     expect(withDefault.tab.title).toBe("Instance 2");
+  });
+
+  it("reuses the lowest available default instance number", () => {
+    const initial = ensureWorkspaceHasTab(createEmptyWorkspaceState());
+    const second = addWorkspaceTab(initial);
+    const removed = removeWorkspaceTab(second.state, initial.tabs[0]!.id);
+    const replacement = addWorkspaceTab(removed.state);
+
+    expect(removed.state.tabs.map((tab) => tab.title)).toEqual(["Instance 1"]);
+    expect(replacement.tab.title).toBe("Instance 2");
+  });
+
+  it("normalizes legacy and sparse auto-generated titles on load", () => {
+    const normalized = ensureWorkspaceHasTab(
+      workspaceStateSchema.parse({
+        tabs: [
+          {
+            id: "d9bd267f-eef0-4dc3-813b-32dcb61de7dd",
+            title: "Terminal 4",
+          },
+          {
+            id: "624e3107-42d4-468a-b825-cb8a3022af0a",
+            title: "Notes",
+          },
+          {
+            id: "dbf395bd-7573-40cd-a52d-53b0fdaf1383",
+            title: "Instance 9",
+          },
+        ],
+        lastActiveTabId: "dbf395bd-7573-40cd-a52d-53b0fdaf1383",
+        nextDefaultTitleIndex: 10,
+      }),
+    );
+
+    expect(normalized.tabs.map((tab) => tab.title)).toEqual([
+      "Instance 1",
+      "Notes",
+      "Instance 2",
+    ]);
+    expect(normalized.nextDefaultTitleIndex).toBe(3);
   });
 
   it("selects a known tab and ignores unknown ones", () => {
