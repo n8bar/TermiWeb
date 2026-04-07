@@ -37,6 +37,7 @@ V1 delivers a browser-based Windows terminal that supports:
 - New instances start in the user's home directory rather than the repository working directory.
 - Terminal width stays fixed at 80 columns across clients so switching devices does not change line wrapping.
 - The sidebar stays outside the scaled stage so instance controls remain finger-sized.
+- The keyboard control tray stays outside the scaled stage so terminal-specific buttons remain finger-sized.
 - The right-hand workspace stage should top-align within its viewport and should never present narrower than a 4:3 aspect ratio.
 - Mobile controls must expose at least `Ctrl`, `Alt`, `Esc`, `Tab`, `Enter`, `Backspace`, and arrow keys.
 - Mobile controls must also expose a `Del` key.

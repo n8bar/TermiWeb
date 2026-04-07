@@ -15,3 +15,4 @@
 2026-04-06 Added `Home` and `End` to the compact mobile key cluster and placed them above the left and right arrow keys.
 2026-04-06 Reworked `Ctrl` and `Alt` so a single tap arms the next key, a double tap locks the modifier, and the buttons visibly distinguish armed and locked states.
 2026-04-06 Merged the terminal header into the main header, moved the terminal workspace into a top-aligned 4:3-aware stage, kept the sidebar outside the scaled stage, and defaulted the sidebar to collapsed on narrow viewports when no local preference exists.
+2026-04-06 Moved the keyboard control tray out of the scaled workspace stage so the terminal buttons stay finger-sized on phones.

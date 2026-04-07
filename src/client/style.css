@@ -281,6 +281,14 @@ button {
   align-items: stretch;
 }
 
+.workspace-main {
+  min-width: 0;
+  min-height: 0;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  gap: 1rem;
+}
+
 .side-panel,
 .terminal-shell {
   padding: 1rem;
@@ -306,6 +314,10 @@ button {
 .workspace-stage {
   transform-origin: top left;
   will-change: transform;
+}
+
+.control-tray {
+  padding: 1rem;
 }
 
 .panel-header {
@@ -424,7 +436,6 @@ button {
 
 .terminal-shell {
   display: grid;
-  grid-template-rows: minmax(0, 1fr) auto;
   gap: 0.9rem;
   min-height: 0;
   height: 100%;

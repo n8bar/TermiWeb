@@ -120,44 +120,46 @@
             </div>
           </aside>
 
-          <section id="workspace-stage-viewport" class="workspace-stage-viewport">
-            <div id="workspace-stage" class="workspace-stage">
-              <main class="card terminal-shell">
-                <div id="terminal-container" class="terminal-container" aria-label="Terminal"></div>
-                <section
-                  id="selection-panel"
-                  class="selection-panel is-hidden"
-                  aria-label="Select terminal text"
-                >
-                  <div class="selection-panel-header">
-                    <div>
-                      <p class="eyebrow">Select text</p>
-                      <h3>Selection mode</h3>
+          <section class="workspace-main">
+            <section id="workspace-stage-viewport" class="workspace-stage-viewport">
+              <div id="workspace-stage" class="workspace-stage">
+                <main class="card terminal-shell">
+                  <div id="terminal-container" class="terminal-container" aria-label="Terminal"></div>
+                  <section
+                    id="selection-panel"
+                    class="selection-panel is-hidden"
+                    aria-label="Select terminal text"
+                  >
+                    <div class="selection-panel-header">
+                      <div>
+                        <p class="eyebrow">Select text</p>
+                        <h3>Selection mode</h3>
+                      </div>
+                      <div class="selection-panel-actions">
+                        <button id="copy-selection-button" class="ghost-button" type="button">
+                          Copy
+                        </button>
+                        <button id="close-selection-button" class="ghost-button" type="button">
+                          Done
+                        </button>
+                      </div>
                     </div>
-                    <div class="selection-panel-actions">
-                      <button id="copy-selection-button" class="ghost-button" type="button">
-                        Copy
-                      </button>
-                      <button id="close-selection-button" class="ghost-button" type="button">
-                        Done
-                      </button>
-                    </div>
-                  </div>
-                  <textarea
-                    id="selection-text"
-                    class="selection-text"
-                    readonly
-                    spellcheck="false"
-                    wrap="off"
-                  ></textarea>
-                </section>
-                <div
-                  id="mobile-controls"
-                  class="mobile-controls"
-                  aria-label="Terminal controls"
-                ></div>
-              </main>
-            </div>
+                    <textarea
+                      id="selection-text"
+                      class="selection-text"
+                      readonly
+                      spellcheck="false"
+                      wrap="off"
+                    ></textarea>
+                  </section>
+                </main>
+              </div>
+            </section>
+            <div
+              id="mobile-controls"
+              class="card control-tray mobile-controls"
+              aria-label="Terminal controls"
+            ></div>
           </section>
         </div>
       </section>
