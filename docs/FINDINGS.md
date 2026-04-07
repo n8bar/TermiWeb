@@ -45,8 +45,8 @@ This document tracks dogfood findings that are worth fixing later, without inter
 - Status: `Open`
 - First seen: `2026-04-06`
 - Area: `UI`
-- Summary: A flashing cursor appears at the last updated character in addition to the real input cursor.
-- Notes: The duplicate cursor is visually distracting because it competes with the actual insertion point.
+- Summary: A flashing cursor appears at the last updated character in addition to the real solid input cursor.
+- Notes: The duplicate flashing cursor is visually distracting because it competes with the actual insertion point.
 
 ## Closed
 
