@@ -27,7 +27,7 @@ html,
 body {
   min-height: 100%;
   margin: 0;
-  overflow-x: auto;
+  overflow-x: hidden;
 }
 
 body {
@@ -51,6 +51,7 @@ button {
 
 .app-shell {
   min-height: 100vh;
+  width: 100%;
   padding:
     max(0.8rem, env(safe-area-inset-top), 1.2rem)
     max(0.8rem, env(safe-area-inset-right), 1.2rem)
@@ -230,7 +231,8 @@ button {
 .workspace-shell {
   display: grid;
   gap: 1rem;
-  min-width: 63rem;
+  width: 100%;
+  min-width: 0;
 }
 
 .is-hidden {
@@ -248,14 +250,16 @@ button {
 
 .workspace-layout {
   display: grid;
-  grid-template-columns: 18rem minmax(42rem, 1fr);
+  grid-template-columns: clamp(10.5rem, 24vw, 18rem) minmax(0, 1fr);
   gap: 1rem;
   min-height: 76vh;
+  min-width: 0;
 }
 
 .side-panel,
 .terminal-shell {
   padding: 1rem;
+  min-width: 0;
 }
 
 .side-panel {
@@ -540,7 +544,7 @@ button {
 }
 
 .workspace-layout.is-sidebar-collapsed {
-  grid-template-columns: 4.5rem minmax(42rem, 1fr);
+  grid-template-columns: 4.5rem minmax(0, 1fr);
 }
 
 .workspace-layout.is-sidebar-collapsed .panel-header-copy,

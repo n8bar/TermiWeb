@@ -13,4 +13,4 @@ Stabilize the first usable v1 browser terminal: multi-device instance behavior, 
 
 ## Next Action
 
-Run real workstation/device validation against the live app, especially the single-layout cross-device viewport, the collapsed instance rail hit targets, and the 80-column shared width before adding more features.
+Run real workstation/device validation against the live app, especially viewport fit on phones, the collapsed instance rail hit targets, and the 80-column shared width before adding more features.

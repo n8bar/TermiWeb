@@ -30,3 +30,4 @@ TermiWeb provides a single browser-served terminal workflow that can be used fro
 - Sidebar collapse is a per-device browser preference and must not propagate through shared session state.
 - Select mode replaces the live terminal viewport with a read-only rendered-text snapshot suitable for copying.
 - Workstation and device browsers should use the same core layout rather than switching into a separate mobile-specific arrangement.
+- The page should fit the device viewport by default instead of forcing the whole UI onto an oversized horizontally panning canvas.
