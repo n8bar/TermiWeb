@@ -22,6 +22,7 @@ const config: TermiWebConfig = {
   port: 4317,
   password: "let-me-in",
   allowLan: false,
+  fixedCols: 120,
   maxSessions: 8,
   sessionTtlHours: 168,
   dataDir: ".termiweb",
@@ -46,6 +47,7 @@ describe("auth routes", () => {
 
     expect(login.status).toBe(200);
     expect(login.body.hostname).toEqual(expect.any(String));
+    expect(login.body.fixedCols).toBe(120);
     const cookies = login.headers["set-cookie"];
     expect(cookies).toBeTruthy();
     if (!cookies) {
@@ -87,5 +89,6 @@ describe("auth routes", () => {
     expect(session.status).toBe(200);
     expect(session.body.authenticated).toBe(false);
     expect(session.body.hostname).toEqual(expect.any(String));
+    expect(session.body.fixedCols).toBe(120);
   });
 });

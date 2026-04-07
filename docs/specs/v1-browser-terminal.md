@@ -16,6 +16,7 @@ V1 delivers a browser-based Windows terminal that supports:
 - Instances persist across app restarts as lightweight metadata only.
 - An instance starts a fresh shell when activated if no live process exists.
 - Output history is replayed to newly attached clients so a second browser can catch up to the current terminal buffer.
+- The globally active instance should be the default attach target for newly connected clients.
 
 ## Terminal UX
 
@@ -25,7 +26,9 @@ V1 delivers a browser-based Windows terminal that supports:
 - The current machine hostname is visible before and after login.
 - The instance rail can collapse horizontally without hiding instance close controls.
 - New instances start in the user's home directory rather than the repository working directory.
+- Terminal width stays fixed at 120 columns across clients so switching devices does not change line wrapping.
 - Mobile controls must expose at least `Ctrl`, `Alt`, `Esc`, `Tab`, `Enter`, `Backspace`, and arrow keys.
+- Mobile controls must also expose a `Del` key.
 - Sticky modifiers must allow key combos to be composed from a phone.
 - Arrow-key controls should look like a compact cursor-key cluster rather than text buttons.
 - A select mode must exist so touch devices can copy terminal text reliably.
@@ -36,7 +39,7 @@ V1 delivers a browser-based Windows terminal that supports:
 - HTTP session state is cookie-based in v1.
 - WebSocket upgrades require a valid authenticated browser session.
 - Runtime configuration can come from process environment or a repo-root `.env` file.
-- LAN binding is enabled by setting `TERMIWEB_ALLOW_LAN=true` when no explicit `TERMIWEB_HOST` is set.
+- LAN binding is enabled by default when no explicit `TERMIWEB_HOST` is set.
 
 ## Testing Guidance
 

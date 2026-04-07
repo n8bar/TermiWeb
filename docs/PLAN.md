@@ -13,4 +13,4 @@ Bootstrap v1 of the shared browser terminal: docs, repo workflow, auth gate, ins
 
 ## Next Action
 
-Run real multi-device/manual UX checks against the live browser terminal, then tighten shared-instance behavior, selection mode, and mobile controls based on what feels bad in practice.
+Run real multi-device/manual UX checks against the live browser terminal, then tighten shared-instance following, selection mode, and fixed-width ergonomics based on what feels bad in practice.

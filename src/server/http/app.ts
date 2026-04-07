@@ -65,7 +65,11 @@ export async function createHttpApp(options: CreateHttpAppOptions) {
   });
 
   app.get("/api/auth/session", (request, response) => {
-    response.json({ authenticated: authenticateRequest(request), hostname });
+    response.json({
+      authenticated: authenticateRequest(request),
+      hostname,
+      fixedCols: options.config.fixedCols,
+    });
   });
 
   app.post("/api/auth/login", (request, response) => {
@@ -82,7 +86,11 @@ export async function createHttpApp(options: CreateHttpAppOptions) {
 
     const token = options.authStore.issue();
     response.setHeader("Set-Cookie", createSessionCookie(token, sessionTtlSeconds));
-    response.json({ authenticated: true, hostname });
+    response.json({
+      authenticated: true,
+      hostname,
+      fixedCols: options.config.fixedCols,
+    });
   });
 
   app.post("/api/auth/logout", (request, response) => {

@@ -76,7 +76,6 @@ const terminal = new Terminal({
 const fitAddon = new FitAddon();
 terminal.loadAddon(fitAddon);
 terminal.open(terminalContainer);
-fitAddon.fit();
 
 let ws: WebSocket | null = null;
 let reconnectTimer: number | undefined;
@@ -87,6 +86,7 @@ let serverActiveSessionId: string | null = null;
 let modifierState: ModifierState = createModifierState();
 let sidebarCollapsed = false;
 let selectionMode = false;
+let fixedCols = 120;
 const sessionHistory = new Map<string, string>();
 
 const statusLabels: Record<SessionSummary["status"], string> = {
@@ -124,6 +124,12 @@ function setHostIdentity(hostname?: string): void {
   appAddress.textContent = accessAddress;
 }
 
+function setFixedCols(nextFixedCols?: number): void {
+  if (typeof nextFixedCols === "number" && Number.isFinite(nextFixedCols)) {
+    fixedCols = nextFixedCols;
+  }
+}
+
 function setView(isAuthenticated: boolean): void {
   authenticated = isAuthenticated;
   loginPanel.classList.toggle("is-hidden", isAuthenticated);
@@ -149,10 +155,47 @@ function sendEvent(event: unknown): void {
 }
 
 function currentSize() {
-  fitAddon.fit();
+  const proposed = fitAddon.proposeDimensions();
+  const rows = Math.max(proposed?.rows ?? terminal.rows, 24);
+  const nextCols = fixedCols;
+
+  if (terminal.cols !== nextCols || terminal.rows !== rows) {
+    terminal.resize(nextCols, rows);
+  }
+
+  const terminalElement = terminal.element;
+  const renderDimensions = (
+    terminal as Terminal & {
+      _core?: {
+        _renderService?: {
+          dimensions?: {
+            css?: {
+              cell?: {
+                width?: number;
+              };
+            };
+          };
+        };
+      };
+    }
+  )._core?._renderService?.dimensions;
+
+  if (terminalElement && renderDimensions?.css?.cell?.width) {
+    const terminalStyles = window.getComputedStyle(terminalElement);
+    const paddingWidth =
+      parseInt(terminalStyles.getPropertyValue("padding-left"), 10) +
+      parseInt(terminalStyles.getPropertyValue("padding-right"), 10);
+    const scrollbarWidth =
+      terminal.options.scrollback === 0 ? 0 : terminal.options.overviewRuler?.width || 14;
+    const visibleWidth =
+      nextCols * renderDimensions.css.cell.width + paddingWidth + scrollbarWidth;
+
+    terminalElement.style.width = `${Math.ceil(visibleWidth)}px`;
+  }
+
   return {
-    cols: Math.max(terminal.cols, 80),
-    rows: Math.max(terminal.rows, 24),
+    cols: nextCols,
+    rows,
   };
 }
 
@@ -396,6 +439,15 @@ function maybeAttachDefaultSession(): void {
     return;
   }
 
+  if (
+    serverActiveSessionId &&
+    sessions.some((session) => session.id === serverActiveSessionId) &&
+    activeSessionId !== serverActiveSessionId
+  ) {
+    attachToSession(serverActiveSessionId);
+    return;
+  }
+
   if (activeSessionId && sessions.some((session) => session.id === activeSessionId)) {
     return;
   }
@@ -487,8 +539,13 @@ async function refreshAuthState(): Promise<void> {
   const response = await fetch("/api/auth/session", {
     credentials: "same-origin",
   });
-  const body = (await response.json()) as { authenticated: boolean; hostname?: string };
+  const body = (await response.json()) as {
+    authenticated: boolean;
+    hostname?: string;
+    fixedCols?: number;
+  };
   setHostIdentity(body.hostname);
+  setFixedCols(body.fixedCols);
   setView(body.authenticated);
   if (body.authenticated) {
     setConnectionState("connecting");
@@ -517,6 +574,7 @@ loginForm.addEventListener("submit", async (event) => {
     authenticated?: boolean;
     error?: string;
     hostname?: string;
+    fixedCols?: number;
   };
   if (!response.ok) {
     setFormMessage(body.error ?? "Unable to authenticate.", true);
@@ -524,6 +582,7 @@ loginForm.addEventListener("submit", async (event) => {
   }
 
   setHostIdentity(body.hostname);
+  setFixedCols(body.fixedCols);
   passwordInput.value = "";
   setView(true);
   connectSocket();
@@ -604,4 +663,5 @@ const resizeObserver = new ResizeObserver(() => {
 resizeObserver.observe(terminalContainer);
 setSidebarCollapsed(false);
 renderModifierControls();
+currentSize();
 await refreshAuthState();

@@ -2,7 +2,7 @@
 
 ## Goal
 
-TermiWeb provides a single browser-served terminal workflow that can be used from all devices without remoting an entire desktop environment.
+TermiWeb provides a single browser-served terminal workflow that can be used from a workstation and other devices without remoting an entire desktop environment.
 
 ## Core Behavior
 
@@ -13,12 +13,13 @@ TermiWeb provides a single browser-served terminal workflow that can be used fro
 - Authentication is a single shared password suitable for local/private deployments in v1.
 - The host platform is Windows-first.
 - Runtime configuration is read from process environment and an optional repo-root `.env` file.
+- Terminal width is fixed at 120 columns by default so concurrent clients target the same line width.
 - The runtime prefers PowerShell 7 from `PATH`, then the standard install path, and only then falls back to Windows PowerShell.
 
 ## V1 Constraints
 
 - No public internet exposure assumptions.
-- `TERMIWEB_ALLOW_LAN=true` binds the app to the LAN default host when no explicit `TERMIWEB_HOST` is set.
+- LAN binding is enabled by default and uses the LAN default host when no explicit `TERMIWEB_HOST` is set.
 - No full account system.
 - No PTY/session resurrection after process or server restart.
 - Persist only the workspace metadata needed to restore the instance list and session labels.

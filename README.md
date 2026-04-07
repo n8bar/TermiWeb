@@ -1,13 +1,14 @@
 # TermiWeb
 
-TermiWeb is a browser-first shared terminal for Windows. The web UI is the session of record for all devices, so one live terminal session can be continued from anywhere without remoting the whole desktop.
+TermiWeb is a browser-first shared terminal for Windows. The browser UI is the same live interface on your workstation and any other device, so one terminal session can be continued anywhere without remoting the whole desktop.
 
-## Current shape
+## What's Working
 
 - Node + TypeScript backend with WebSocket-driven terminal sessions
 - `xterm.js` client with touch-oriented terminal controls
 - Shared instances backed by Windows shell processes
 - Single shared-password login for local/LAN use
+- Fixed 120-column terminal width across clients
 - Local-only testing and verification workflow
 
 ## Quick start
@@ -20,9 +21,9 @@ TermiWeb is a browser-first shared terminal for Windows. The web UI is the sessi
 
 ## LAN Access
 
-- Set `TERMIWEB_ALLOW_LAN=true` in `.env`.
+- TermiWeb binds to your LAN by default.
 - Leave `TERMIWEB_HOST` blank unless you want an explicit bind address.
-- Browse to `http://<your-pc-lan-ip>:22443` from your phone on the same network.
+- Browse to `http://<your-pc-lan-ip>:22443` from another device, such as your phone, on the same network.
 
 ## Scripts
 

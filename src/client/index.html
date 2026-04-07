@@ -22,7 +22,7 @@
             <p id="login-hostname" class="host-name">Loading host…</p>
             <p id="login-address" class="host-address">Connecting…</p>
             <p class="lede">
-              One terminal session, served through the browser for all devices.
+              One terminal session, shared between your workstation and any device.
             </p>
           </div>
         </div>
@@ -70,6 +70,15 @@
               </div>
               <div class="panel-header-actions">
                 <button
+                  id="refresh-button"
+                  class="ghost-button compact icon-button"
+                  type="button"
+                  aria-label="Refresh instances"
+                  title="Refresh instances"
+                >
+                  ↻
+                </button>
+                <button
                   id="toggle-sidebar-button"
                   class="ghost-button compact icon-button"
                   type="button"
@@ -79,15 +88,6 @@
                   title="Collapse instances"
                 >
                   «
-                </button>
-                <button
-                  id="refresh-button"
-                  class="ghost-button compact icon-button"
-                  type="button"
-                  aria-label="Refresh instances"
-                  title="Refresh instances"
-                >
-                  ↻
                 </button>
                 <button id="new-session-button" class="primary-button compact" type="button">
                   New instance
@@ -100,8 +100,8 @@
             <div class="side-panel-meta">
               <p id="shell-label">Shell: detecting…</p>
               <p>
-                All devices share this same browser shell. Instances persist; live shell processes
-                do not.
+                Your workstation and any device share this same browser shell. Instances persist;
+                live shell processes do not.
               </p>
             </div>
           </aside>

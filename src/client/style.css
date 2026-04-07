@@ -360,13 +360,14 @@ button {
   background:
     linear-gradient(180deg, rgba(122, 255, 178, 0.02), transparent 22%),
     var(--terminal-bg);
-  overflow: hidden;
+  overflow: auto;
   position: relative;
 }
 
 .terminal-container .xterm {
   padding: 0.85rem;
   height: 100%;
+  min-width: fit-content;
   font-family: var(--mono-font);
 }
 

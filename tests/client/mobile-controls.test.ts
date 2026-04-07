@@ -27,5 +27,6 @@ describe("mobile control modifiers", () => {
   it("provides terminal navigation sequences", () => {
     expect(terminalSequence("up")).toBe("\u001b[A");
     expect(terminalSequence("backspace")).toBe("\u007f");
+    expect(terminalSequence("delete")).toBe("\u001b[3~");
   });
 });
