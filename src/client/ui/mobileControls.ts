@@ -1,6 +1,8 @@
+export type ModifierMode = "off" | "armed" | "locked";
+
 export interface ModifierState {
-  ctrl: boolean;
-  alt: boolean;
+  ctrl: ModifierMode;
+  alt: ModifierMode;
 }
 
 export type ModifierKey = keyof ModifierState;
@@ -71,23 +73,31 @@ const SEQUENCES: Record<TerminalControlAction, string> = {
 
 export function createModifierState(): ModifierState {
   return {
-    ctrl: false,
-    alt: false,
+    ctrl: "off",
+    alt: "off",
   };
 }
 
-export function toggleModifier(
+export function advanceModifierState(
   state: ModifierState,
   modifier: ModifierKey,
+  isDoubleTap: boolean,
 ): ModifierState {
+  const current = state[modifier];
+  let next: ModifierMode;
+
+  if (current === "locked") {
+    next = "off";
+  } else if (current === "armed") {
+    next = isDoubleTap ? "locked" : "off";
+  } else {
+    next = "armed";
+  }
+
   return {
     ...state,
-    [modifier]: !state[modifier],
+    [modifier]: next,
   };
-}
-
-export function resetModifiers(): ModifierState {
-  return createModifierState();
 }
 
 export function terminalSequence(action: TerminalControlAction): string {
@@ -98,7 +108,10 @@ export function applyModifiersToInput(
   data: string,
   state: ModifierState,
 ): { data: string; nextState: ModifierState } {
-  if (!state.ctrl && !state.alt) {
+  const ctrlActive = state.ctrl !== "off";
+  const altActive = state.alt !== "off";
+
+  if (!ctrlActive && !altActive) {
     return {
       data,
       nextState: state,
@@ -106,7 +119,7 @@ export function applyModifiersToInput(
   }
 
   let transformed = data;
-  if (state.ctrl && data.length === 1) {
+  if (ctrlActive && data.length === 1) {
     const lowered = data.toLowerCase();
     if (lowered >= "a" && lowered <= "z") {
       transformed = String.fromCharCode(lowered.charCodeAt(0) - 96);
@@ -115,12 +128,15 @@ export function applyModifiersToInput(
     }
   }
 
-  if (state.alt) {
+  if (altActive) {
     transformed = `\u001b${transformed}`;
   }
 
   return {
     data: transformed,
-    nextState: resetModifiers(),
+    nextState: {
+      ctrl: state.ctrl === "armed" ? "off" : state.ctrl,
+      alt: state.alt === "armed" ? "off" : state.alt,
+    },
   };
 }

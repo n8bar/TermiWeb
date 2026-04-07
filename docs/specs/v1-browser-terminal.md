@@ -37,7 +37,8 @@ V1 delivers a browser-based Windows terminal that supports:
 - Mobile controls must expose at least `Ctrl`, `Alt`, `Esc`, `Tab`, `Enter`, `Backspace`, and arrow keys.
 - Mobile controls must also expose a `Del` key.
 - Mobile controls must also expose `Home` and `End`.
-- Sticky modifiers must allow key combos to be composed from a phone.
+- Modifier controls must allow key combos to be composed from a phone.
+- `Ctrl` and `Alt` should arm for the next key on single tap, lock on double tap, and clear on a later tap when locked.
 - Arrow-key controls should look like a compact cursor-key cluster rather than text buttons.
 - `Home` should sit above `←` and `End` should sit above `→` in that cluster.
 - The main control strip should stay dense enough to fit roughly twice the current button count per row when space allows.

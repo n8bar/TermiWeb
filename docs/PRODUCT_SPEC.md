@@ -34,3 +34,4 @@ TermiWeb provides a single browser-served terminal workflow that can be used fro
 - Mobile browsers should default to a desktop-style layout viewport so the UI initially behaves more like the browser's "Desktop Site" mode without requiring a per-device toggle.
 - That desktop-style mobile viewport should leave the browser free to choose the initial fit instead of pinning the page to a forced `initial-scale=1.0`.
 - The mobile key cluster should include `Home` and `End` near the cursor keys, not only in the main action strip.
+- `Ctrl` and `Alt` should arm on a single tap, lock on a double tap, and visibly distinguish armed from locked states.

@@ -13,3 +13,4 @@
 2026-04-06 Switched the default viewport metadata to a desktop-style layout width so phones behave more like "Desktop Site" mode without requiring a per-device browser toggle.
 2026-04-06 Removed the forced `initial-scale=1.0` from the desktop-style mobile viewport so browsers can choose a more zoomed-out initial fit on their own.
 2026-04-06 Added `Home` and `End` to the compact mobile key cluster and placed them above the left and right arrow keys.
+2026-04-06 Reworked `Ctrl` and `Alt` so a single tap arms the next key, a double tap locks the modifier, and the buttons visibly distinguish armed and locked states.

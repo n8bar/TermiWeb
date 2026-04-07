@@ -1,27 +1,57 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  advanceModifierState,
   applyModifiersToInput,
   createModifierState,
   terminalSequence,
-  toggleModifier,
 } from "../../src/client/ui/mobileControls.js";
 
 describe("mobile control modifiers", () => {
+  it("arms a modifier on first tap, locks it on double tap, and clears it on the next tap", () => {
+    const armed = advanceModifierState(createModifierState(), "ctrl", false);
+    expect(armed.ctrl).toBe("armed");
+
+    const locked = advanceModifierState(armed, "ctrl", true);
+    expect(locked.ctrl).toBe("locked");
+
+    const cleared = advanceModifierState(locked, "ctrl", false);
+    expect(cleared.ctrl).toBe("off");
+  });
+
+  it("clears an armed modifier when it is tapped again without a double tap", () => {
+    const armed = advanceModifierState(createModifierState(), "alt", false);
+    const cleared = advanceModifierState(armed, "alt", false);
+
+    expect(cleared.alt).toBe("off");
+  });
+
   it("converts ctrl-letter combos into control characters", () => {
-    const state = toggleModifier(createModifierState(), "ctrl");
+    const state = advanceModifierState(createModifierState(), "ctrl", false);
     const result = applyModifiersToInput("c", state);
 
     expect(result.data).toBe("\u0003");
-    expect(result.nextState.ctrl).toBe(false);
+    expect(result.nextState.ctrl).toBe("off");
   });
 
   it("prefixes alt combos with escape", () => {
-    const state = toggleModifier(createModifierState(), "alt");
+    const state = advanceModifierState(createModifierState(), "alt", false);
     const result = applyModifiersToInput("f", state);
 
     expect(result.data).toBe("\u001bf");
-    expect(result.nextState.alt).toBe(false);
+    expect(result.nextState.alt).toBe("off");
+  });
+
+  it("keeps locked modifiers active after use", () => {
+    const locked = advanceModifierState(
+      advanceModifierState(createModifierState(), "ctrl", false),
+      "ctrl",
+      true,
+    );
+    const result = applyModifiersToInput("c", locked);
+
+    expect(result.data).toBe("\u0003");
+    expect(result.nextState.ctrl).toBe("locked");
   });
 
   it("provides terminal navigation sequences", () => {

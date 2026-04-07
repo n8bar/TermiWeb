@@ -527,6 +527,16 @@ button {
   color: var(--accent);
 }
 
+.control-button.is-armed {
+  box-shadow: inset 0 0 0 1px rgba(122, 255, 178, 0.18);
+}
+
+.control-button.is-locked {
+  border-color: rgba(244, 211, 94, 0.55);
+  background: rgba(244, 211, 94, 0.18);
+  color: var(--accent-hot);
+}
+
 .terminal-header-actions,
 .topbar-actions {
   display: flex;

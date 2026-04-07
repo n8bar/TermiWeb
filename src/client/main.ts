@@ -6,12 +6,11 @@ import { Terminal } from "@xterm/xterm";
 
 import { parseServerEvent, type ServerEvent, type SessionSummary } from "../shared/protocol.js";
 import {
+  advanceModifierState,
   applyModifiersToInput,
   createModifierState,
   mobileControlButtons,
-  resetModifiers,
   terminalSequence,
-  toggleModifier,
   type ModifierKey,
   type ModifierState,
   type TerminalControlAction,
@@ -86,10 +85,17 @@ let sessions: SessionSummary[] = [];
 let activeSessionId: string | null = null;
 let workspaceActiveSessionId: string | null = null;
 let modifierState: ModifierState = createModifierState();
+let lastModifierTap:
+  | {
+      key: ModifierKey;
+      atMs: number;
+    }
+  | null = null;
 let sidebarCollapsed = false;
 let selectionMode = false;
 let fixedCols = 80;
 const sidebarStorageKey = "termiweb.sidebar-collapsed";
+const modifierDoubleTapWindowMs = 360;
 
 const statusLabels: Record<SessionSummary["status"], string> = {
   stopped: "Stopped",
@@ -272,9 +278,20 @@ function renderModifierControls(): void {
 
     if (button.kind === "modifier") {
       const modifierKey = button.id as ModifierKey;
-      element.classList.toggle("is-active", modifierState[modifierKey]);
+      const mode = modifierState[modifierKey];
+      element.classList.toggle("is-active", mode !== "off");
+      element.classList.toggle("is-armed", mode === "armed");
+      element.classList.toggle("is-locked", mode === "locked");
       element.addEventListener("click", () => {
-        modifierState = toggleModifier(modifierState, modifierKey);
+        const now = window.performance.now();
+        const isDoubleTap =
+          lastModifierTap?.key === modifierKey &&
+          now - lastModifierTap.atMs <= modifierDoubleTapWindowMs;
+        modifierState = advanceModifierState(modifierState, modifierKey, isDoubleTap);
+        lastModifierTap = {
+          key: modifierKey,
+          atMs: now,
+        };
         renderModifierControls();
         terminal.focus();
       });
@@ -290,12 +307,15 @@ function renderModifierControls(): void {
           return;
         }
 
+        const transformed = applyModifiersToInput(terminalSequence(action), modifierState);
+
         sendEvent({
           type: "terminal/input",
           sessionId: activeSessionId,
-          data: terminalSequence(action),
+          data: transformed.data,
         });
-        modifierState = resetModifiers();
+        modifierState = transformed.nextState;
+        lastModifierTap = null;
         renderModifierControls();
         terminal.focus();
       });
@@ -316,11 +336,15 @@ function renderModifierControls(): void {
         try {
           const pasted = await navigator.clipboard.readText();
           if (activeSessionId && pasted) {
+            const transformed = applyModifiersToInput(pasted, modifierState);
             sendEvent({
               type: "terminal/input",
               sessionId: activeSessionId,
-              data: pasted,
+              data: transformed.data,
             });
+            modifierState = transformed.nextState;
+            lastModifierTap = null;
+            renderModifierControls();
           }
         } catch {
           setConnectionState("error", "Clipboard blocked");
@@ -629,6 +653,7 @@ terminal.onData((data) => {
 
   const transformed = applyModifiersToInput(data, modifierState);
   modifierState = transformed.nextState;
+  lastModifierTap = null;
   renderModifierControls();
 
   sendEvent({
