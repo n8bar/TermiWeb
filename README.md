@@ -8,6 +8,7 @@ TermiWeb is a browser-first shared terminal for Windows. The browser UI is the s
 - `xterm.js` client with touch-oriented terminal controls
 - Shared instances backed by Windows shell processes
 - Single shared-password login for local/LAN use
+- Empty logins seed `Instance 1` automatically so a fresh browser session never lands on an empty instance rail
 - Device-local instance selection after initial attach
 - Rendered-text select mode for reliable copying after screen clears
 - Fixed 80-column terminal width across clients

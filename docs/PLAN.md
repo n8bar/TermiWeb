@@ -2,7 +2,7 @@
 
 ## Current Focus
 
-Stabilize the first usable v1 browser terminal: multi-device instance behavior, copy/select workflow, and the mobile-first shell layout.
+Dogfood the first usable v1 browser terminal, close the current findings batch, and keep the live-session workflow stable while polishing interaction details.
 
 ## Milestones
 
@@ -13,4 +13,4 @@ Stabilize the first usable v1 browser terminal: multi-device instance behavior, 
 
 ## Next Action
 
-Dogfood the live app in real work, log issues in `docs/FINDINGS.md`, and batch the next implementation pass once a useful set of findings has accumulated.
+Continue dogfooding the live app in real work, log the next findings in `docs/FINDINGS.md`, and batch follow-up polish once another useful set of issues accumulates.

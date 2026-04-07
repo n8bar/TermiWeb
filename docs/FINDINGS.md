@@ -20,34 +20,34 @@ This document tracks dogfood findings that are worth fixing later, without inter
 
 ## Open
 
-### Finding 1: Home and End require a double press
-- Status: `Open`
-- First seen: `2026-04-06`
-- Area: `mobile`
-- Summary: The `Home` and `End` buttons do not take effect on the first press and currently have to be pressed twice.
-- Notes: The issue appears specific to the on-screen control buttons rather than general terminal input.
-
-### Finding 2: Cursor keys toggle keyboard visibility on mobile
-- Status: `Open`
-- First seen: `2026-04-06`
-- Area: `mobile`
-- Summary: Pressing the on-screen cursor keys causes the mobile keyboard to show or hide unexpectedly.
-- Notes: When the keyboard visibility changes, the keyboard control tray shifts position, which makes the controls feel unstable during navigation.
-
-### Finding 3: Returning from landscape leaves the UI too wide
-- Status: `Open`
-- First seen: `2026-04-06`
-- Area: `mobile`
-- Summary: On mobile, rotating to landscape and then back to portrait can leave the layout wider than the screen.
-- Notes: The right side of the UI becomes inaccessible until the page is refreshed.
-
-### Finding 4: A second flashing cursor appears at the last updated character
-- Status: `Open`
-- First seen: `2026-04-06`
-- Area: `UI`
-- Summary: A flashing cursor appears at the last updated character in addition to the real solid input cursor.
-- Notes: The duplicate flashing cursor is visually distracting because it competes with the actual insertion point.
+None yet.
 
 ## Closed
 
-None yet.
+### Finding 1: Home and End require a double press
+- Status: `Closed`
+- First seen: `2026-04-06`
+- Area: `mobile`
+- Summary: The `Home` and `End` buttons did not take effect on the first press and had to be pressed twice.
+- Notes: Fixed by making on-screen navigation buttons respect xterm application cursor mode instead of always sending normal-mode sequences.
+
+### Finding 2: Cursor keys toggle keyboard visibility on mobile
+- Status: `Closed`
+- First seen: `2026-04-06`
+- Area: `mobile`
+- Summary: Pressing the on-screen cursor keys caused the mobile keyboard to show or hide unexpectedly.
+- Notes: Fixed by keeping touch interaction with the control tray from stealing terminal focus, which keeps the keyboard and tray position stable during navigation.
+
+### Finding 3: Returning from landscape leaves the UI too wide
+- Status: `Closed`
+- First seen: `2026-04-06`
+- Area: `mobile`
+- Summary: Rotating to landscape and then back to portrait could leave the layout wider than the screen.
+- Notes: Fixed by forcing terminal and stage refits on viewport and orientation changes so the layout settles without a manual refresh.
+
+### Finding 4: A second flashing cursor appears at the last updated character
+- Status: `Closed`
+- First seen: `2026-04-06`
+- Area: `UI`
+- Summary: A flashing cursor appeared at the last updated character in addition to the real solid input cursor.
+- Notes: Fixed by switching the rendered terminal to a single solid bar cursor and suppressing the inactive cursor artifact.

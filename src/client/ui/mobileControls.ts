@@ -27,6 +27,10 @@ export interface TerminalControlButton {
   group: "main" | "arrow";
 }
 
+export interface TerminalSequenceOptions {
+  applicationCursorKeysMode?: boolean;
+}
+
 export const mobileControlButtons: TerminalControlButton[] = [
   { id: "esc", label: "Esc", kind: "sequence", group: "main" },
   { id: "backspace", label: "Bksp", kind: "sequence", group: "main" },
@@ -100,7 +104,31 @@ export function advanceModifierState(
   };
 }
 
-export function terminalSequence(action: TerminalControlAction): string {
+export function terminalSequence(
+  action: TerminalControlAction,
+  options: TerminalSequenceOptions = {},
+): string {
+  const applicationCursorKeysMode = options.applicationCursorKeysMode ?? false;
+
+  if (applicationCursorKeysMode) {
+    switch (action) {
+      case "home":
+        return "\u001bOH";
+      case "end":
+        return "\u001bOF";
+      case "up":
+        return "\u001bOA";
+      case "down":
+        return "\u001bOB";
+      case "right":
+        return "\u001bOC";
+      case "left":
+        return "\u001bOD";
+      default:
+        break;
+    }
+  }
+
   return SEQUENCES[action];
 }
 

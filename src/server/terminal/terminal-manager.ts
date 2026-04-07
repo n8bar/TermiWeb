@@ -50,6 +50,15 @@ export class TerminalManager extends EventEmitter<ManagerEvents> {
     return this.listSessions()[0]?.id ?? null;
   }
 
+  async ensureSessionAvailable(): Promise<SessionSummary> {
+    const existing = this.listSessions()[0];
+    if (existing) {
+      return existing;
+    }
+
+    return this.createSession();
+  }
+
   async createSession(title?: string): Promise<SessionSummary> {
     if (this.#sessions.size >= this.#config.maxSessions) {
       throw new Error(`Maximum session count (${this.#config.maxSessions}) reached.`);

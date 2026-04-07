@@ -16,6 +16,7 @@ V1 delivers a browser-based Windows terminal that supports:
 - Instances persist across app restarts as lightweight metadata only.
 - Auto-generated instance names should reuse the lowest available `Instance N` rather than monotonically climbing forever.
 - Legacy auto-generated `Terminal N` names should normalize forward to `Instance N`.
+- If a browser session reaches an empty workspace on login or reconnect, the app should create `Instance 1` automatically.
 - An instance starts a fresh shell when activated if no live process exists.
 - Output history is replayed to newly attached clients so a second browser can catch up to the current terminal buffer.
 - The workspace's last active instance should be the default attach target for newly connected clients that do not already have a local selection.
@@ -46,11 +47,14 @@ V1 delivers a browser-based Windows terminal that supports:
 - The right-hand workspace stage should top-align within its viewport and should never present narrower than a 4:3 aspect ratio.
 - When the viewport is narrower than 4:3, the stage should keep the full available width and reduce height instead of scaling the entire workspace down.
 - The workspace shell should follow the live visual viewport height so the control tray remains visible above the on-screen keyboard.
+- Viewport and orientation changes should force a terminal refit so the layout does not require a refresh after rotating a device.
 - Mobile controls must expose at least `Ctrl`, `Alt`, `Esc`, `Tab`, `Enter`, `Backspace`, and arrow keys.
 - Mobile controls must also expose a `Del` key.
 - Mobile controls must also expose `Home` and `End`.
 - Modifier controls must allow key combos to be composed from a phone.
 - `Ctrl` and `Alt` should arm for the next key on single tap, lock on double tap, and clear on a later tap when locked.
+- On-screen `Home`, `End`, and arrow-key buttons should respect xterm application cursor mode.
+- Touching the control tray should preserve terminal focus so the OS keyboard does not flicker or jump around during navigation.
 - Arrow-key controls should look like a compact cursor-key cluster rather than text buttons.
 - `Home` should sit above `←` and `End` should sit above `→` in that cluster.
 - The cursor-key cluster should sit beside the main control rows instead of stacking beneath them.
@@ -60,6 +64,7 @@ V1 delivers a browser-based Windows terminal that supports:
 - A select mode must exist so touch devices can copy terminal text reliably.
 - Select mode should replace the terminal viewport in-place with a read-only monospace text view derived from the rendered terminal buffer instead of the raw PTY stream.
 - The select snapshot should reflect what is currently visible in the terminal buffer, so text cleared by commands like `cls` does not reappear there.
+- The visible terminal cursor should behave like a single solid insertion cursor and should not leave a separate blinking cursor artifact behind.
 
 ## Security
 

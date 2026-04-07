@@ -11,6 +11,7 @@ TermiWeb provides a single browser-served terminal workflow that can be used fro
 - The app manages named shared instances rather than a single throwaway shell.
 - The UI refers to those shared shells as instances.
 - Auto-generated instance names should reuse the lowest available `Instance N` and normalize legacy `Terminal N` names forward to `Instance N`.
+- If a browser session reaches an empty workspace on login or reconnect, the app should seed `Instance 1` automatically.
 - Authentication is a single shared password suitable for local/private deployments in v1.
 - The host platform is Windows-first.
 - Runtime configuration is read from process environment and an optional repo-root `.env` file.
@@ -38,6 +39,8 @@ TermiWeb provides a single browser-served terminal workflow that can be used fro
 - That desktop-style mobile viewport should leave the browser free to choose the initial fit instead of pinning the page to a forced `initial-scale=1.0`.
 - The mobile key cluster should include `Home` and `End` near the cursor keys, not only in the main action strip.
 - `Ctrl` and `Alt` should arm on a single tap, lock on a double tap, and visibly distinguish armed from locked states.
+- On-screen `Home`, `End`, and cursor keys should emit application-cursor sequences when the terminal is in application cursor mode.
+- Touch use of the control tray should not blur the terminal or toggle the OS keyboard unexpectedly.
 - The sidebar should stay outside any scaled workspace stage so instance targets remain finger-sized.
 - The keyboard control tray should also stay outside the scaled workspace stage so its controls remain finger-sized.
 - The keyboard control tray should stay anchored inside the outer terminal shell, below the scaled stage, rather than floating against the screen edge.
@@ -45,8 +48,10 @@ TermiWeb provides a single browser-served terminal workflow that can be used fro
 - The terminal workspace stage should never present narrower than a 4:3 aspect ratio and should top-align so portrait phones leave slack below for the on-screen keyboard.
 - When the viewport is narrower than 4:3, the stage should preserve its full available width and reduce visible height rather than scaling the whole workspace down.
 - The workspace shell should follow the live visual viewport height so the control tray stays attached to the terminal area instead of dropping behind the on-screen keyboard.
+- Viewport and orientation changes should fully refit the terminal shell without requiring a browser refresh.
 - When no manual sidebar preference is stored for a device, narrow viewports should default to a collapsed sidebar.
 - The control tray should keep the cursor-key cluster aligned beside the main button rows instead of stacking it below them.
 - The main key strip should favor three taller rows over two cramped rows when that keeps touch targets usable.
 - Non-arrow terminal buttons should match the cursor-key button height.
 - The main key strip order should be `Esc`, `Bksp`, `Del`; then `Tab`, `Select`, `Copy`; then `Ctrl`, `Alt`, `Paste`, with `Enter` placed under the cursor-key cluster.
+- The rendered terminal cursor should present as a single solid insertion cursor rather than showing an extra blinking cursor artifact.

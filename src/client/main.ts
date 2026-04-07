@@ -70,7 +70,10 @@ const focusTerminalButton = mustQuery<HTMLButtonElement>("#focus-terminal-button
 const toggleSidebarButton = mustQuery<HTMLButtonElement>("#toggle-sidebar-button");
 
 const terminal = new Terminal({
-  cursorBlink: true,
+  cursorBlink: false,
+  cursorStyle: "bar",
+  cursorInactiveStyle: "none",
+  cursorWidth: 2,
   fontFamily: `"Cascadia Code", "Cascadia Mono", Consolas, monospace`,
   fontSize: 15,
   lineHeight: 1.18,
@@ -93,11 +96,13 @@ terminal.open(terminalContainer);
 
 let ws: WebSocket | null = null;
 let reconnectTimer: number | undefined;
+let viewportRefitTimer: number | undefined;
 let authenticated = false;
 let sessions: SessionSummary[] = [];
 let activeSessionId: string | null = null;
 let workspaceActiveSessionId: string | null = null;
 let modifierState: ModifierState = createModifierState();
+let lastControlPointerType: string | null = null;
 let lastModifierTap:
   | {
       key: ModifierKey;
@@ -160,10 +165,7 @@ function setView(isAuthenticated: boolean): void {
 
   if (isAuthenticated) {
     window.requestAnimationFrame(() => {
-      syncAppViewportHeight();
-      updateAutoSidebarPreference();
-      syncWorkspaceStage();
-      currentSize();
+      syncViewportLayout();
     });
   }
 }
@@ -237,6 +239,37 @@ function currentTerminalFontSize(): number {
     : defaultTerminalFontSize;
 }
 
+function isTouchLikePointer(pointerType: string | null | undefined): boolean {
+  return pointerType === "touch" || pointerType === "pen";
+}
+
+function registerControlButtonFocusBehavior(element: HTMLButtonElement): void {
+  element.addEventListener(
+    "pointerdown",
+    (event) => {
+      lastControlPointerType = event.pointerType || null;
+      if (isTouchLikePointer(event.pointerType)) {
+        event.preventDefault();
+      }
+    },
+    {
+      passive: false,
+    },
+  );
+}
+
+function resetControlPointerType(): void {
+  lastControlPointerType = null;
+}
+
+function maybeRefocusTerminalAfterControl(): void {
+  const shouldFocusTerminal = !isTouchLikePointer(lastControlPointerType);
+  resetControlPointerType();
+  if (shouldFocusTerminal) {
+    terminal.focus();
+  }
+}
+
 function readTerminalRenderMetrics(): TerminalRenderMetrics | null {
   const terminalElement = terminal.element;
   const renderDimensions = (
@@ -288,6 +321,53 @@ function fitTerminalWidth(): void {
   if (Math.abs(nextFontSize - currentTerminalFontSize()) >= 0.1) {
     terminal.options.fontSize = nextFontSize;
   }
+}
+
+function emitTerminalResize(size: { cols: number; rows: number }): void {
+  if (!activeSessionId) {
+    return;
+  }
+
+  sendEvent({
+    type: "terminal/resize",
+    sessionId: activeSessionId,
+    ...size,
+  });
+}
+
+function syncViewportLayout(options: {
+  sendResize?: boolean;
+  scrollToOrigin?: boolean;
+} = {}): void {
+  syncAppViewportHeight();
+  updateAutoSidebarPreference();
+  syncWorkspaceStage();
+
+  const size = currentSize();
+  if (options.sendResize) {
+    emitTerminalResize(size);
+  }
+
+  if (selectionMode) {
+    syncSelectionText();
+  }
+
+  if (options.scrollToOrigin) {
+    window.scrollTo(0, 0);
+  }
+}
+
+function scheduleViewportLayoutSync(
+  delayMs: number,
+  options: {
+    sendResize?: boolean;
+    scrollToOrigin?: boolean;
+  } = {},
+): void {
+  window.clearTimeout(viewportRefitTimer);
+  viewportRefitTimer = window.setTimeout(() => {
+    syncViewportLayout(options);
+  }, delayMs);
 }
 
 function initializeSidebarPreference(): void {
@@ -419,6 +499,8 @@ function renderModifierControls(): void {
       element.classList.add("is-square");
     }
 
+    registerControlButtonFocusBehavior(element);
+
     if (button.kind === "modifier") {
       const modifierKey = button.id as ModifierKey;
       const mode = modifierState[modifierKey];
@@ -436,21 +518,28 @@ function renderModifierControls(): void {
           atMs: now,
         };
         renderModifierControls();
-        terminal.focus();
+        maybeRefocusTerminalAfterControl();
       });
     } else if (button.kind === "mode" && button.id === "select") {
       element.classList.toggle("is-active", selectionMode);
       element.addEventListener("click", () => {
         setSelectionMode(!selectionMode);
+        resetControlPointerType();
       });
     } else if (button.kind === "sequence") {
       const action = button.id as TerminalControlAction;
       element.addEventListener("click", () => {
         if (!activeSessionId) {
+          resetControlPointerType();
           return;
         }
 
-        const transformed = applyModifiersToInput(terminalSequence(action), modifierState);
+        const transformed = applyModifiersToInput(
+          terminalSequence(action, {
+            applicationCursorKeysMode: terminal.modes.applicationCursorKeysMode,
+          }),
+          modifierState,
+        );
 
         sendEvent({
           type: "terminal/input",
@@ -460,7 +549,7 @@ function renderModifierControls(): void {
         modifierState = transformed.nextState;
         lastModifierTap = null;
         renderModifierControls();
-        terminal.focus();
+        maybeRefocusTerminalAfterControl();
       });
     } else if (button.id === "copy") {
       element.addEventListener("click", async () => {
@@ -470,7 +559,9 @@ function renderModifierControls(): void {
           setConnectionState("error", "Clipboard blocked");
         } finally {
           if (!selectionMode) {
-            terminal.focus();
+            maybeRefocusTerminalAfterControl();
+          } else {
+            resetControlPointerType();
           }
         }
       });
@@ -492,7 +583,7 @@ function renderModifierControls(): void {
         } catch {
           setConnectionState("error", "Clipboard blocked");
         } finally {
-          terminal.focus();
+          maybeRefocusTerminalAfterControl();
         }
       });
     }
@@ -804,13 +895,7 @@ terminal.onData((data) => {
 
 const resizeObserver = new ResizeObserver(() => {
   const size = currentSize();
-  if (activeSessionId) {
-    sendEvent({
-      type: "terminal/resize",
-      sessionId: activeSessionId,
-      ...size,
-    });
-  }
+  emitTerminalResize(size);
 });
 
 resizeObserver.observe(terminalContainer);
@@ -821,17 +906,30 @@ const stageViewportObserver = new ResizeObserver(() => {
 stageViewportObserver.observe(workspaceStageViewport);
 
 const handleViewportResize = () => {
-  syncAppViewportHeight();
-  updateAutoSidebarPreference();
-  syncWorkspaceStage();
+  syncViewportLayout({
+    sendResize: true,
+  });
+  scheduleViewportLayoutSync(180, {
+    sendResize: true,
+    scrollToOrigin: true,
+  });
 };
 
 window.addEventListener("resize", handleViewportResize);
 window.visualViewport?.addEventListener("resize", handleViewportResize);
+window.visualViewport?.addEventListener("scroll", handleViewportResize);
+window.addEventListener("orientationchange", () => {
+  syncViewportLayout({
+    sendResize: true,
+    scrollToOrigin: true,
+  });
+  scheduleViewportLayoutSync(260, {
+    sendResize: true,
+    scrollToOrigin: true,
+  });
+});
 
 initializeSidebarPreference();
 renderModifierControls();
-syncAppViewportHeight();
-syncWorkspaceStage();
-currentSize();
+syncViewportLayout();
 await refreshAuthState();

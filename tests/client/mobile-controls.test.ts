@@ -63,6 +63,14 @@ describe("mobile control modifiers", () => {
     expect(terminalSequence("delete")).toBe("\u001b[3~");
   });
 
+  it("switches navigation sequences when application cursor keys mode is active", () => {
+    expect(terminalSequence("home", { applicationCursorKeysMode: true })).toBe("\u001bOH");
+    expect(terminalSequence("up", { applicationCursorKeysMode: true })).toBe("\u001bOA");
+    expect(terminalSequence("end", { applicationCursorKeysMode: true })).toBe("\u001bOF");
+    expect(terminalSequence("left", { applicationCursorKeysMode: true })).toBe("\u001bOD");
+    expect(terminalSequence("right", { applicationCursorKeysMode: true })).toBe("\u001bOC");
+  });
+
   it("keeps the touch-control order aligned with the intended three-row layout", () => {
     expect(mobileControlButtons.map((button) => button.id)).toEqual([
       "esc",

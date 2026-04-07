@@ -8,6 +8,10 @@ import { createHttpApp } from "../../src/server/http/app.js";
 import type { TermiWebConfig } from "../../src/server/config.js";
 
 class TerminalManagerStub extends EventEmitter {
+  async ensureSessionAvailable() {
+    return undefined;
+  }
+
   listSessions() {
     return [];
   }

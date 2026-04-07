@@ -100,7 +100,8 @@ export async function createHttpApp(options: CreateHttpAppOptions) {
     response.json({ authenticated: false });
   });
 
-  app.get("/api/workspaces", requireAuth, (_request, response) => {
+  app.get("/api/workspaces", requireAuth, async (_request, response) => {
+    await options.terminalManager.ensureSessionAvailable();
     response.json({
       sessions: options.terminalManager.listSessions(),
       activeSessionId: options.terminalManager.getActiveSessionId(),
@@ -182,7 +183,9 @@ export async function createHttpApp(options: CreateHttpAppOptions) {
   websocketServer.on("connection", (socket) => {
     const clientId = randomUUID();
     clientSockets.set(clientId, socket);
-    send(socket, createSessionListEvent());
+    void options.terminalManager.ensureSessionAvailable().then(() => {
+      send(socket, createSessionListEvent());
+    });
 
     socket.on("message", async (raw) => {
       try {
@@ -192,6 +195,7 @@ export async function createHttpApp(options: CreateHttpAppOptions) {
             send(socket, { type: "pong" });
             return;
           case "session/list.request":
+            await options.terminalManager.ensureSessionAvailable();
             send(socket, createSessionListEvent());
             return;
           case "session/create": {
