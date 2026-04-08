@@ -34,6 +34,7 @@ import {
   type TerminalRenderMetrics,
 } from "./ui/terminalSizing.js";
 import { applyTerminalInputAttributes } from "./ui/terminalInput.js";
+import { attachTerminalTouchScroll, resolveTerminalViewport } from "./ui/terminalScroll.js";
 import { toDisplayVersion } from "./ui/version.js";
 
 type ConnectionState = "connecting" | "connected" | "offline" | "error";
@@ -111,6 +112,10 @@ terminal.loadAddon(fitAddon);
 terminal.open(terminalContainer);
 if (terminal.textarea) {
   applyTerminalInputAttributes(terminal.textarea);
+}
+const terminalViewport = resolveTerminalViewport(terminal.element ?? null);
+if (terminalViewport) {
+  attachTerminalTouchScroll(terminalContainer, terminalViewport);
 }
 
 let ws: WebSocket | null = null;
