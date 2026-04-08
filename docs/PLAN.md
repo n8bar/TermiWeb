@@ -6,10 +6,13 @@ Dogfood the first usable 0.1 browser terminal, implement per-instance column wid
 
 ## Milestones
 
-- [x] M1: Repository bootstrap and docs baseline
-- [x] M2: Shared terminal backend and session model
-- [x] M3: Browser UI with instances, auth, and mobile controls
-- [x] M4: Local verification and launch polish
+- [x] 2026-04-06 M1: Repository bootstrap and docs baseline
+- [x] 2026-04-06 M2: Shared terminal backend and session model
+- [x] 2026-04-06 M3: Browser UI with instances, auth, and mobile controls
+- [x] 2026-04-07 M4: Local verification and launch polish
+- [ ] 2026-04-11 M5: Per-instance custom width and release polish
+- [ ] 2026-04-18 M6: 0.1 release and GitHub Pages download website
+- [ ] 2026-05-16 M7: Marketing for an open-source, free-to-use product
 
 ## Future Candidates
 

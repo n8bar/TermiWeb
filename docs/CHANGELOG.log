@@ -36,3 +36,4 @@
 2026-04-07 Documented an isolated single-tab Browser Session as a possible `0.2` instance type, without committing to Brave-profile or sync integration.
 2026-04-08 Documented per-instance column width as the next 0.1 feature, with `80` as the new-instance default and a topbar shared-session control for changing width.
 2026-04-08 Added an explicit 0.1 release standard, linked it from the plan and README, and called out interactive CLI rendering drift as the main known gap against that release bar.
+2026-04-08 Added dated milestones through M7 in the project plan, including 0.1 release polish, a GitHub Pages download site, and a later marketing phase while keeping TermiWeb open source and free to use.
