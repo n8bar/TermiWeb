@@ -2,7 +2,7 @@
 
 ## Current Focus
 
-Dogfood the first usable 0.1 browser terminal, keep the workstation-first deployment story clear, and implement per-instance column width as the next shared-session control.
+Dogfood the first usable 0.1 browser terminal, implement per-instance column width as the next shared-session control, and drive the release toward the `0.1` bar defined in [the release standard](RELEASE_STANDARD.md).
 
 ## Milestones
 
@@ -14,6 +14,11 @@ Dogfood the first usable 0.1 browser terminal, keep the workstation-first deploy
 ## Future Candidates
 
 - `0.2` candidate: isolated workstation-hosted `Browser` instances with one tab and basic browser chrome
+
+## Release Gate
+
+- `0.1` should ship only when it meets [the release standard](RELEASE_STANDARD.md).
+- The most serious known gap against that standard right now is `Finding 5` in [FINDINGS.md](FINDINGS.md): interactive CLI rendering drift and ghost text.
 
 ## Next Action
 

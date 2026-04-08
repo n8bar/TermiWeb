@@ -59,6 +59,7 @@ TermiWeb is a workstation-first shared terminal for Windows. The browser UI is t
 ## Documentation
 
 - [Project plan](docs/PLAN.md)
+- [Release standard](docs/RELEASE_STANDARD.md)
 - [Product spec](docs/PRODUCT_SPEC.md)
 - [Deployment philosophy](docs/DEPLOYMENT_PHILOSOPHY.md)
 - [Findings log](docs/FINDINGS.md)
