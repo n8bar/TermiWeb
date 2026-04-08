@@ -33,6 +33,7 @@ import {
   resolveTerminalRows,
   type TerminalRenderMetrics,
 } from "./ui/terminalSizing.js";
+import { toDisplayVersion } from "./ui/version.js";
 
 type ConnectionState = "connecting" | "connected" | "offline" | "error";
 type ManagedWebSocket = WebSocket & {
@@ -55,8 +56,10 @@ const passwordInput = mustQuery<HTMLInputElement>("#password-input");
 const loginMessage = mustQuery<HTMLElement>("#login-message");
 const loginHostname = mustQuery<HTMLElement>("#login-hostname");
 const loginAddress = mustQuery<HTMLElement>("#login-address");
+const loginVersion = mustQuery<HTMLElement>("#login-version");
 const appHostname = mustQuery<HTMLElement>("#app-hostname");
 const appAddress = mustQuery<HTMLElement>("#app-address");
+const appVersion = mustQuery<HTMLElement>("#app-version");
 const workspaceLayout = mustQuery<HTMLElement>("#workspace-layout");
 const sessionList = mustQuery<HTMLElement>("#session-list");
 const shellLabel = mustQuery<HTMLElement>("#shell-label");
@@ -133,6 +136,13 @@ const sidebarStorageKey = "termiweb.sidebar-collapsed";
 const controlsStorageKey = "termiweb.controls-collapsed";
 const modifierDoubleTapWindowMs = 360;
 const defaultTerminalFontSize = 15;
+const displayVersion = toDisplayVersion(
+  (
+    globalThis as typeof globalThis & {
+      __TERMIWEB_VERSION__?: string;
+    }
+  ).__TERMIWEB_VERSION__ ?? "0.1.0",
+);
 
 const statusLabels: Record<SessionSummary["status"], string> = {
   stopped: "Stopped",
@@ -167,6 +177,13 @@ function setHostIdentity(hostname?: string): void {
   appHostname.textContent = machineName;
   loginAddress.textContent = accessAddress;
   appAddress.textContent = accessAddress;
+}
+
+function setVersionIdentity(): void {
+  const versionLabel = `v${displayVersion}`;
+  loginVersion.textContent = versionLabel;
+  appVersion.textContent = versionLabel;
+  document.title = `TermiWeb ${versionLabel}`;
 }
 
 function setFixedCols(nextFixedCols?: number): void {
@@ -1195,6 +1212,7 @@ window.addEventListener("orientationchange", () => {
 initializeSidebarPreference();
 initializeControlsPreference();
 renderModifierControls();
+setVersionIdentity();
 syncDesktopViewportMeta(true);
 syncViewportLayout();
 await refreshAuthState();

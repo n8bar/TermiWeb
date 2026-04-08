@@ -41,6 +41,7 @@ TermiWeb provides a workstation-first browser terminal workflow that can also be
 - Persist only the workspace metadata needed to restore the instance list and session labels.
 - Mobile users must have access to terminal-essential keys even when the OS keyboard is limited.
 - The host machine identity should remain visible before and after login.
+- The current product version should remain visible before and after login so the running build is obvious on every device.
 - The instance rail can collapse horizontally, but instance selection and close actions must remain available.
 - The instance rail should favor larger touch targets over maximum density.
 - In collapsed mode, the collapse toggle should sit above refresh instead of sharing a row with it.
