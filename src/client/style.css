@@ -139,7 +139,6 @@ button {
 .field span,
 .form-message,
 .session-meta,
-.session-caption,
 .host-address {
   color: var(--muted);
 }
@@ -737,7 +736,6 @@ button {
 
 .workspace-layout.is-sidebar-collapsed .panel-header-copy,
 .workspace-layout.is-sidebar-collapsed .side-panel-meta,
-.workspace-layout.is-sidebar-collapsed .session-caption,
 .workspace-layout.is-sidebar-collapsed .session-meta,
 .workspace-layout.is-sidebar-collapsed .session-card .status-pill,
 .workspace-layout.is-sidebar-collapsed .button-label {

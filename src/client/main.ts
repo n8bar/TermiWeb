@@ -889,13 +889,6 @@ function renderSessions(): void {
     meta.className = "session-meta";
     meta.textContent = `${session.clientCount} attached | ${session.shell ?? "shell pending"}`;
 
-    const caption = document.createElement("div");
-    caption.className = "session-caption";
-    caption.textContent =
-      session.lastExitCode === null
-        ? "Fresh shell when opened"
-        : `Last exit code: ${session.lastExitCode}`;
-
     const close = document.createElement("button");
     close.type = "button";
     close.className = "ghost-button compact icon-button session-close";
@@ -910,7 +903,7 @@ function renderSessions(): void {
       });
     });
 
-    card.append(head, meta, caption);
+    card.append(head, meta);
     row.append(card, close);
     sessionList.append(row);
   }
