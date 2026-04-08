@@ -33,6 +33,7 @@ import {
   resolveTerminalRows,
   type TerminalRenderMetrics,
 } from "./ui/terminalSizing.js";
+import { applyTerminalInputAttributes } from "./ui/terminalInput.js";
 import { toDisplayVersion } from "./ui/version.js";
 
 type ConnectionState = "connecting" | "connected" | "offline" | "error";
@@ -108,6 +109,9 @@ const terminal = new Terminal({
 const fitAddon = new FitAddon();
 terminal.loadAddon(fitAddon);
 terminal.open(terminalContainer);
+if (terminal.textarea) {
+  applyTerminalInputAttributes(terminal.textarea);
+}
 
 let ws: WebSocket | null = null;
 let reconnectTimer: number | undefined;

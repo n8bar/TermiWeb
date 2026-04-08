@@ -40,3 +40,4 @@
 2026-04-08 Inserted a dedicated installer-experience milestone into the roadmap and shifted the release-site and marketing milestones out by one week.
 2026-04-08 Added a visible `0.1` version badge to the login and main workspace UI, sourced from the package version so the running build is obvious before and after login.
 2026-04-08 Removed the instance-card exit-status caption so cards no longer show the awkward "Fresh shell when opened" copy.
+2026-04-08 Disabled autocorrect, autocapitalize, spellcheck, and Grammarly-style text assistance on the live terminal input so mobile keyboards stop trying to reinterpret commands.
