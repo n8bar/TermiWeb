@@ -10,6 +10,7 @@ TermiWeb provides a workstation-first browser terminal workflow that can also be
 - Careful WAN exposure is a legitimate advanced use case for people managing their own workstations remotely.
 - The product should remain useful without requiring a homelab or a complex self-hosted access stack.
 - Advanced remote or internet-enabled deployments should be documented as operator-managed patterns around the app rather than treated as misuse.
+- Future instance types may extend beyond terminals; the current leading candidate after `0.1` is an isolated workstation-hosted browser session.
 - Documentation should clearly separate current product behavior from deployment patterns users may layer around the app themselves.
 
 ## Core Behavior

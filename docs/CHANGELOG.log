@@ -33,3 +33,4 @@
 2026-04-07 Added a collapsible keyboard control tray with a per-browser preference so users can trade control-panel space for more visible terminal rows.
 2026-04-07 Added hidden Windows background start/restart scripts so TermiWeb can be launched without spawning an extra empty console window.
 2026-04-07 Moved the keyboard-tray collapse handle onto the seam between the terminal and tray so it no longer spends a dedicated header row.
+2026-04-07 Documented an isolated single-tab Browser Session as a possible `0.2` instance type, without committing to Brave-profile or sync integration.

@@ -11,6 +11,10 @@ Dogfood the first usable 0.1 browser terminal, keep the workstation-first deploy
 - [x] M3: Browser UI with instances, auth, and mobile controls
 - [x] M4: Local verification and launch polish
 
+## Future Candidates
+
+- `0.2` candidate: isolated workstation-hosted `Browser` instances with one tab and basic browser chrome
+
 ## Next Action
 
 Continue dogfooding the live app in real work, log the next findings in `docs/FINDINGS.md`, keep the simple trusted-network path as the default in the docs, and document careful operator-managed WAN exposure as a legitimate advanced path without overstating current `0.1` features.
