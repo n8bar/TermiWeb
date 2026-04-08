@@ -1,17 +1,41 @@
-export function resolveTerminalViewport(root: ParentNode | null): HTMLElement | null {
-  return root?.querySelector<HTMLElement>(".xterm-viewport") ?? null;
+import type { Terminal } from "@xterm/xterm";
+
+export function consumeTouchScrollDelta(options: {
+  previousY: number;
+  currentY: number;
+  cellHeight: number;
+  pixelRemainder: number;
+}): {
+  lineDelta: number;
+  nextPixelRemainder: number;
+} {
+  const { previousY, currentY, cellHeight, pixelRemainder } = options;
+  const nextCellHeight = Math.max(cellHeight, 1);
+  const totalPixelDelta = pixelRemainder + (currentY - previousY);
+  const movedLines =
+    totalPixelDelta > 0
+      ? Math.floor(totalPixelDelta / nextCellHeight)
+      : Math.ceil(totalPixelDelta / nextCellHeight);
+
+  return {
+    lineDelta: -movedLines,
+    nextPixelRemainder: totalPixelDelta - movedLines * nextCellHeight,
+  };
 }
 
-export function attachTerminalTouchScroll(
-  surface: HTMLElement,
-  viewport: HTMLElement,
-): void {
+export function attachTerminalTouchScroll(options: {
+  surface: HTMLElement;
+  terminal: Terminal;
+  getCellHeight: () => number;
+}): void {
+  const { surface, terminal, getCellHeight } = options;
   let activeTouchId: number | null = null;
-  let startY = 0;
-  let startScrollTop = 0;
+  let lastY = 0;
+  let pixelRemainder = 0;
 
   const reset = (): void => {
     activeTouchId = null;
+    pixelRemainder = 0;
   };
 
   surface.addEventListener(
@@ -29,16 +53,16 @@ export function attachTerminalTouchScroll(
       }
 
       activeTouchId = touch.identifier;
-      startY = touch.clientY;
-      startScrollTop = viewport.scrollTop;
+      lastY = touch.clientY;
+      pixelRemainder = 0;
     },
-    { passive: true },
+    { passive: true, capture: true },
   );
 
   surface.addEventListener(
     "touchmove",
     (event) => {
-      if (activeTouchId === null || viewport.scrollHeight <= viewport.clientHeight) {
+      if (activeTouchId === null) {
         return;
       }
 
@@ -49,20 +73,26 @@ export function attachTerminalTouchScroll(
         return;
       }
 
-      const nextScrollTop = startScrollTop + (startY - touch.clientY);
-      const maxScrollTop = Math.max(0, viewport.scrollHeight - viewport.clientHeight);
-      const clampedScrollTop = Math.min(Math.max(nextScrollTop, 0), maxScrollTop);
+      const { lineDelta, nextPixelRemainder } = consumeTouchScrollDelta({
+        previousY: lastY,
+        currentY: touch.clientY,
+        cellHeight: getCellHeight(),
+        pixelRemainder,
+      });
 
-      if (Math.abs(clampedScrollTop - viewport.scrollTop) < 0.5) {
+      lastY = touch.clientY;
+      pixelRemainder = nextPixelRemainder;
+
+      if (lineDelta === 0) {
         return;
       }
 
-      viewport.scrollTop = clampedScrollTop;
+      terminal.scrollLines(lineDelta);
       event.preventDefault();
     },
-    { passive: false },
+    { passive: false, capture: true },
   );
 
-  surface.addEventListener("touchend", reset, { passive: true });
-  surface.addEventListener("touchcancel", reset, { passive: true });
+  surface.addEventListener("touchend", reset, { passive: true, capture: true });
+  surface.addEventListener("touchcancel", reset, { passive: true, capture: true });
 }

@@ -61,6 +61,7 @@ TermiWeb provides a workstation-first browser terminal workflow that can also be
 - The live terminal input should disable autocorrect, autocapitalize, spellcheck, and similar word-level text assistance so command entry is not altered by the browser or OS keyboard.
 - The visible terminal surface itself should support one-finger vertical touch scrolling through scrollback on coarse-pointer devices.
 - The app should not expose a dead outer terminal scrollbar when the real scrollback lives inside the xterm viewport.
+- The touch-oriented terminal scrollbar should favor a larger draggable thumb over strict visual density.
 - The sidebar should stay outside any scaled workspace stage so instance targets remain finger-sized.
 - The keyboard control tray should also stay outside the scaled workspace stage so its controls remain finger-sized.
 - The keyboard control tray should stay anchored inside the outer terminal shell, below the scaled stage, rather than floating against the screen edge.

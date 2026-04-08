@@ -42,3 +42,4 @@
 2026-04-08 Removed the instance-card exit-status caption so cards no longer show the awkward "Fresh shell when opened" copy.
 2026-04-08 Disabled autocorrect, autocapitalize, spellcheck, and Grammarly-style text assistance on the live terminal input so mobile keyboards stop trying to reinterpret commands.
 2026-04-08 Hid the dead outer terminal scrollbar, widened the real xterm scrollbar for touch devices, and added one-finger touch scrolling on the visible terminal surface for mobile scrollback.
+2026-04-08 Switched terminal touch scrolling to xterm's real scroll model, hid the native xterm viewport scrollbar, and enlarged the custom scrollbar thumb for better mobile dragging.

@@ -34,7 +34,7 @@ import {
   type TerminalRenderMetrics,
 } from "./ui/terminalSizing.js";
 import { applyTerminalInputAttributes } from "./ui/terminalInput.js";
-import { attachTerminalTouchScroll, resolveTerminalViewport } from "./ui/terminalScroll.js";
+import { attachTerminalTouchScroll } from "./ui/terminalScroll.js";
 import { toDisplayVersion } from "./ui/version.js";
 
 type ConnectionState = "connecting" | "connected" | "offline" | "error";
@@ -113,9 +113,35 @@ terminal.open(terminalContainer);
 if (terminal.textarea) {
   applyTerminalInputAttributes(terminal.textarea);
 }
-const terminalViewport = resolveTerminalViewport(terminal.element ?? null);
-if (terminalViewport) {
-  attachTerminalTouchScroll(terminalContainer, terminalViewport);
+if (terminal.element) {
+  attachTerminalTouchScroll({
+    surface: terminal.element,
+    terminal,
+    getCellHeight: () => {
+      const renderDimensions = (
+        terminal as Terminal & {
+          _core?: {
+            _renderService?: {
+              dimensions?: {
+                css?: {
+                  cell?: {
+                    height?: number;
+                  };
+                };
+              };
+            };
+          };
+        }
+      )._core?._renderService?.dimensions;
+
+      const cellHeight = renderDimensions?.css?.cell?.height;
+      if (typeof cellHeight === "number" && Number.isFinite(cellHeight) && cellHeight > 0) {
+        return cellHeight;
+      }
+
+      return currentTerminalFontSize() * (terminal.options.lineHeight ?? 1);
+    },
+  });
 }
 
 let ws: WebSocket | null = null;
