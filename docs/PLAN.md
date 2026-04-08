@@ -2,7 +2,7 @@
 
 ## Current Focus
 
-Dogfood the first usable 0.1 browser terminal, keep the workstation-first deployment story clear, and continue polishing live-session behavior from real use.
+Dogfood the first usable 0.1 browser terminal, keep the workstation-first deployment story clear, and implement per-instance column width as the next shared-session control.
 
 ## Milestones
 
@@ -17,4 +17,4 @@ Dogfood the first usable 0.1 browser terminal, keep the workstation-first deploy
 
 ## Next Action
 
-Continue dogfooding the live app in real work, log the next findings in `docs/FINDINGS.md`, keep the simple trusted-network path as the default in the docs, and document careful operator-managed WAN exposure as a legitimate advanced path without overstating current `0.1` features.
+Implement per-instance column width from [the focused spec](specs/v0.1-per-instance-column-width.md): keep `80` as the default for new instances, expose a topbar `Cols N` control for the active instance, and treat width changes as shared session state for all attached devices.
