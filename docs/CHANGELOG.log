@@ -45,3 +45,4 @@
 2026-04-08 Switched terminal touch scrolling to xterm's real scroll model, hid the native xterm viewport scrollbar, and enlarged the custom scrollbar thumb for better mobile dragging.
 2026-04-09 Shipped per-instance shared column width with a topbar `Cols N` control, preset/custom widths, shared-session confirmation, persisted width metadata, and layout rules that preserve the existing scaling model around the chosen column count.
 2026-04-09 Raised the top bar above the workspace stack so the shared-width popover opens in front of the sidebar and terminal instead of behind them.
+2026-04-09 Replaced the shared-width popover's `132`-column preset with `160`.
