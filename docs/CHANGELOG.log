@@ -73,3 +73,4 @@
 2026-04-09 Increased the host pill's horizontal padding substantially in both headers so the hostname/address chip has clearly visible side breathing room without growing taller.
 2026-04-09 Replaced the previous host-pill padding workaround with real horizontal margin in both headers and returned the internal spacing to a saner level.
 2026-04-09 Doubled the host pill's real horizontal margin in both headers for much stronger left/right separation from surrounding header content.
+2026-04-09 Set the version label to the `small` font size in both headers so it reads as quieter secondary metadata.

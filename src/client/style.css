@@ -194,13 +194,13 @@ button {
   align-items: center;
   color: var(--muted);
   font-family: var(--mono-font);
-  font-size: 0.82rem;
+  font-size: small;
   font-weight: 700;
   letter-spacing: 0.06em;
 }
 
 .version-label.compact {
-  font-size: 0.76rem;
+  font-size: small;
 }
 
 .auth-form {
