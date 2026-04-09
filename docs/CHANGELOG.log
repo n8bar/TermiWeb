@@ -71,3 +71,4 @@
 2026-04-09 Increased the host pill to a materially wider shared padding in both headers so the hostname/address chip reads with clear horizontal breathing room.
 2026-04-09 Restored the host pill's original vertical padding while keeping the wider horizontal padding so the chip reads broader without getting taller.
 2026-04-09 Increased the host pill's horizontal padding substantially in both headers so the hostname/address chip has clearly visible side breathing room without growing taller.
+2026-04-09 Replaced the previous host-pill padding workaround with real horizontal margin in both headers and returned the internal spacing to a saner level.
