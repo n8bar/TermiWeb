@@ -293,6 +293,7 @@ function setSidebarCollapsed(
 ): void {
   sidebarCollapsed = collapsed;
   workspaceLayout.classList.toggle("is-sidebar-collapsed", collapsed);
+  renderSessions();
   toggleSidebarButton.textContent = collapsed ? "»" : "«";
   toggleSidebarButton.setAttribute("aria-expanded", String(!collapsed));
   toggleSidebarButton.setAttribute(
