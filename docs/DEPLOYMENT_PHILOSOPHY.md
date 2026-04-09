@@ -8,7 +8,7 @@ The default deployment story should stay simple:
 
 - one Windows machine
 - one trusted operator or a small trusted group
-- one shared password
+- one configured app password
 - one private network such as localhost, a home LAN, an office LAN, or a private overlay network
 
 That is the product's normal operating mode in `0.1`. It should not require a homelab, reverse proxy stack, or internet-facing setup to make sense.
@@ -35,7 +35,7 @@ Version `0.1` does not ship:
 - multi-user identity and authorization
 - built-in TLS termination
 - turnkey public exposure
-- a claim that the shared-password gate alone is a complete WAN security posture
+- a claim that the configured app password alone is a complete WAN security posture
 
 That does not mean WAN exposure is off-limits. It means the surrounding deployment and security model is operator-managed in `0.1`.
 

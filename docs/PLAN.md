@@ -26,4 +26,4 @@ Dogfood the first usable 0.1 browser terminal, polish the release-critical auth 
 
 ## Next Action
 
-Use the shipped restart-stable shared-password sessions from [the focused spec](specs/v0.1-persistent-auth-sessions.md) in real recovery flows, then continue `M5` release polish with `Finding 5` in [FINDINGS.md](FINDINGS.md): interactive CLI rendering drift and ghost text.
+Use the shipped restart-stable authenticated sessions from [the focused spec](specs/v0.1-persistent-auth-sessions.md) in real recovery flows, then continue `M5` release polish with `Finding 5` in [FINDINGS.md](FINDINGS.md): interactive CLI rendering drift and ghost text.

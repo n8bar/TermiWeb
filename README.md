@@ -14,8 +14,8 @@ TermiWeb is a workstation-first shared terminal for Windows. The browser UI is t
 - Node + TypeScript backend with WebSocket-driven terminal sessions
 - `xterm.js` client with touch-oriented terminal controls
 - Shared instances backed by Windows shell processes
-- Single shared-password login for local/LAN use
-- Shared-password browser sessions that survive normal server restarts until logout or expiry
+- Login with one configured app password for local/LAN use
+- Authenticated browser sessions that survive normal server restarts until logout or expiry
 - Empty logins seed `Instance 1` automatically so a fresh browser session never lands on an empty instance rail
 - Device-local instance selection after initial attach
 - Rendered-text select mode for reliable copying after screen clears
@@ -43,7 +43,7 @@ TermiWeb is a workstation-first shared terminal for Windows. The browser UI is t
 - The supported default is still a trusted private network.
 - If you want remote access across the internet or across sites, expose it deliberately behind controls you already trust, such as TLS termination, external auth, a reverse proxy, a VPN or mesh network, IP restrictions, or equivalent safeguards.
 - Those are real deployment patterns for `0.1`, but they are operator-managed patterns around the app rather than built-in product features.
-- The shared-password gate is part of the access story, not the whole WAN hardening story by itself.
+- The configured app password is part of the access story, not the whole WAN hardening story by itself.
 
 ## Scripts
 

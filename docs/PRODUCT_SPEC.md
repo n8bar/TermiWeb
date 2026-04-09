@@ -21,8 +21,8 @@ TermiWeb provides a workstation-first browser terminal workflow that can also be
 - The UI refers to those shared shells as instances.
 - Auto-generated instance names should reuse the lowest available `Instance N` and normalize legacy `Terminal N` names forward to `Instance N`.
 - If a browser session reaches an empty workspace on login or reconnect, the app should seed `Instance 1` automatically.
-- Authentication is a single shared password suitable for trusted private deployments in `0.1`.
-- Shared-password browser sessions should survive a normal server restart until they expire or are revoked.
+- Authentication uses a single configured app password suitable for trusted private deployments in `0.1`.
+- Authenticated browser sessions should survive a normal server restart until they expire or are revoked.
 - The host platform is Windows-first.
 - Runtime configuration is read from process environment and an optional repo-root `.env` file.
 - New instances start at 80 columns by default.
@@ -36,10 +36,10 @@ TermiWeb provides a workstation-first browser terminal workflow that can also be
 - The supported default is localhost, LAN, or another trusted private network.
 - Careful WAN exposure is allowed as an operator-managed deployment pattern around the app.
 - `0.1` expects operators to provide the surrounding WAN controls they need, such as TLS, external auth, ingress policy, VPN or mesh access, or equivalent safeguards.
-- No built-in claim that the shared-password gate by itself is a complete public-internet security story.
+- No built-in claim that the configured app password by itself is a complete public-internet security story.
 - LAN binding is enabled by default and uses the LAN default host when no explicit `TERMIWEB_HOST` is set.
 - No full account system.
-- No built-in multi-user authorization model beyond the shared password gate.
+- No built-in multi-user authorization model beyond the configured app password.
 - No built-in TLS termination.
 - No PTY/session resurrection after process or server restart.
 - Persist only the workspace metadata needed to restore the instance list and session labels.

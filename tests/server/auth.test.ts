@@ -87,7 +87,7 @@ describe("auth routes", () => {
     expect(authorized.body.activeSessionId).toBeNull();
   });
 
-  it("rejects an incorrect shared password", async () => {
+  it("rejects an incorrect app password", async () => {
     const { app } = await createHttpApp({
       config,
       authStore: new SessionStore(config.sessionTtlHours),
