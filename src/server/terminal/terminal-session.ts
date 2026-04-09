@@ -10,6 +10,7 @@ interface TerminalSessionOptions {
   title: string;
   shell: string;
   historyLimit: number;
+  fixedCols: number;
 }
 
 interface TerminalSessionEvents {
@@ -40,7 +41,7 @@ export class TerminalSession extends EventEmitter<TerminalSessionEvents> {
   #history = "";
   #status: TerminalStatus = "stopped";
   #lastExitCode: number | null = null;
-  #cols = 80;
+  #cols: number;
   #rows = 32;
 
   constructor(options: TerminalSessionOptions) {
@@ -49,6 +50,7 @@ export class TerminalSession extends EventEmitter<TerminalSessionEvents> {
     this.#title = options.title;
     this.#shell = options.shell;
     this.#historyLimit = options.historyLimit;
+    this.#cols = options.fixedCols;
   }
 
   get id(): string {
@@ -63,6 +65,7 @@ export class TerminalSession extends EventEmitter<TerminalSessionEvents> {
       clientCount: this.#clientIds.size,
       shell: this.#shell,
       lastExitCode: this.#lastExitCode,
+      fixedCols: this.#cols,
     };
   }
 
@@ -119,11 +122,10 @@ export class TerminalSession extends EventEmitter<TerminalSessionEvents> {
     }
   }
 
-  attachClient(clientId: string, size: { cols: number; rows: number }): void {
+  attachClient(clientId: string, rows: number): void {
     this.#clientIds.add(clientId);
-    this.#cols = size.cols;
-    this.#rows = size.rows;
-    this.#pty?.resize(size.cols, size.rows);
+    this.#rows = rows;
+    this.#pty?.resize(this.#cols, rows);
     this.#emitSummary();
   }
 
@@ -142,6 +144,14 @@ export class TerminalSession extends EventEmitter<TerminalSessionEvents> {
     this.#cols = cols;
     this.#rows = rows;
     this.#pty?.resize(cols, rows);
+  }
+
+  setFixedCols(cols: number, rows = this.#rows): void {
+    this.resize(cols, rows);
+  }
+
+  getFixedCols(): number {
+    return this.#cols;
   }
 
   dispose(): void {

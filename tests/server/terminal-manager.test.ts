@@ -9,6 +9,7 @@ import {
   ensureWorkspaceHasTab,
   removeWorkspaceTab,
   selectWorkspaceTab,
+  updateWorkspaceTabFixedCols,
   type WorkspaceState,
 } from "../../src/server/workspace/workspace-state.js";
 
@@ -41,6 +42,10 @@ class FakeWorkspaceStore {
 
   async selectTab(tabId: string) {
     this.#state = selectWorkspaceTab(this.#state, tabId);
+  }
+
+  async setTabFixedCols(tabId: string, fixedCols: number) {
+    this.#state = updateWorkspaceTabFixedCols(this.#state, tabId, fixedCols);
   }
 }
 
@@ -86,5 +91,20 @@ describe("terminal manager", () => {
 
     expect(ensured.id).toBe(existing?.id);
     expect(manager.listSessions()).toHaveLength(1);
+  });
+
+  it("updates and persists the fixed column width for a session", async () => {
+    const store = new FakeWorkspaceStore(ensureWorkspaceHasTab(createEmptyWorkspaceState()));
+    const manager = new TerminalManager(createConfig(), store as unknown as WorkspaceStore);
+
+    await manager.initialize();
+
+    const existing = manager.listSessions()[0];
+    expect(existing?.fixedCols).toBe(80);
+
+    await manager.setSessionFixedCols(existing!.id, 120, 32);
+
+    expect(manager.listSessions()[0]?.fixedCols).toBe(120);
+    expect(store.listTabs()[0]?.fixedCols).toBe(120);
   });
 });

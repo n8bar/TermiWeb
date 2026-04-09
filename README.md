@@ -18,7 +18,7 @@ TermiWeb is a workstation-first shared terminal for Windows. The browser UI is t
 - Empty logins seed `Instance 1` automatically so a fresh browser session never lands on an empty instance rail
 - Device-local instance selection after initial attach
 - Rendered-text select mode for reliable copying after screen clears
-- Fixed 80-column terminal width across clients
+- Per-instance shared column width with `80` as the default for new instances
 - One shared layout across workstation and device browsers
 - Collapsible keyboard control tray that trades button space for more visible terminal rows
 - Local-only testing and verification workflow

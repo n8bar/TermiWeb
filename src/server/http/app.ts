@@ -229,6 +229,14 @@ export async function createHttpApp(options: CreateHttpAppOptions) {
               clientId,
             );
             return;
+          case "session/cols":
+            await options.terminalManager.setSessionFixedCols(
+              parsed.sessionId,
+              parsed.cols,
+              parsed.rows,
+              clientId,
+            );
+            return;
         }
       } catch (error) {
         const message = error instanceof Error ? error.message : "Unknown protocol error.";

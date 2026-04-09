@@ -2,7 +2,7 @@
 
 ## Current Focus
 
-Dogfood the first usable 0.1 browser terminal, implement per-instance column width as the next shared-session control, and drive the release toward the `0.1` bar defined in [the release standard](RELEASE_STANDARD.md).
+Dogfood the first usable 0.1 browser terminal, use the new per-instance column-width control in real work, and drive the release toward the `0.1` bar defined in [the release standard](RELEASE_STANDARD.md).
 
 ## Milestones
 
@@ -26,4 +26,4 @@ Dogfood the first usable 0.1 browser terminal, implement per-instance column wid
 
 ## Next Action
 
-Implement per-instance column width from [the focused spec](specs/v0.1-per-instance-column-width.md): keep `80` as the default for new instances, expose a topbar `Cols N` control for the active instance, and treat width changes as shared session state for all attached devices.
+Use the shipped per-instance column-width control from [the focused spec](specs/v0.1-per-instance-column-width.md) in dogfood sessions, then spend the rest of `M5` on release polish, starting with `Finding 5` in [FINDINGS.md](FINDINGS.md): interactive CLI rendering drift and ghost text.

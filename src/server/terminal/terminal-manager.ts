@@ -32,7 +32,7 @@ export class TerminalManager extends EventEmitter<ManagerEvents> {
 
   async initialize(): Promise<void> {
     for (const tab of this.#workspaceStore.listTabs()) {
-      this.#registerSession(tab.id, tab.title);
+      this.#registerSession(tab.id, tab.title, tab.fixedCols);
     }
     this.#emitSessions();
   }
@@ -65,7 +65,7 @@ export class TerminalManager extends EventEmitter<ManagerEvents> {
     }
 
     const tab = await this.#workspaceStore.createTab(title);
-    const session = this.#registerSession(tab.id, tab.title);
+    const session = this.#registerSession(tab.id, tab.title, tab.fixedCols);
     this.#emitSessions();
     return session.getSummary();
   }
@@ -106,8 +106,11 @@ export class TerminalManager extends EventEmitter<ManagerEvents> {
     }
 
     this.#clientSessions.set(clientId, sessionId);
-    session.attachClient(clientId, size);
-    await session.ensureStarted(size);
+    session.attachClient(clientId, size.rows);
+    await session.ensureStarted({
+      cols: session.getFixedCols(),
+      rows: size.rows,
+    });
     await this.#workspaceStore.selectTab(sessionId);
     this.#emitSessions();
     return session.getSnapshot();
@@ -137,19 +140,45 @@ export class TerminalManager extends EventEmitter<ManagerEvents> {
       return;
     }
 
-    this.#sessions.get(sessionId)?.resize(cols, rows);
+    const session = this.#sessions.get(sessionId);
+    if (!session) {
+      return;
+    }
+
+    session.resize(session.getFixedCols(), rows);
+  }
+
+  async setSessionFixedCols(
+    sessionId: string,
+    cols: number,
+    rows: number,
+    clientId?: string,
+  ): Promise<void> {
+    if (clientId && this.#clientSessions.get(clientId) !== sessionId) {
+      return;
+    }
+
+    const session = this.#sessions.get(sessionId);
+    if (!session) {
+      throw new Error("Session not found.");
+    }
+
+    session.setFixedCols(cols, rows);
+    await this.#workspaceStore.setTabFixedCols(sessionId, cols);
+    this.#emitSessions();
   }
 
   getShellLabel(): string {
     return this.#shell;
   }
 
-  #registerSession(sessionId: string, title: string): TerminalSession {
+  #registerSession(sessionId: string, title: string, fixedCols: number): TerminalSession {
     const session = new TerminalSession({
       id: sessionId,
       title,
       shell: this.#shell,
       historyLimit: this.#config.historyLimit,
+      fixedCols,
     });
 
     session.on("summary", () => {

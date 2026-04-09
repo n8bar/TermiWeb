@@ -1,10 +1,15 @@
 import { randomUUID } from "node:crypto";
 import { z } from "zod";
 
+export const DEFAULT_FIXED_COLS = 80;
+export const MIN_FIXED_COLS = 20;
+export const MAX_FIXED_COLS = 240;
+
 export const workspaceTabSchema = z.object({
   id: z.string().uuid(),
   title: z.string().min(1).max(64),
   autoNamed: z.boolean().default(false),
+  fixedCols: z.number().int().min(MIN_FIXED_COLS).max(MAX_FIXED_COLS).default(DEFAULT_FIXED_COLS),
 });
 
 export const workspaceStateSchema = z.object({
@@ -97,7 +102,10 @@ export function createEmptyWorkspaceState(): WorkspaceState {
   };
 }
 
-export function ensureWorkspaceHasTab(state: WorkspaceState): WorkspaceState {
+export function ensureWorkspaceHasTab(
+  state: WorkspaceState,
+  defaultFixedCols = DEFAULT_FIXED_COLS,
+): WorkspaceState {
   if (state.tabs.length > 0) {
     const tabs = normalizeWorkspaceTabs(state.tabs);
     return {
@@ -111,6 +119,7 @@ export function ensureWorkspaceHasTab(state: WorkspaceState): WorkspaceState {
     id: randomUUID(),
     title: createDefaultTitle(state.nextDefaultTitleIndex),
     autoNamed: true,
+    fixedCols: defaultFixedCols,
   };
 
   return {
@@ -123,6 +132,7 @@ export function ensureWorkspaceHasTab(state: WorkspaceState): WorkspaceState {
 export function addWorkspaceTab(
   state: WorkspaceState,
   title?: string,
+  fixedCols = DEFAULT_FIXED_COLS,
 ): { state: WorkspaceState; tab: WorkspaceTab } {
   const normalizedTitle = title?.trim();
   const resolvedTitle = normalizedTitle || createDefaultTitle(state.nextDefaultTitleIndex);
@@ -130,6 +140,7 @@ export function addWorkspaceTab(
     id: randomUUID(),
     title: resolvedTitle,
     autoNamed: !normalizedTitle,
+    fixedCols,
   };
   const tabs = normalizeWorkspaceTabs([...state.tabs, tab]);
   const resolvedTab = tabs.at(-1) ?? tab;
@@ -178,5 +189,33 @@ export function removeWorkspaceTab(
       lastActiveTabId: nextActive,
       nextDefaultTitleIndex: resolveNextDefaultTitleIndex(nextTabs),
     },
+  };
+}
+
+export function updateWorkspaceTabFixedCols(
+  state: WorkspaceState,
+  tabId: string,
+  fixedCols: number,
+): WorkspaceState {
+  let changed = false;
+  const nextTabs = state.tabs.map((tab) => {
+    if (tab.id !== tabId || tab.fixedCols === fixedCols) {
+      return tab;
+    }
+
+    changed = true;
+    return {
+      ...tab,
+      fixedCols,
+    };
+  });
+
+  if (!changed) {
+    return state;
+  }
+
+  return {
+    ...state,
+    tabs: nextTabs,
   };
 }

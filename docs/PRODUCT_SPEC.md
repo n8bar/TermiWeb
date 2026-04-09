@@ -24,7 +24,10 @@ TermiWeb provides a workstation-first browser terminal workflow that can also be
 - Authentication is a single shared password suitable for trusted private deployments in `0.1`.
 - The host platform is Windows-first.
 - Runtime configuration is read from process environment and an optional repo-root `.env` file.
-- Terminal width is fixed at 80 columns by default so concurrent clients target the same line width, while the rendered terminal scales to use the available width and lets the visible row count change with height.
+- New instances start at 80 columns by default.
+- Terminal width is an instance property shared across all attached devices for that instance.
+- The UI exposes a topbar `Cols N` control for the active instance so users can change shared width deliberately without turning width into a per-device preference.
+- The rendered terminal should scale to use the available width around the chosen shared column count, while the visible row count continues to flex with height.
 - The runtime prefers PowerShell 7 from `PATH`, then the standard install path, and only then falls back to Windows PowerShell.
 
 ## 0.1 Constraints

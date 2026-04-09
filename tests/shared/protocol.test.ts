@@ -40,6 +40,7 @@ describe("protocol parsing", () => {
           clientCount: 2,
           shell: "powershell.exe",
           lastExitCode: null,
+          fixedCols: 80,
         },
       ],
     });
@@ -50,5 +51,23 @@ describe("protocol parsing", () => {
     }
     expect(event.activeSessionId).toBe("54fd93ae-0f1d-4dc4-af4a-547e8b87d2af");
     expect(event.sessions[0]?.clientCount).toBe(2);
+    expect(event.sessions[0]?.fixedCols).toBe(80);
+  });
+
+  it("accepts a valid session column width change event", () => {
+    const event = parseClientEvent({
+      type: "session/cols",
+      sessionId: "54fd93ae-0f1d-4dc4-af4a-547e8b87d2af",
+      cols: 120,
+      rows: 32,
+    });
+
+    expect(event.type).toBe("session/cols");
+    if (event.type !== "session/cols") {
+      throw new Error("Expected session/cols event");
+    }
+
+    expect(event.cols).toBe(120);
+    expect(event.rows).toBe(32);
   });
 });
