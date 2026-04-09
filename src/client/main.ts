@@ -1041,7 +1041,7 @@ function renderSessions(): void {
 
   for (const session of sessions) {
     const row = document.createElement("div");
-    row.className = "session-row";
+    row.className = `session-row${session.id === activeSessionId ? " is-active" : ""}`;
 
     const card = document.createElement("div");
     card.className = `session-card${session.id === activeSessionId ? " is-active" : ""}`;

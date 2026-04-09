@@ -56,3 +56,4 @@
 2026-04-09 Lowered the websocket/client protocol minimum row count from `5` to `1` so mobile viewport churn and tiny-height terminal states no longer throw resize validation errors.
 2026-04-09 Replaced the responsive expanded sidebar width with a fixed `16.5rem` rail so the instance panel stops resizing as aggressively with the viewport.
 2026-04-09 Split the instance status pill and the New instance action onto their own rows so the sidebar rail reads more cleanly and wraps less aggressively.
+2026-04-09 Joined each instance card and its close button into a single seam-aligned control in both expanded and collapsed sidebar layouts.
