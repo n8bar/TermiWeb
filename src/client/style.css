@@ -996,6 +996,7 @@ button {
   width: 100%;
   margin-left: 0;
   margin-top: 0;
+  border-left-width: 1px;
   border-top-width: 0;
   border-top-left-radius: 0;
   border-top-right-radius: 0;
@@ -1005,6 +1006,7 @@ button {
 
 .workspace-layout.is-sidebar-collapsed .session-card {
   border-top-right-radius: var(--radius-md);
+  border-right-width: 1px;
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
   border-bottom-width: 0;
