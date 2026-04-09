@@ -66,3 +66,4 @@
 2026-04-09 Changed collapsed auto-named instance labels to show only their number and removed the collapsed-mode small-font override so those labels keep the expanded title size.
 2026-04-09 Made collapsed-instance labels update immediately when the sidebar toggles and removed the ambiguous live-process note from the sidebar helper copy.
 2026-04-09 Wrapped hostname and address together inside a single host pill in both headers and converted the version from a pill badge to plain secondary text.
+2026-04-09 Increased host pill padding and host/address text sizes, and restyled the `Cols` control as a clearer dropdown-style action with stronger button affordance and a caret.
