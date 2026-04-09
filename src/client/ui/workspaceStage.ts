@@ -1,4 +1,3 @@
-export const MIN_STAGE_ASPECT_RATIO = 4 / 3;
 export const NARROW_VIEWPORT_COLLAPSE_THRESHOLD = 760;
 
 export interface StageLayout {
@@ -13,11 +12,9 @@ export interface StageLayout {
 export function computeStageLayout(options: {
   availableWidth: number;
   availableHeight: number;
-  minAspectRatio?: number;
 }): StageLayout {
   const availableWidth = Math.max(0, options.availableWidth);
   const availableHeight = Math.max(0, options.availableHeight);
-  const minAspectRatio = options.minAspectRatio ?? MIN_STAGE_ASPECT_RATIO;
 
   if (availableWidth === 0 || availableHeight === 0) {
     return {
@@ -30,9 +27,8 @@ export function computeStageLayout(options: {
     };
   }
 
-  const maxHeightAtAvailableWidth = availableWidth / minAspectRatio;
   const baseWidth = availableWidth;
-  const baseHeight = Math.min(availableHeight, maxHeightAtAvailableWidth);
+  const baseHeight = availableHeight;
   const scale = 1;
   const renderedWidth = baseWidth;
   const renderedHeight = baseHeight;
@@ -43,7 +39,7 @@ export function computeStageLayout(options: {
     scale,
     renderedWidth,
     renderedHeight,
-    slackHeight: Math.max(0, availableHeight - renderedHeight),
+    slackHeight: 0,
   };
 }
 

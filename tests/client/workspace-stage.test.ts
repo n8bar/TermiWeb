@@ -7,7 +7,7 @@ import {
 } from "../../src/client/ui/workspaceStage.js";
 
 describe("workspace stage layout", () => {
-  it("fills the available area when it already meets the minimum aspect ratio", () => {
+  it("fills the available area when width and height are both available", () => {
     const layout = computeStageLayout({
       availableWidth: 1200,
       availableHeight: 720,
@@ -20,18 +20,18 @@ describe("workspace stage layout", () => {
     expect(layout.slackHeight).toBe(0);
   });
 
-  it("preserves full width and trims height when the available area is narrower than 4:3", () => {
+  it("uses the full available height instead of trimming tall layouts", () => {
     const layout = computeStageLayout({
       availableWidth: 600,
       availableHeight: 900,
     });
 
     expect(layout.baseWidth).toBe(600);
-    expect(layout.baseHeight).toBe(450);
+    expect(layout.baseHeight).toBe(900);
     expect(layout.scale).toBe(1);
     expect(layout.renderedWidth).toBe(600);
-    expect(layout.renderedHeight).toBe(450);
-    expect(layout.slackHeight).toBe(450);
+    expect(layout.renderedHeight).toBe(900);
+    expect(layout.slackHeight).toBe(0);
   });
 
   it("chooses the smallest real viewport width for sidebar auto-collapse decisions", () => {
