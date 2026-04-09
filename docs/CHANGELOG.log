@@ -54,3 +54,4 @@
 2026-04-09 Simplified terminal width fitting to use xterm's own proposed column fit, made the xterm root fill the available width directly, and removed the older visible-width heuristics from the font-sizing path.
 2026-04-09 Lowered the width-fit floor to `6px` and added a terminal-local horizontal scrollbar fallback for cases where the configured columns still cannot fit without clipping.
 2026-04-09 Lowered the websocket/client protocol minimum row count from `5` to `1` so mobile viewport churn and tiny-height terminal states no longer throw resize validation errors.
+2026-04-09 Replaced the responsive expanded sidebar width with a fixed `16.5rem` rail so the instance panel stops resizing as aggressively with the viewport.
