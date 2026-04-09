@@ -105,12 +105,12 @@ button {
 .brand-heading {
   display: inline-flex;
   align-items: center;
-  gap: 0.65rem;
+  gap: 0;
   flex-wrap: wrap;
 }
 
 .brand-heading.compact {
-  gap: 0.5rem;
+  gap: 0;
 }
 
 .host-name,
