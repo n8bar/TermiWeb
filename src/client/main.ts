@@ -1085,7 +1085,7 @@ function renderSessions(): void {
 
     const meta = document.createElement("div");
     meta.className = "session-meta";
-    meta.textContent = `${session.clientCount} attached | ${session.shell ?? "shell pending"}`;
+    meta.textContent = `${session.clientCount} attached\n${session.shell ?? "shell pending"}`;
 
     const close = document.createElement("button");
     close.type = "button";

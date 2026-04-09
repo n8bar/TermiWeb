@@ -75,3 +75,4 @@
 2026-04-09 Doubled the host pill's real horizontal margin in both headers for much stronger left/right separation from surrounding header content.
 2026-04-09 Set the version label to the `small` font size in both headers so it reads as quieter secondary metadata.
 2026-04-09 Increased general UI typography by 50 percent outside the terminal and cursor cluster, moved the host pill back under the branding without side margins, and made the sidebar forcibly auto-collapse below 800px.
+2026-04-09 Tightened the keyboard tray toggle metrics, put the sidebar title and collapse button on the same row with refresh on its own right-aligned row, restored status-pill text to its pre-scale size, converted session metadata to two stacked lines, and widened the session area relative to the branding block.

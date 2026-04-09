@@ -307,6 +307,8 @@ button {
   display: grid;
   gap: 0.2rem;
   position: relative;
+  width: 150%;
+  max-width: 100%;
 }
 
 .topbar-session h3,
@@ -504,7 +506,8 @@ button {
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.28);
   touch-action: manipulation;
   white-space: pre-line;
-  line-height: 0.58;
+  line-height: 0.4;
+  padding-bottom: 12px;
   font-size: calc(0.92rem * var(--ui-font-scale));
 }
 
@@ -513,30 +516,45 @@ button {
 }
 
 .panel-header {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    "copy toggle"
+    ". refresh"
+    "new new";
   gap: 1rem;
   align-items: center;
 }
 
 .panel-header-copy {
   min-width: 0;
+  grid-area: copy;
 }
 
 .panel-header-actions {
-  display: grid;
-  grid-template-columns: auto auto;
-  justify-content: end;
-  align-items: start;
-  gap: 0.55rem;
+  display: contents;
 }
 
 #new-session-button {
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
-  grid-column: 1 / -1;
+  grid-area: new;
   justify-content: center;
+}
+
+#toggle-sidebar-button {
+  grid-area: toggle;
+  justify-self: end;
+}
+
+#refresh-button {
+  grid-area: refresh;
+  justify-self: end;
+}
+
+#new-session-button {
+  order: 3;
 }
 
 .button-icon {
@@ -610,6 +628,13 @@ button {
   font-size: calc(0.9rem * var(--ui-font-scale));
 }
 
+.session-meta {
+  display: grid;
+  gap: 0.18rem;
+  white-space: pre-line;
+  line-height: 1.15;
+}
+
 .status-pill {
   display: inline-flex;
   align-items: center;
@@ -620,6 +645,7 @@ button {
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.08);
   color: var(--muted);
+  font-size: 1rem;
   white-space: nowrap;
 }
 
@@ -971,15 +997,12 @@ button {
 }
 
 .workspace-layout.is-sidebar-collapsed .panel-header {
-  flex-direction: column;
-  align-items: stretch;
+  align-items: center;
   gap: 0.55rem;
 }
 
 .workspace-layout.is-sidebar-collapsed .panel-header-actions {
-  display: grid;
-  grid-template-columns: 1fr;
-  justify-content: stretch;
+  display: contents;
 }
 
 .workspace-layout.is-sidebar-collapsed #toggle-sidebar-button {
