@@ -1,43 +1,30 @@
-export interface TerminalRenderMetrics {
-  cellWidth: number;
-  paddingWidth: number;
-  scrollbarWidth: number;
-}
-
-export function computeTerminalVisibleWidth(
-  cols: number,
-  metrics: TerminalRenderMetrics,
-): number {
-  return cols * metrics.cellWidth + metrics.paddingWidth + metrics.scrollbarWidth;
-}
-
-export function fitFontSizeToWidth(options: {
+export function fitFontSizeToCols(options: {
   currentFontSize: number;
-  currentVisibleWidth: number;
-  targetWidth: number;
+  fittedCols: number;
+  targetCols: number;
   minFontSize?: number;
   maxFontSize?: number;
 }): number {
   const {
     currentFontSize,
-    currentVisibleWidth,
-    targetWidth,
+    fittedCols,
+    targetCols,
     minFontSize = 8,
     maxFontSize = 32,
   } = options;
 
   if (
     !Number.isFinite(currentFontSize) ||
-    !Number.isFinite(currentVisibleWidth) ||
-    !Number.isFinite(targetWidth) ||
+    !Number.isFinite(fittedCols) ||
+    !Number.isFinite(targetCols) ||
     currentFontSize <= 0 ||
-    currentVisibleWidth <= 0 ||
-    targetWidth <= 0
+    fittedCols <= 0 ||
+    targetCols <= 0
   ) {
     return currentFontSize;
   }
 
-  const scaledFontSize = currentFontSize * (targetWidth / currentVisibleWidth);
+  const scaledFontSize = currentFontSize * (fittedCols / targetCols);
   const roundedFontSize = Math.round(scaledFontSize * 10) / 10;
 
   return Math.min(maxFontSize, Math.max(minFontSize, roundedFontSize));

@@ -28,10 +28,8 @@ import {
   shouldAutoCollapseSidebar,
 } from "./ui/workspaceStage.js";
 import {
-  computeTerminalVisibleWidth,
-  fitFontSizeToWidth,
+  fitFontSizeToCols,
   resolveTerminalRows,
-  type TerminalRenderMetrics,
 } from "./ui/terminalSizing.js";
 import { applyTerminalInputAttributes } from "./ui/terminalInput.js";
 import { attachTerminalTouchScroll } from "./ui/terminalScroll.js";
@@ -562,57 +560,29 @@ function requestSessionWidthChange(nextCols: number): void {
   maybeRefocusTerminalAfterControl();
 }
 
-function readTerminalRenderMetrics(): TerminalRenderMetrics | null {
-  const terminalElement = terminal.element;
-  const renderDimensions = (
-    terminal as Terminal & {
-      _core?: {
-        _renderService?: {
-          dimensions?: {
-            css?: {
-              cell?: {
-                width?: number;
-              };
-            };
-          };
-        };
-      };
-    }
-  )._core?._renderService?.dimensions;
-
-  const cellWidth = renderDimensions?.css?.cell?.width;
-  if (!terminalElement || typeof cellWidth !== "number" || !Number.isFinite(cellWidth) || cellWidth <= 0) {
-    return null;
+function fitTerminalWidth(): boolean {
+  const proposed = fitAddon.proposeDimensions();
+  const fittedCols = proposed?.cols;
+  if (
+    typeof fittedCols !== "number" ||
+    !Number.isFinite(fittedCols) ||
+    fittedCols <= 0
+  ) {
+    return false;
   }
 
-  const terminalStyles = window.getComputedStyle(terminalElement);
-  const paddingWidth =
-    parseFloat(terminalStyles.getPropertyValue("padding-left")) +
-    parseFloat(terminalStyles.getPropertyValue("padding-right"));
-
-  return {
-    cellWidth,
-    paddingWidth,
-    scrollbarWidth: 14,
-  };
-}
-
-function fitTerminalWidth(): void {
-  const targetWidth = terminalContainer.clientWidth;
-  const metrics = readTerminalRenderMetrics();
-  if (!metrics || targetWidth <= 0) {
-    return;
-  }
-
-  const nextFontSize = fitFontSizeToWidth({
+  const nextFontSize = fitFontSizeToCols({
     currentFontSize: currentTerminalFontSize(),
-    currentVisibleWidth: computeTerminalVisibleWidth(fixedCols, metrics),
-    targetWidth,
+    fittedCols,
+    targetCols: fixedCols,
   });
 
   if (Math.abs(nextFontSize - currentTerminalFontSize()) >= 0.1) {
     terminal.options.fontSize = nextFontSize;
+    return true;
   }
+
+  return false;
 }
 
 function emitTerminalResize(size: { cols: number; rows: number }): void {
@@ -770,11 +740,6 @@ function currentSize() {
   const targetWidth = terminalContainer.clientWidth;
   const targetHeight = terminalContainer.clientHeight;
   const nextCols = fixedCols;
-  const terminalElement = terminal.element;
-
-  if (terminalElement) {
-    terminalElement.style.width = "";
-  }
 
   if (targetWidth <= 0 || targetHeight <= 0) {
     return {
@@ -783,27 +748,22 @@ function currentSize() {
     };
   }
 
-  fitTerminalWidth();
+  let rows = Math.max(terminal.rows, 1);
 
-  let proposed = fitAddon.proposeDimensions();
-  let rows = resolveTerminalRows({
-    proposedRows: proposed?.rows,
-    fallbackRows: terminal.rows,
-  });
+  for (let attempt = 0; attempt < 2; attempt += 1) {
+    fitTerminalWidth();
 
-  if (terminal.cols !== nextCols || terminal.rows !== rows) {
-    terminal.resize(nextCols, rows);
-  }
+    const proposed = fitAddon.proposeDimensions();
+    const nextRows = resolveTerminalRows({
+      proposedRows: proposed?.rows,
+      fallbackRows: rows,
+    });
 
-  fitTerminalWidth();
-  proposed = fitAddon.proposeDimensions();
-  const refinedRows = resolveTerminalRows({
-    proposedRows: proposed?.rows,
-    fallbackRows: rows,
-  });
-  if (refinedRows !== rows) {
-    rows = refinedRows;
-    terminal.resize(nextCols, rows);
+    if (terminal.cols !== nextCols || terminal.rows !== nextRows) {
+      terminal.resize(nextCols, nextRows);
+    }
+
+    rows = nextRows;
   }
 
   return {

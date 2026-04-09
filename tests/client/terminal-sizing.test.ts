@@ -1,47 +1,44 @@
 import { describe, expect, it } from "vitest";
 
 import {
-  computeTerminalVisibleWidth,
-  fitFontSizeToWidth,
+  fitFontSizeToCols,
   resolveTerminalRows,
 } from "../../src/client/ui/terminalSizing.js";
 
 describe("terminal sizing helpers", () => {
-  it("computes the visible width for a fixed-column terminal", () => {
+  it("scales font size to fit the target column count", () => {
     expect(
-      computeTerminalVisibleWidth(80, {
-        cellWidth: 8.5,
-        paddingWidth: 24,
-        scrollbarWidth: 14,
-      }),
-    ).toBe(718);
-  });
-
-  it("scales font size to fill the target width", () => {
-    expect(
-      fitFontSizeToWidth({
+      fitFontSizeToCols({
         currentFontSize: 15,
-        currentVisibleWidth: 720,
-        targetWidth: 960,
+        fittedCols: 64,
+        targetCols: 80,
       }),
-    ).toBe(20);
+    ).toBe(12);
+
+    expect(
+      fitFontSizeToCols({
+        currentFontSize: 15,
+        fittedCols: 120,
+        targetCols: 80,
+      }),
+    ).toBe(22.5);
   });
 
   it("clamps the fitted font size to the configured bounds", () => {
     expect(
-      fitFontSizeToWidth({
+      fitFontSizeToCols({
         currentFontSize: 15,
-        currentVisibleWidth: 720,
-        targetWidth: 4000,
+        fittedCols: 500,
+        targetCols: 80,
         maxFontSize: 28,
       }),
     ).toBe(28);
 
     expect(
-      fitFontSizeToWidth({
+      fitFontSizeToCols({
         currentFontSize: 15,
-        currentVisibleWidth: 720,
-        targetWidth: 120,
+        fittedCols: 20,
+        targetCols: 80,
         minFontSize: 9,
       }),
     ).toBe(9);
