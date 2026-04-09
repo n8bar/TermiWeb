@@ -901,6 +901,7 @@ button {
   border-bottom-left-radius: 0;
   border-top-right-radius: var(--radius-md);
   border-bottom-right-radius: var(--radius-md);
+  color: rgb(192, 0, 0);
 }
 
 .session-row.is-active .session-close {
@@ -992,6 +993,7 @@ button {
 }
 
 .workspace-layout.is-sidebar-collapsed .session-card {
+  border-top-right-radius: var(--radius-md);
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
 }
