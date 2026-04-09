@@ -70,4 +70,20 @@ describe("protocol parsing", () => {
     expect(event.cols).toBe(120);
     expect(event.rows).toBe(32);
   });
+
+  it("accepts a tiny-height resize event when the viewport only has a few visible rows", () => {
+    const event = parseClientEvent({
+      type: "terminal/resize",
+      sessionId: "54fd93ae-0f1d-4dc4-af4a-547e8b87d2af",
+      cols: 80,
+      rows: 1,
+    });
+
+    expect(event.type).toBe("terminal/resize");
+    if (event.type !== "terminal/resize") {
+      throw new Error("Expected terminal/resize event");
+    }
+
+    expect(event.rows).toBe(1);
+  });
 });

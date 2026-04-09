@@ -53,3 +53,4 @@
 2026-04-09 Clarified the terminal width-fit spec so configured columns must always fit inside the visible `xterm` viewport width, with font sizing owning width fit and rows then flowing from height.
 2026-04-09 Simplified terminal width fitting to use xterm's own proposed column fit, made the xterm root fill the available width directly, and removed the older visible-width heuristics from the font-sizing path.
 2026-04-09 Lowered the width-fit floor to `6px` and added a terminal-local horizontal scrollbar fallback for cases where the configured columns still cannot fit without clipping.
+2026-04-09 Lowered the websocket/client protocol minimum row count from `5` to `1` so mobile viewport churn and tiny-height terminal states no longer throw resize validation errors.

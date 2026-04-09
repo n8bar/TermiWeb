@@ -27,7 +27,7 @@ export const sessionSnapshotSchema = z.object({
 
 const sizeFields = {
   cols: z.number().int().min(10).max(500),
-  rows: z.number().int().min(5).max(400),
+  rows: z.number().int().min(1).max(400),
 };
 
 export const clientEventSchema = z.discriminatedUnion("type", [
