@@ -59,3 +59,4 @@
 2026-04-09 Joined each instance card and its close button into a single seam-aligned control in both expanded and collapsed sidebar layouts.
 2026-04-09 Restored the collapsed instance card's top-right corner radius and changed the close glyph to a darker red for clearer visual separation.
 2026-04-09 Enlarged the instance close glyph, returned it to white, and gave the close control a soft red border/background treatment instead of the default neutral or accent styling.
+2026-04-09 Removed the shared seam border between each instance card and its close control in both expanded and collapsed sidebar layouts.

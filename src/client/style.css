@@ -540,6 +540,7 @@ button {
   cursor: pointer;
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
+  border-right-color: transparent;
 }
 
 .session-card.is-active {
@@ -897,6 +898,7 @@ button {
   padding: 0;
   line-height: 1;
   margin-left: -1px;
+  border-left-width: 0;
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
   border-top-right-radius: var(--radius-md);
@@ -994,6 +996,7 @@ button {
   width: 100%;
   margin-left: 0;
   margin-top: -1px;
+  border-top-width: 0;
   border-top-left-radius: 0;
   border-top-right-radius: 0;
   border-bottom-left-radius: var(--radius-md);
@@ -1004,4 +1007,5 @@ button {
   border-top-right-radius: var(--radius-md);
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
+  border-bottom-color: transparent;
 }
