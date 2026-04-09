@@ -63,3 +63,4 @@
 2026-04-09 Removed the redundant sidebar eyebrow so the interface now shows only one `Instances` label in the side panel header.
 2026-04-09 Switched the instance-card seam to true zero-width contacting borders instead of transparent-edge and overlap tricks in both expanded and collapsed sidebar layouts.
 2026-04-09 Restored the collapsed instance card's right outer border and the close control's left outer border so the stacked layout keeps its full outside frame while the shared seam stays borderless.
+2026-04-09 Changed collapsed auto-named instance labels to show only their number and removed the collapsed-mode small-font override so those labels keep the expanded title size.

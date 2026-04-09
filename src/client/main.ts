@@ -34,6 +34,7 @@ import {
 } from "./ui/terminalSizing.js";
 import { applyTerminalInputAttributes } from "./ui/terminalInput.js";
 import { attachTerminalTouchScroll } from "./ui/terminalScroll.js";
+import { getDisplaySessionTitle } from "./ui/sessionTitle.js";
 import { toDisplayVersion } from "./ui/version.js";
 
 type ConnectionState = "connecting" | "connected" | "offline" | "error";
@@ -1061,7 +1062,7 @@ function renderSessions(): void {
     head.className = "session-card-head";
     const title = document.createElement("span");
     title.className = "session-title";
-    title.textContent = session.title;
+    title.textContent = getDisplaySessionTitle(session.title, sidebarCollapsed);
     const status = document.createElement("span");
     status.className = `status-pill is-${session.status}`;
     status.textContent = statusLabels[session.status];
