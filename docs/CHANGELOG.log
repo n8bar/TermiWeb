@@ -70,3 +70,4 @@
 2026-04-09 Removed the gap between the product name and version so the mixed-font wordmark reads as a single unit in both headers.
 2026-04-09 Increased the host pill to a materially wider shared padding in both headers so the hostname/address chip reads with clear horizontal breathing room.
 2026-04-09 Restored the host pill's original vertical padding while keeping the wider horizontal padding so the chip reads broader without getting taller.
+2026-04-09 Increased the host pill's horizontal padding substantially in both headers so the hostname/address chip has clearly visible side breathing room without growing taller.
