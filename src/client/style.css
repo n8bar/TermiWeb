@@ -901,12 +901,20 @@ button {
   border-bottom-left-radius: 0;
   border-top-right-radius: var(--radius-md);
   border-bottom-right-radius: var(--radius-md);
-  color: rgb(192, 0, 0);
+  font-size: xx-large;
+  background: rgba(192, 0, 0, 0.08);
+  border-color: rgba(192, 0, 0, 0.24);
+  color: #fff;
+}
+
+.session-close:hover {
+  background: rgba(192, 0, 0, 0.14);
+  border-color: rgba(192, 0, 0, 0.34);
 }
 
 .session-row.is-active .session-close {
-  border-color: rgba(122, 255, 178, 0.42);
-  background: var(--accent-soft);
+  border-color: rgba(192, 0, 0, 0.3);
+  background: rgba(192, 0, 0, 0.12);
 }
 
 .workspace-layout.is-sidebar-collapsed {
