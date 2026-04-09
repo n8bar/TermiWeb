@@ -15,6 +15,7 @@ TermiWeb is a workstation-first shared terminal for Windows. The browser UI is t
 - `xterm.js` client with touch-oriented terminal controls
 - Shared instances backed by Windows shell processes
 - Single shared-password login for local/LAN use
+- Shared-password browser sessions that survive normal server restarts until logout or expiry
 - Empty logins seed `Instance 1` automatically so a fresh browser session never lands on an empty instance rail
 - Device-local instance selection after initial attach
 - Rendered-text select mode for reliable copying after screen clears
@@ -65,6 +66,7 @@ TermiWeb is a workstation-first shared terminal for Windows. The browser UI is t
 - [Findings log](docs/FINDINGS.md)
 - [0.1 browser terminal spec](docs/specs/v0.1-browser-terminal.md)
 - [0.1 per-instance column width](docs/specs/v0.1-per-instance-column-width.md)
+- [0.1 persistent auth sessions](docs/specs/v0.1-persistent-auth-sessions.md)
 - [0.2 browser session candidate](docs/specs/v0.2-browser-session-candidate.md)
 - [Change log](docs/CHANGELOG.log)
 

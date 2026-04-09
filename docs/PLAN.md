@@ -2,7 +2,7 @@
 
 ## Current Focus
 
-Dogfood the first usable 0.1 browser terminal, use the new per-instance column-width control in real work, and drive the release toward the `0.1` bar defined in [the release standard](RELEASE_STANDARD.md).
+Dogfood the first usable 0.1 browser terminal, polish the release-critical auth and rendering gaps, and drive the release toward the `0.1` bar defined in [the release standard](RELEASE_STANDARD.md).
 
 ## Milestones
 
@@ -26,4 +26,4 @@ Dogfood the first usable 0.1 browser terminal, use the new per-instance column-w
 
 ## Next Action
 
-Use the shipped per-instance column-width control from [the focused spec](specs/v0.1-per-instance-column-width.md) in dogfood sessions, then spend the rest of `M5` on release polish, starting with `Finding 5` in [FINDINGS.md](FINDINGS.md): interactive CLI rendering drift and ghost text.
+Use the shipped restart-stable shared-password sessions from [the focused spec](specs/v0.1-persistent-auth-sessions.md) in real recovery flows, then continue `M5` release polish with `Finding 5` in [FINDINGS.md](FINDINGS.md): interactive CLI rendering drift and ghost text.

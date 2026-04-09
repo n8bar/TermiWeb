@@ -24,7 +24,10 @@ export async function createTermiWebServer(options?: {
   const terminalManager = new TerminalManager(config, workspaceStore);
   await terminalManager.initialize();
 
-  const authStore = new SessionStore(config.sessionTtlHours);
+  const authStore = new SessionStore({
+    ttlHours: config.sessionTtlHours,
+    dataDir: config.dataDir,
+  });
   const httpAppOptions = {
     config,
     authStore,

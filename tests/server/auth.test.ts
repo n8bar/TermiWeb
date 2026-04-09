@@ -1,7 +1,10 @@
+import { mkdtempSync, rmSync } from "node:fs";
 import { EventEmitter } from "node:events";
+import os from "node:os";
+import path from "node:path";
 
 import request from "supertest";
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it } from "vitest";
 
 import { SessionStore } from "../../src/server/auth/session-store.js";
 import { createHttpApp } from "../../src/server/http/app.js";
@@ -32,6 +35,23 @@ const config: TermiWebConfig = {
   dataDir: ".termiweb",
   historyLimit: 200_000,
 };
+
+const tempDirs: string[] = [];
+
+function createTempDataDir(): string {
+  const dir = mkdtempSync(path.join(os.tmpdir(), "termiweb-auth-test-"));
+  tempDirs.push(dir);
+  return dir;
+}
+
+afterEach(() => {
+  while (tempDirs.length > 0) {
+    const dir = tempDirs.pop();
+    if (dir) {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  }
+});
 
 describe("auth routes", () => {
   it("sets a session cookie on valid login and protects workspace routes", async () => {
@@ -94,5 +114,48 @@ describe("auth routes", () => {
     expect(session.body.authenticated).toBe(false);
     expect(session.body.hostname).toEqual(expect.any(String));
     expect(session.body.fixedCols).toBe(80);
+  });
+
+  it("keeps an authenticated cookie valid across a server restart when session state persists", async () => {
+    const dataDir = createTempDataDir();
+    const persistentConfig = {
+      ...config,
+      dataDir,
+    };
+    const firstStore = new SessionStore({
+      ttlHours: persistentConfig.sessionTtlHours,
+      dataDir,
+    });
+    const firstApp = await createHttpApp({
+      config: persistentConfig,
+      authStore: firstStore,
+      terminalManager: new TerminalManagerStub() as never,
+    });
+
+    const login = await request(firstApp.app).post("/api/auth/login").send({
+      password: persistentConfig.password,
+    });
+    const cookies = login.headers["set-cookie"];
+    expect(cookies).toBeTruthy();
+    if (!cookies) {
+      throw new Error("Expected auth cookie");
+    }
+
+    const restartedStore = new SessionStore({
+      ttlHours: persistentConfig.sessionTtlHours,
+      dataDir,
+    });
+    const restartedApp = await createHttpApp({
+      config: persistentConfig,
+      authStore: restartedStore,
+      terminalManager: new TerminalManagerStub() as never,
+    });
+
+    const session = await request(restartedApp.app)
+      .get("/api/auth/session")
+      .set("Cookie", cookies);
+
+    expect(session.status).toBe(200);
+    expect(session.body.authenticated).toBe(true);
   });
 });

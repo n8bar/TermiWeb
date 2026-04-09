@@ -22,6 +22,7 @@ TermiWeb provides a workstation-first browser terminal workflow that can also be
 - Auto-generated instance names should reuse the lowest available `Instance N` and normalize legacy `Terminal N` names forward to `Instance N`.
 - If a browser session reaches an empty workspace on login or reconnect, the app should seed `Instance 1` automatically.
 - Authentication is a single shared password suitable for trusted private deployments in `0.1`.
+- Shared-password browser sessions should survive a normal server restart until they expire or are revoked.
 - The host platform is Windows-first.
 - Runtime configuration is read from process environment and an optional repo-root `.env` file.
 - New instances start at 80 columns by default.
@@ -42,6 +43,7 @@ TermiWeb provides a workstation-first browser terminal workflow that can also be
 - No built-in TLS termination.
 - No PTY/session resurrection after process or server restart.
 - Persist only the workspace metadata needed to restore the instance list and session labels.
+- Restart-stable auth state may persist lightweight server-side session records under `.termiweb/`, but that does not imply session resurrection for PTYs or shells.
 - Mobile users must have access to terminal-essential keys even when the OS keyboard is limited.
 - The host machine identity should remain visible before and after login.
 - The current product version should remain visible before and after login so the running build is obvious on every device.
