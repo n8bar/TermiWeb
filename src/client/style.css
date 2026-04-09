@@ -118,6 +118,21 @@ button {
   margin: 0;
 }
 
+.host-pill {
+  display: inline-grid;
+  gap: 0.12rem;
+  margin-top: 0.4rem;
+  padding: 0.48rem 0.8rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.host-pill.compact {
+  margin-top: 0.3rem;
+  padding: 0.42rem 0.7rem;
+}
+
 .host-name {
   font-family: var(--mono-font);
   font-size: 1.02rem;
@@ -172,25 +187,17 @@ button {
   font-size: 1rem;
 }
 
-.version-badge {
+.version-label {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  min-height: 1.7rem;
-  padding: 0 0.65rem;
-  border-radius: 999px;
-  background: rgba(244, 211, 94, 0.14);
-  border: 1px solid rgba(244, 211, 94, 0.28);
-  color: var(--accent-hot);
+  color: var(--muted);
   font-family: var(--mono-font);
   font-size: 0.82rem;
   font-weight: 700;
   letter-spacing: 0.06em;
 }
 
-.version-badge.compact {
-  min-height: 1.45rem;
-  padding-inline: 0.55rem;
+.version-label.compact {
   font-size: 0.76rem;
 }
 

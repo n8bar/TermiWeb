@@ -65,3 +65,4 @@
 2026-04-09 Restored the collapsed instance card's right outer border and the close control's left outer border so the stacked layout keeps its full outside frame while the shared seam stays borderless.
 2026-04-09 Changed collapsed auto-named instance labels to show only their number and removed the collapsed-mode small-font override so those labels keep the expanded title size.
 2026-04-09 Made collapsed-instance labels update immediately when the sidebar toggles and removed the ambiguous live-process note from the sidebar helper copy.
+2026-04-09 Wrapped hostname and address together inside a single host pill in both headers and converted the version from a pill badge to plain secondary text.
