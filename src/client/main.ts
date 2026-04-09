@@ -360,17 +360,24 @@ function syncWorkspaceStage(): void {
 }
 
 function updateAutoSidebarPreference(): void {
-  if (sidebarPreferenceMode !== "auto") {
-    return;
-  }
-
   const effectiveViewportWidth = resolveEffectiveViewportWidth({
     layoutWidth: window.innerWidth,
     visualWidth: window.visualViewport?.width ?? null,
     screenWidth: window.screen?.width ?? null,
   });
 
-  setSidebarCollapsed(shouldAutoCollapseSidebar(effectiveViewportWidth), {
+  if (shouldAutoCollapseSidebar(effectiveViewportWidth)) {
+    setSidebarCollapsed(true, {
+      persist: false,
+    });
+    return;
+  }
+
+  if (sidebarPreferenceMode !== "auto") {
+    return;
+  }
+
+  setSidebarCollapsed(false, {
     persist: false,
   });
 }
@@ -722,11 +729,18 @@ function scheduleViewportLayoutSync(
 }
 
 function initializeSidebarPreference(): void {
+  const effectiveViewportWidth = resolveEffectiveViewportWidth({
+    layoutWidth: window.innerWidth,
+    visualWidth: window.visualViewport?.width ?? null,
+    screenWidth: window.screen?.width ?? null,
+  });
+  const shouldForceCollapse = shouldAutoCollapseSidebar(effectiveViewportWidth);
+
   try {
     const stored = window.localStorage.getItem(sidebarStorageKey);
     if (stored === "true" || stored === "false") {
       sidebarPreferenceMode = "manual";
-      setSidebarCollapsed(stored === "true", {
+      setSidebarCollapsed(shouldForceCollapse ? true : stored === "true", {
         persist: false,
       });
       return;
@@ -1324,6 +1338,19 @@ focusTerminalButton.addEventListener("click", () => {
 
 toggleSidebarButton.addEventListener("click", () => {
   setSessionWidthPopoverOpen(false);
+  const effectiveViewportWidth = resolveEffectiveViewportWidth({
+    layoutWidth: window.innerWidth,
+    visualWidth: window.visualViewport?.width ?? null,
+    screenWidth: window.screen?.width ?? null,
+  });
+  if (shouldAutoCollapseSidebar(effectiveViewportWidth)) {
+    sidebarPreferenceMode = "auto";
+    setSidebarCollapsed(true, {
+      persist: false,
+    });
+    syncWorkspaceStage();
+    return;
+  }
   sidebarPreferenceMode = "manual";
   setSidebarCollapsed(!sidebarCollapsed);
   syncWorkspaceStage();

@@ -1,6 +1,7 @@
 :root {
   color-scheme: dark;
   --app-viewport-height: 100dvh;
+  --ui-font-scale: 1.5;
   --bg: #09131d;
   --bg-elevated: rgba(10, 21, 30, 0.88);
   --panel: rgba(13, 27, 38, 0.92);
@@ -40,6 +41,7 @@ body {
     linear-gradient(160deg, #08111a 0%, #09131d 40%, #05080c 100%);
   color: var(--text);
   font-family: var(--ui-font);
+  font-size: calc(1rem * var(--ui-font-scale));
 }
 
 button,
@@ -122,7 +124,7 @@ button {
   display: inline-grid;
   gap: 0.12rem;
   margin-top: 0.4rem;
-  margin-inline: 2rem;
+  margin-inline: 0;
   padding: 0.52rem 1rem;
   border-radius: 999px;
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -131,24 +133,24 @@ button {
 
 .host-pill.compact {
   margin-top: 0.3rem;
-  margin-inline: 2rem;
+  margin-inline: 0;
   padding: 0.46rem 1rem;
 }
 
 .host-name {
   font-family: var(--mono-font);
-  font-size: 1.12rem;
+  font-size: calc(1.12rem * var(--ui-font-scale));
   font-weight: 650;
   letter-spacing: 0.01em;
 }
 
 .host-name.compact {
-  font-size: 1.04rem;
+  font-size: calc(1.04rem * var(--ui-font-scale));
 }
 
 .host-address {
   font-family: var(--mono-font);
-  font-size: 0.94rem;
+  font-size: calc(0.94rem * var(--ui-font-scale));
 }
 
 .lede,
@@ -162,7 +164,7 @@ button {
 
 .eyebrow {
   margin: 0 0 0.2rem;
-  font-size: 0.76rem;
+  font-size: calc(0.76rem * var(--ui-font-scale));
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--accent-hot);
@@ -179,14 +181,14 @@ button {
     rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(244, 211, 94, 0.22);
   font-family: var(--mono-font);
-  font-size: 1.4rem;
+  font-size: calc(1.4rem * var(--ui-font-scale));
   font-weight: 700;
 }
 
 .brand-mark.small {
   width: 2.8rem;
   border-radius: 0.9rem;
-  font-size: 1rem;
+  font-size: calc(1rem * var(--ui-font-scale));
 }
 
 .version-label {
@@ -194,13 +196,13 @@ button {
   align-items: center;
   color: var(--muted);
   font-family: var(--mono-font);
-  font-size: small;
+  font-size: calc(0.8rem * var(--ui-font-scale));
   font-weight: 700;
   letter-spacing: 0.06em;
 }
 
 .version-label.compact {
-  font-size: small;
+  font-size: calc(0.8rem * var(--ui-font-scale));
 }
 
 .auth-form {
@@ -265,7 +267,7 @@ button {
 .icon-button {
   min-width: 2.15rem;
   padding: 0;
-  font-size: 1.05rem;
+  font-size: calc(1.05rem * var(--ui-font-scale));
 }
 
 .ghost-button,
@@ -318,7 +320,7 @@ button {
 
 .topbar-shell {
   color: var(--muted);
-  font-size: 0.9rem;
+  font-size: calc(0.9rem * var(--ui-font-scale));
 }
 
 .session-width-controls {
@@ -345,7 +347,7 @@ button {
 
 .session-width-button::after {
   content: "▾";
-  font-size: 0.72rem;
+  font-size: calc(0.72rem * var(--ui-font-scale));
   opacity: 0.85;
   transition: transform 150ms ease;
 }
@@ -407,7 +409,7 @@ button {
 .session-width-field span,
 .session-width-note {
   color: var(--muted);
-  font-size: 0.84rem;
+  font-size: calc(0.84rem * var(--ui-font-scale));
 }
 
 .session-width-field input {
@@ -503,7 +505,7 @@ button {
   touch-action: manipulation;
   white-space: pre-line;
   line-height: 0.58;
-  font-size: 0.92rem;
+  font-size: calc(0.92rem * var(--ui-font-scale));
 }
 
 .terminal-shell.is-controls-collapsed .tray-toggle-button {
@@ -541,7 +543,7 @@ button {
   display: inline-grid;
   place-items: center;
   min-width: 0.9rem;
-  font-size: 1rem;
+  font-size: calc(1rem * var(--ui-font-scale));
   line-height: 1;
 }
 
@@ -605,7 +607,7 @@ button {
 
 .session-meta,
 .side-panel-meta {
-  font-size: 0.9rem;
+  font-size: calc(0.9rem * var(--ui-font-scale));
 }
 
 .status-pill {
@@ -779,7 +781,7 @@ button {
   background: rgba(4, 8, 12, 0.82);
   color: var(--text);
   font-family: var(--mono-font);
-  font-size: 0.95rem;
+  font-size: calc(0.95rem * var(--ui-font-scale));
   line-height: 1.4;
   resize: none;
   white-space: pre;
@@ -805,7 +807,7 @@ button {
 .control-button {
   min-height: var(--control-key-height);
   padding-inline: 0.35rem;
-  font-size: 0.95rem;
+  font-size: calc(0.95rem * var(--ui-font-scale));
   touch-action: manipulation;
 }
 

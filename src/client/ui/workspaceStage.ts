@@ -1,4 +1,4 @@
-export const NARROW_VIEWPORT_COLLAPSE_THRESHOLD = 760;
+export const NARROW_VIEWPORT_COLLAPSE_THRESHOLD = 800;
 
 export interface StageLayout {
   baseWidth: number;
