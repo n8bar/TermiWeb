@@ -1,3 +1,24 @@
+export function computeRequiredTerminalWidth(options: {
+  cols: number;
+  cellWidth: number;
+  horizontalPadding: number;
+}): number {
+  const { cols, cellWidth, horizontalPadding } = options;
+
+  if (
+    !Number.isFinite(cols) ||
+    !Number.isFinite(cellWidth) ||
+    !Number.isFinite(horizontalPadding) ||
+    cols <= 0 ||
+    cellWidth <= 0 ||
+    horizontalPadding < 0
+  ) {
+    return 0;
+  }
+
+  return cols * cellWidth + horizontalPadding;
+}
+
 export function fitFontSizeToCols(options: {
   currentFontSize: number;
   fittedCols: number;
@@ -9,7 +30,7 @@ export function fitFontSizeToCols(options: {
     currentFontSize,
     fittedCols,
     targetCols,
-    minFontSize = 8,
+    minFontSize = 6,
     maxFontSize = 32,
   } = options;
 

@@ -31,6 +31,7 @@ TermiWeb provides a workstation-first browser terminal workflow that can also be
 - The configured column count must always fit inside the visible `xterm` viewport width on each device.
 - Font sizing should make the configured columns fit inside that visible width.
 - Visible row count should then flex from the available terminal height.
+- If width fit reaches the minimum font-size floor and configured columns still cannot fit, the terminal should expose a local horizontal scrollbar rather than clipping columns.
 - The runtime prefers PowerShell 7 from `PATH`, then the standard install path, and only then falls back to Windows PowerShell.
 
 ## 0.1 Constraints

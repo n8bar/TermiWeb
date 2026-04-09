@@ -621,6 +621,13 @@ button {
   overscroll-behavior: contain;
 }
 
+.terminal-container.is-horizontal-overflow {
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: auto;
+  scrollbar-color: rgba(122, 255, 178, 0.42) rgba(255, 255, 255, 0.05);
+}
+
 .terminal-container .xterm {
   padding: 0.85rem;
   height: 100%;
@@ -641,6 +648,19 @@ button {
 .terminal-container .xterm .xterm-viewport::-webkit-scrollbar {
   width: 0;
   height: 0;
+}
+
+.terminal-container.is-horizontal-overflow::-webkit-scrollbar {
+  height: 0.95rem;
+}
+
+.terminal-container.is-horizontal-overflow::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.terminal-container.is-horizontal-overflow::-webkit-scrollbar-thumb {
+  background: rgba(122, 255, 178, 0.42);
+  border-radius: 999px;
 }
 
 @media (pointer: coarse) {

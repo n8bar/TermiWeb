@@ -1,11 +1,22 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  computeRequiredTerminalWidth,
   fitFontSizeToCols,
   resolveTerminalRows,
 } from "../../src/client/ui/terminalSizing.js";
 
 describe("terminal sizing helpers", () => {
+  it("computes the width needed to display all columns", () => {
+    expect(
+      computeRequiredTerminalWidth({
+        cols: 80,
+        cellWidth: 8.5,
+        horizontalPadding: 24,
+      }),
+    ).toBe(704);
+  });
+
   it("scales font size to fit the target column count", () => {
     expect(
       fitFontSizeToCols({
@@ -39,9 +50,9 @@ describe("terminal sizing helpers", () => {
         currentFontSize: 15,
         fittedCols: 20,
         targetCols: 80,
-        minFontSize: 9,
+        minFontSize: 6,
       }),
-    ).toBe(9);
+    ).toBe(6);
   });
 
   it("lets rows shrink to whatever fits instead of enforcing a larger floor", () => {

@@ -28,6 +28,7 @@ import {
   shouldAutoCollapseSidebar,
 } from "./ui/workspaceStage.js";
 import {
+  computeRequiredTerminalWidth,
   fitFontSizeToCols,
   resolveTerminalRows,
 } from "./ui/terminalSizing.js";
@@ -177,6 +178,7 @@ const sidebarStorageKey = "termiweb.sidebar-collapsed";
 const controlsStorageKey = "termiweb.controls-collapsed";
 const modifierDoubleTapWindowMs = 360;
 const defaultTerminalFontSize = 15;
+const minTerminalFontSize = 6;
 const minSessionCols = 20;
 const maxSessionCols = 240;
 const displayVersion = toDisplayVersion(
@@ -560,6 +562,52 @@ function requestSessionWidthChange(nextCols: number): void {
   maybeRefocusTerminalAfterControl();
 }
 
+function readTerminalWidthMetrics(): { cellWidth: number; horizontalPadding: number } | null {
+  const terminalElement = terminal.element;
+  const renderDimensions = (
+    terminal as Terminal & {
+      _core?: {
+        _renderService?: {
+          dimensions?: {
+            css?: {
+              cell?: {
+                width?: number;
+              };
+            };
+          };
+        };
+      };
+    }
+  )._core?._renderService?.dimensions;
+
+  const cellWidth = renderDimensions?.css?.cell?.width;
+  if (
+    !terminalElement ||
+    typeof cellWidth !== "number" ||
+    !Number.isFinite(cellWidth) ||
+    cellWidth <= 0
+  ) {
+    return null;
+  }
+
+  const terminalStyles = window.getComputedStyle(terminalElement);
+  const horizontalPadding =
+    parseFloat(terminalStyles.getPropertyValue("padding-left")) +
+    parseFloat(terminalStyles.getPropertyValue("padding-right"));
+
+  return {
+    cellWidth,
+    horizontalPadding,
+  };
+}
+
+function resetTerminalHorizontalOverflow(): void {
+  terminalContainer.classList.remove("is-horizontal-overflow");
+  if (terminal.element) {
+    terminal.element.style.width = "";
+  }
+}
+
 function fitTerminalWidth(): boolean {
   const proposed = fitAddon.proposeDimensions();
   const fittedCols = proposed?.cols;
@@ -575,6 +623,7 @@ function fitTerminalWidth(): boolean {
     currentFontSize: currentTerminalFontSize(),
     fittedCols,
     targetCols: fixedCols,
+    minFontSize: minTerminalFontSize,
   });
 
   if (Math.abs(nextFontSize - currentTerminalFontSize()) >= 0.1) {
@@ -583,6 +632,39 @@ function fitTerminalWidth(): boolean {
   }
 
   return false;
+}
+
+function syncTerminalHorizontalOverflow(): boolean {
+  const proposed = fitAddon.proposeDimensions();
+  const fittedCols = proposed?.cols;
+  if (
+    currentTerminalFontSize() > minTerminalFontSize + 0.01 ||
+    typeof fittedCols !== "number" ||
+    !Number.isFinite(fittedCols) ||
+    fittedCols >= fixedCols
+  ) {
+    return false;
+  }
+
+  const metrics = readTerminalWidthMetrics();
+  if (!metrics) {
+    return false;
+  }
+
+  const requiredWidth = Math.ceil(
+    computeRequiredTerminalWidth({
+      cols: fixedCols,
+      cellWidth: metrics.cellWidth,
+      horizontalPadding: metrics.horizontalPadding,
+    }) + 1,
+  );
+
+  terminalContainer.classList.add("is-horizontal-overflow");
+  if (terminal.element) {
+    terminal.element.style.width = `${requiredWidth}px`;
+  }
+
+  return true;
 }
 
 function emitTerminalResize(size: { cols: number; rows: number }): void {
@@ -748,6 +830,8 @@ function currentSize() {
     };
   }
 
+  resetTerminalHorizontalOverflow();
+
   let rows = Math.max(terminal.rows, 1);
 
   for (let attempt = 0; attempt < 2; attempt += 1) {
@@ -764,6 +848,19 @@ function currentSize() {
     }
 
     rows = nextRows;
+  }
+
+  if (syncTerminalHorizontalOverflow()) {
+    const overflowRows = resolveTerminalRows({
+      proposedRows: fitAddon.proposeDimensions()?.rows,
+      fallbackRows: rows,
+    });
+
+    if (terminal.cols !== nextCols || terminal.rows !== overflowRows) {
+      terminal.resize(nextCols, overflowRows);
+    }
+
+    rows = overflowRows;
   }
 
   return {
