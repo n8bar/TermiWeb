@@ -34,10 +34,10 @@ function defaultWorkingDirectory(): string {
 
 export class TerminalSession extends EventEmitter<TerminalSessionEvents> {
   readonly #id: string;
-  readonly #title: string;
   readonly #shell: string;
   readonly #historyLimit: number;
   readonly #clientIds = new Set<string>();
+  #title: string;
   #pty: IPty | null = null;
   #history = "";
   #status: TerminalStatus = "stopped";
@@ -159,6 +159,23 @@ export class TerminalSession extends EventEmitter<TerminalSessionEvents> {
 
   getFixedCols(): number {
     return this.#cols;
+  }
+
+  setTitle(title: string): void {
+    if (this.#title === title) {
+      return;
+    }
+
+    this.#title = title;
+    this.#emitSummary();
+  }
+
+  requestRedraw(): void {
+    if (!this.#pty) {
+      return;
+    }
+
+    this.#pty.resize(this.#cols, this.#rows);
   }
 
   dispose(): void {

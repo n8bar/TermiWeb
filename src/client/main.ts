@@ -48,6 +48,7 @@ function mustQuery<T extends Element>(selector: string): T {
 
 const loginPanel = mustQuery<HTMLElement>("#login-panel");
 const workspacePanel = mustQuery<HTMLElement>("#workspace-panel");
+const appShell = mustQuery<HTMLElement>(".app-shell");
 const loginForm = mustQuery<HTMLFormElement>("#login-form");
 const passwordInput = mustQuery<HTMLInputElement>("#password-input");
 const loginMessage = mustQuery<HTMLElement>("#login-message");
@@ -150,6 +151,7 @@ let ws: WebSocket | null = null;
 let reconnectTimer: number | undefined;
 let viewportRefitTimer: number | undefined;
 let terminalResyncTimer: number | undefined;
+let terminalPaintRefreshFrame: number | undefined;
 let recoveryPollTimer: number | undefined;
 let authenticated = false;
 let sessions: SessionSummary[] = [];
@@ -172,6 +174,7 @@ let fixedCols = 80;
 let sessionWidthAnchorButton: HTMLButtonElement | null = null;
 let pendingViewportScrollReset = false;
 let pendingViewportSnapshotResync = false;
+let pendingTextureAtlasReset = false;
 const sidebarStorageKey = "termiweb.sidebar-collapsed";
 const controlsStorageKey = "termiweb.controls-collapsed";
 const modifierDoubleTapWindowMs = 360;
@@ -186,6 +189,8 @@ const displayVersion = toDisplayVersion(
     }
   ).__TERMIWEB_VERSION__ ?? "0.1.0",
 );
+
+appShell.append(sessionWidthPopover);
 
 const statusLabels: Record<SessionSummary["status"], string> = {
   stopped: "Stopped",
@@ -299,7 +304,7 @@ function positionSessionWidthPopover(): void {
     : anchorRect.bottom + 4;
   const maxTop = Math.max(viewportPadding, window.innerHeight - popoverRect.height - viewportPadding);
   if (top > maxTop) {
-    top = Math.max(viewportPadding, anchorRect.top - popoverRect.height - 10);
+    top = Math.max(viewportPadding, anchorRect.top - popoverRect.height - 4);
   }
 
   sessionWidthPopover.style.left = `${Math.round(left)}px`;
@@ -657,6 +662,9 @@ function fitTerminalWidth(): boolean {
 
   if (Math.abs(nextFontSize - currentTerminalFontSize()) >= 0.1) {
     terminal.options.fontSize = nextFontSize;
+    scheduleTerminalPaintRefresh({
+      clearTextureAtlas: true,
+    });
     return true;
   }
 
@@ -692,6 +700,9 @@ function syncTerminalHorizontalOverflow(): boolean {
   if (terminal.element) {
     terminal.element.style.width = `${requiredWidth}px`;
   }
+  scheduleTerminalPaintRefresh({
+    clearTextureAtlas: true,
+  });
 
   return true;
 }
@@ -741,6 +752,35 @@ function scheduleViewportLayoutSync(
 function clearTerminalResyncTimer(): void {
   window.clearTimeout(terminalResyncTimer);
   terminalResyncTimer = undefined;
+}
+
+function clearTerminalPaintRefreshFrame(): void {
+  if (typeof terminalPaintRefreshFrame !== "number") {
+    return;
+  }
+
+  window.cancelAnimationFrame(terminalPaintRefreshFrame);
+  terminalPaintRefreshFrame = undefined;
+}
+
+function scheduleTerminalPaintRefresh(options: {
+  clearTextureAtlas?: boolean;
+} = {}): void {
+  pendingTextureAtlasReset ||= options.clearTextureAtlas === true;
+  if (typeof terminalPaintRefreshFrame === "number") {
+    return;
+  }
+
+  terminalPaintRefreshFrame = window.requestAnimationFrame(() => {
+    terminalPaintRefreshFrame = undefined;
+
+    if (pendingTextureAtlasReset) {
+      terminal.clearTextureAtlas();
+      pendingTextureAtlasReset = false;
+    }
+
+    terminal.refresh(0, Math.max(terminal.rows - 1, 0));
+  });
 }
 
 function requestActiveSessionSnapshot(): void {
@@ -830,6 +870,7 @@ function closeSocket(intentional = false): void {
   }
 
   clearTerminalResyncTimer();
+  clearTerminalPaintRefreshFrame();
   const managedSocket = ws as ManagedWebSocket;
   managedSocket.intentionalClose = intentional;
   ws.close();
@@ -1278,9 +1319,23 @@ function handleServerEvent(event: ServerEvent): void {
       }
       setSelectionMode(false);
       terminal.reset();
-      terminal.write(event.snapshot.history);
-      renderSessions();
-      terminal.focus();
+      const snapshotSessionId = event.snapshot.session.id;
+      terminal.write(event.snapshot.history, () => {
+        scheduleTerminalPaintRefresh({
+          clearTextureAtlas: true,
+        });
+        renderSessions();
+        terminal.focus();
+        if (
+          activeSessionId === snapshotSessionId &&
+          event.snapshot.session.status === "running"
+        ) {
+          sendEvent({
+            type: "session/redraw.request",
+            sessionId: snapshotSessionId,
+          });
+        }
+      });
       return;
     case "session/output":
       if (event.sessionId === activeSessionId) {
@@ -1506,6 +1561,10 @@ terminal.onData((data) => {
     sessionId: activeSessionId,
     data: transformed.data,
   });
+});
+
+terminal.onWriteParsed(() => {
+  scheduleTerminalPaintRefresh();
 });
 
 const resizeObserver = new ResizeObserver(() => {

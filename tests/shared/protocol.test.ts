@@ -68,6 +68,20 @@ describe("protocol parsing", () => {
     expect(event.sessionId).toBe("54fd93ae-0f1d-4dc4-af4a-547e8b87d2af");
   });
 
+  it("accepts a session redraw request event", () => {
+    const event = parseClientEvent({
+      type: "session/redraw.request",
+      sessionId: "54fd93ae-0f1d-4dc4-af4a-547e8b87d2af",
+    });
+
+    expect(event.type).toBe("session/redraw.request");
+    if (event.type !== "session/redraw.request") {
+      throw new Error("Expected session/redraw.request event");
+    }
+
+    expect(event.sessionId).toBe("54fd93ae-0f1d-4dc4-af4a-547e8b87d2af");
+  });
+
   it("accepts a valid session column width change event", () => {
     const event = parseClientEvent({
       type: "session/cols",

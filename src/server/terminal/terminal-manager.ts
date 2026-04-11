@@ -34,6 +34,7 @@ export class TerminalManager extends EventEmitter<ManagerEvents> {
     for (const tab of this.#workspaceStore.listTabs()) {
       this.#registerSession(tab.id, tab.title, tab.fixedCols);
     }
+    this.#syncSessionDefinitions();
     this.#emitSessions();
   }
 
@@ -65,7 +66,9 @@ export class TerminalManager extends EventEmitter<ManagerEvents> {
     }
 
     const tab = await this.#workspaceStore.createTab(title);
+    this.#syncSessionDefinitions();
     const session = this.#registerSession(tab.id, tab.title, tab.fixedCols);
+    this.#syncSessionDefinitions();
     this.#emitSessions();
     return session.getSummary();
   }
@@ -86,6 +89,7 @@ export class TerminalManager extends EventEmitter<ManagerEvents> {
     }
 
     const removed = await this.#workspaceStore.closeTab(sessionId);
+    this.#syncSessionDefinitions();
     this.#emitSessions();
     return removed;
   }
@@ -181,6 +185,14 @@ export class TerminalManager extends EventEmitter<ManagerEvents> {
     this.#emitSessions();
   }
 
+  requestSessionRedraw(sessionId: string, clientId?: string): void {
+    if (clientId && this.#clientSessions.get(clientId) !== sessionId) {
+      return;
+    }
+
+    this.#sessions.get(sessionId)?.requestRedraw();
+  }
+
   getShellLabel(): string {
     return this.#shell;
   }
@@ -208,5 +220,11 @@ export class TerminalManager extends EventEmitter<ManagerEvents> {
 
   #emitSessions(): void {
     this.emit("sessions", this.listSessions());
+  }
+
+  #syncSessionDefinitions(): void {
+    for (const tab of this.#workspaceStore.listTabs()) {
+      this.#sessions.get(tab.id)?.setTitle(tab.title);
+    }
   }
 }

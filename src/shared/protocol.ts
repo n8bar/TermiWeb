@@ -42,6 +42,10 @@ export const clientEventSchema = z.discriminatedUnion("type", [
     sessionId: z.string().uuid(),
   }),
   z.object({
+    type: z.literal("session/redraw.request"),
+    sessionId: z.string().uuid(),
+  }),
+  z.object({
     type: z.literal("session/create"),
     title: z.string().trim().min(1).max(64).optional(),
   }),

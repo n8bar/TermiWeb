@@ -108,6 +108,31 @@ describe("terminal manager", () => {
     expect(store.listTabs()[0]?.fixedCols).toBe(120);
   });
 
+  it("renumbers surviving auto-named sessions after a close", async () => {
+    const store = new FakeWorkspaceStore(ensureWorkspaceHasTab(createEmptyWorkspaceState()));
+    const manager = new TerminalManager(createConfig(), store as unknown as WorkspaceStore);
+
+    await manager.initialize();
+
+    const first = manager.listSessions()[0];
+    const second = await manager.createSession();
+
+    expect(first?.title).toBe("Instance 1");
+    expect(second.title).toBe("Instance 2");
+
+    await manager.closeSession(first!.id);
+
+    const sessionsAfterClose = manager.listSessions();
+    expect(sessionsAfterClose).toHaveLength(1);
+    expect(sessionsAfterClose[0]?.title).toBe("Instance 1");
+
+    const created = await manager.createSession();
+    const finalTitles = manager.listSessions().map((session) => session.title);
+
+    expect(created.title).toBe("Instance 2");
+    expect(finalTitles).toEqual(["Instance 1", "Instance 2"]);
+  });
+
   it("can return a snapshot for an attached client without reattaching the session", async () => {
     const store = new FakeWorkspaceStore(ensureWorkspaceHasTab(createEmptyWorkspaceState()));
     const manager = new TerminalManager(createConfig(), store as unknown as WorkspaceStore);

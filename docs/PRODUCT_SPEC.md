@@ -20,6 +20,7 @@ TermiWeb provides a workstation-first browser terminal workflow that can also be
 - The app manages named shared instances rather than a single throwaway shell.
 - The UI refers to those shared shells as instances.
 - Auto-generated instance names should reuse the lowest available `Instance N` and normalize legacy `Terminal N` names forward to `Instance N`.
+- Live instance titles should stay synced with that renumbering after creates and closes so the UI does not show duplicate auto-generated names.
 - If a browser session reaches an empty workspace on login or reconnect, the app should seed `Instance 1` automatically.
 - Authentication uses a single configured app password suitable for trusted private deployments in `0.1`.
 - Authenticated browser sessions should survive a normal server restart until they expire or are revoked.
@@ -88,6 +89,7 @@ TermiWeb provides a workstation-first browser terminal workflow that can also be
 - Viewport churn from one attached device should stay local after session startup rather than repeatedly rewriting the live PTY rows for every browser resize or mobile rotation.
 - The live PTY row count should be established when a shell starts and should not keep changing just because attached devices have different viewport heights.
 - TermiWeb should be able to rebuild the current instance from a fresh session snapshot after disruptive viewport changes without requiring a full page refresh.
+- Snapshot-driven terminal rebuilds should force a local xterm repaint and request a same-size PTY redraw so interactive CLI apps have a chance to repaint cleanly after attach or recovery.
 - After a live connection is interrupted by a server restart, open pages should wait for server recovery and refresh themselves instead of flapping between reconnect states.
 - When no manual sidebar preference is stored for a device, narrow viewports should default to a collapsed sidebar.
 - The control tray should keep the cursor-key cluster aligned beside the main button rows instead of stacking it below them.
