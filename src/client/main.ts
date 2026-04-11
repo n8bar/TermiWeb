@@ -170,14 +170,6 @@ let controlsCollapsed = false;
 let selectionMode = false;
 let fixedCols = 80;
 let sessionWidthAnchorButton: HTMLButtonElement | null = null;
-let lastEmittedTerminalResize:
-  | {
-      sessionId: string;
-      cols: number;
-      rows: number;
-    }
-  | null = null;
-let pendingViewportResizeBroadcast = false;
 let pendingViewportScrollReset = false;
 let pendingViewportSnapshotResync = false;
 const sidebarStorageKey = "termiweb.sidebar-collapsed";
@@ -297,12 +289,14 @@ function positionSessionWidthPopover(): void {
 
   const popoverRect = sessionWidthPopover.getBoundingClientRect();
   const preferredLeft = sidebarCollapsed
-    ? anchorRect.right - popoverRect.width
+    ? anchorRect.right + 8
     : anchorRect.left;
   const maxLeft = Math.max(viewportPadding, window.innerWidth - popoverRect.width - viewportPadding);
   const left = Math.min(Math.max(viewportPadding, preferredLeft), maxLeft);
 
-  let top = anchorRect.bottom + 10;
+  let top = sidebarCollapsed
+    ? anchorRect.top + (anchorRect.height - popoverRect.height) / 2
+    : anchorRect.bottom + 6;
   const maxTop = Math.max(viewportPadding, window.innerHeight - popoverRect.height - viewportPadding);
   if (top > maxTop) {
     top = Math.max(viewportPadding, anchorRect.top - popoverRect.height - 10);
@@ -702,44 +696,14 @@ function syncTerminalHorizontalOverflow(): boolean {
   return true;
 }
 
-function emitTerminalResize(size: { cols: number; rows: number }): void {
-  if (!activeSessionId) {
-    return;
-  }
-
-  if (
-    lastEmittedTerminalResize?.sessionId === activeSessionId &&
-    lastEmittedTerminalResize.cols === size.cols &&
-    lastEmittedTerminalResize.rows === size.rows
-  ) {
-    return;
-  }
-
-  lastEmittedTerminalResize = {
-    sessionId: activeSessionId,
-    cols: size.cols,
-    rows: size.rows,
-  };
-
-  sendEvent({
-    type: "terminal/resize",
-    sessionId: activeSessionId,
-    ...size,
-  });
-}
-
 function syncViewportLayout(options: {
-  sendResize?: boolean;
   scrollToOrigin?: boolean;
 } = {}): void {
   syncAppViewportHeight();
   updateAutoSidebarPreference();
   syncWorkspaceStage();
 
-  const size = currentSize();
-  if (options.sendResize) {
-    emitTerminalResize(size);
-  }
+  currentSize();
 
   if (selectionMode) {
     syncSelectionText();
@@ -753,22 +717,18 @@ function syncViewportLayout(options: {
 function scheduleViewportLayoutSync(
   delayMs: number,
   options: {
-    sendResize?: boolean;
     scrollToOrigin?: boolean;
     requestSnapshot?: boolean;
   } = {},
 ): void {
-  pendingViewportResizeBroadcast ||= options.sendResize === true;
   pendingViewportScrollReset ||= options.scrollToOrigin === true;
   pendingViewportSnapshotResync ||= options.requestSnapshot === true;
   window.clearTimeout(viewportRefitTimer);
   viewportRefitTimer = window.setTimeout(() => {
     const layoutOptions = {
-      sendResize: pendingViewportResizeBroadcast,
       scrollToOrigin: pendingViewportScrollReset,
     };
     const shouldRequestSnapshot = pendingViewportSnapshotResync;
-    pendingViewportResizeBroadcast = false;
     pendingViewportScrollReset = false;
     pendingViewportSnapshotResync = false;
     syncViewportLayout(layoutOptions);
@@ -870,7 +830,6 @@ function closeSocket(intentional = false): void {
   }
 
   clearTerminalResyncTimer();
-  lastEmittedTerminalResize = null;
   const managedSocket = ws as ManagedWebSocket;
   managedSocket.intentionalClose = intentional;
   ws.close();
@@ -1141,6 +1100,10 @@ function renderSessions(): void {
   for (const session of sessions) {
     const row = document.createElement("div");
     row.className = `session-row${session.id === activeSessionId ? " is-active" : ""}`;
+    const showExternalWidthButton = sidebarCollapsed && session.id === activeSessionId;
+    if (showExternalWidthButton) {
+      row.classList.add("has-width-button");
+    }
 
     const card = document.createElement("div");
     card.className = `session-card${session.id === activeSessionId ? " is-active" : ""}`;
@@ -1170,51 +1133,57 @@ function renderSessions(): void {
     meta.className = "session-meta";
     meta.textContent = `${session.clientCount} attached\n${session.shell ?? "shell pending"}`;
 
-    if (session.id === activeSessionId) {
-      const actions = document.createElement("div");
-      actions.className = "session-card-actions";
+    const widthButton = document.createElement("button");
+    widthButton.type = "button";
+    widthButton.className = `ghost-button compact session-width-button${showExternalWidthButton ? " is-rail-button" : ""}`;
+    widthButton.textContent = getSessionWidthButtonLabel(session.fixedCols);
+    widthButton.setAttribute("aria-label", `Change columns for ${session.title}`);
+    widthButton.setAttribute("aria-expanded", "false");
+    widthButton.setAttribute("aria-haspopup", "dialog");
+    widthButton.setAttribute("aria-controls", "session-width-popover");
+    const preservePointerInteraction = (event: Event) => {
+      if (event.cancelable) {
+        event.preventDefault();
+      }
+    };
+    widthButton.addEventListener(
+      "pointerdown",
+      (event) => {
+        preservePointerInteraction(event);
+      },
+      { passive: false },
+    );
+    widthButton.addEventListener(
+      "mousedown",
+      (event) => {
+        preservePointerInteraction(event);
+      },
+      { passive: false },
+    );
+    widthButton.addEventListener(
+      "touchstart",
+      (event) => {
+        preservePointerInteraction(event);
+      },
+      { passive: false },
+    );
+    widthButton.addEventListener("click", (event) => {
+      event.stopPropagation();
+      const shouldOpen =
+        sessionWidthPopover.classList.contains("is-hidden") ||
+        sessionWidthAnchorButton !== widthButton;
+      setSessionWidthPopoverOpen(shouldOpen, widthButton);
+    });
 
-      const widthButton = document.createElement("button");
-      widthButton.type = "button";
-      widthButton.className = "ghost-button compact session-width-button";
-      widthButton.textContent = getSessionWidthButtonLabel(session.fixedCols);
-      widthButton.setAttribute("aria-label", `Change columns for ${session.title}`);
-      widthButton.setAttribute("aria-expanded", "false");
-      const preservePointerInteraction = (event: Event) => {
-        if (event.cancelable) {
-          event.preventDefault();
-        }
-      };
-      widthButton.addEventListener(
-        "pointerdown",
-        (event) => {
-          preservePointerInteraction(event);
-        },
-        { passive: false },
-      );
-      widthButton.addEventListener(
-        "mousedown",
-        (event) => {
-          preservePointerInteraction(event);
-        },
-        { passive: false },
-      );
-      widthButton.addEventListener(
-        "touchstart",
-        (event) => {
-          preservePointerInteraction(event);
-        },
-        { passive: false },
-      );
-      widthButton.addEventListener("click", (event) => {
-        event.stopPropagation();
-        const shouldOpen =
-          sessionWidthPopover.classList.contains("is-hidden") ||
-          sessionWidthAnchorButton !== widthButton;
-        setSessionWidthPopoverOpen(shouldOpen, widthButton);
-      });
-      actions.append(widthButton);
-      card.append(head, meta, actions);
+    if (session.id === activeSessionId) {
+      if (showExternalWidthButton) {
+        card.append(head, meta);
+      } else {
+        const actions = document.createElement("div");
+        actions.className = "session-card-actions";
+        actions.append(widthButton);
+        card.append(head, meta, actions);
+      }
     } else {
       card.append(head, meta);
     }
@@ -1233,7 +1202,11 @@ function renderSessions(): void {
       });
     });
 
-    row.append(card, close);
+    row.append(card);
+    if (showExternalWidthButton) {
+      row.append(widthButton);
+    }
+    row.append(close);
     sessionList.append(row);
   }
 
@@ -1247,7 +1220,6 @@ function attachToSession(sessionId: string): void {
   }
 
   activeSessionId = sessionId;
-  lastEmittedTerminalResize = null;
   setSessionWidthPopoverOpen(false);
   setSelectionMode(false);
   terminal.reset();
@@ -1296,12 +1268,14 @@ function handleServerEvent(event: ServerEvent): void {
       setConnectionState("error", event.message);
       return;
     case "session/list":
+      setConnectionState("connected");
       workspaceActiveSessionId = event.activeSessionId;
       sessions = event.sessions;
       renderSessions();
       maybeAttachDefaultSession();
       return;
     case "session/created":
+      setConnectionState("connected");
       setFixedCols(event.session.fixedCols);
       attachToSession(event.session.id);
       return;
@@ -1480,16 +1454,12 @@ toggleSidebarButton.addEventListener("click", () => {
     setSidebarCollapsed(true, {
       persist: false,
     });
-    syncViewportLayout({
-      sendResize: true,
-    });
+    syncViewportLayout();
     return;
   }
   sidebarPreferenceMode = "manual";
   setSidebarCollapsed(!sidebarCollapsed);
-  syncViewportLayout({
-    sendResize: true,
-  });
+  syncViewportLayout();
 });
 
 for (const button of sessionWidthPresetButtons) {
@@ -1516,9 +1486,7 @@ sessionWidthForm.addEventListener("submit", (event) => {
 registerControlButtonFocusBehavior(toggleControlsButton);
 bindControlButtonActivation(toggleControlsButton, () => {
   setControlsCollapsed(!controlsCollapsed);
-  syncViewportLayout({
-    sendResize: true,
-  });
+  syncViewportLayout();
   maybeRefocusTerminalAfterControl();
 });
 
@@ -1563,14 +1531,11 @@ stageViewportObserver.observe(workspaceStageViewport);
 
 const handleViewportResize = () => {
   const coarsePointer = isCoarsePointerDevice();
-  syncViewportLayout({
-    sendResize: !coarsePointer,
-  });
+  syncViewportLayout();
   window.requestAnimationFrame(() => {
     positionSessionWidthPopover();
   });
   scheduleViewportLayoutSync(coarsePointer ? 220 : 140, {
-    sendResize: !coarsePointer,
     requestSnapshot: coarsePointer,
   });
 };

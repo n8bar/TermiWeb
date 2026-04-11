@@ -78,7 +78,7 @@ export class TerminalSession extends EventEmitter<TerminalSessionEvents> {
   }
 
   async ensureStarted(size?: { cols: number; rows: number }): Promise<void> {
-    if (size) {
+    if (size && !this.#pty && this.#status !== "starting") {
       this.#cols = size.cols;
       this.#rows = resolveNextTerminalRows(this.#rows, size.rows);
     }
@@ -125,8 +125,9 @@ export class TerminalSession extends EventEmitter<TerminalSessionEvents> {
 
   attachClient(clientId: string, rows: number): void {
     this.#clientIds.add(clientId);
-    this.#rows = resolveNextTerminalRows(this.#rows, rows);
-    this.#pty?.resize(this.#cols, this.#rows);
+    if (!this.#pty) {
+      this.#rows = resolveNextTerminalRows(this.#rows, rows);
+    }
     this.#emitSummary();
   }
 
@@ -143,12 +144,17 @@ export class TerminalSession extends EventEmitter<TerminalSessionEvents> {
 
   resize(cols: number, rows: number): void {
     this.#cols = cols;
-    this.#rows = resolveNextTerminalRows(this.#rows, rows);
-    this.#pty?.resize(cols, this.#rows);
+    if (!this.#pty) {
+      this.#rows = resolveNextTerminalRows(this.#rows, rows);
+    }
   }
 
   setFixedCols(cols: number, rows = this.#rows): void {
-    this.resize(cols, rows);
+    this.#cols = cols;
+    if (!this.#pty) {
+      this.#rows = resolveNextTerminalRows(this.#rows, rows);
+    }
+    this.#pty?.resize(cols, this.#rows);
   }
 
   getFixedCols(): number {

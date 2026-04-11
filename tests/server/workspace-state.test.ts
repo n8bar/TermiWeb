@@ -40,6 +40,24 @@ describe("workspace state", () => {
     expect(replacement.tab.title).toBe("Instance 2");
   });
 
+  it("ignores a stale nextDefaultTitleIndex when creating the next auto-named tab", () => {
+    const staleState = workspaceStateSchema.parse({
+      tabs: [
+        {
+          id: "4b2734b8-2878-4fa0-8c7e-1d0cdab85fb8",
+          title: "Instance 1",
+          fixedCols: 80,
+        },
+      ],
+      lastActiveTabId: "4b2734b8-2878-4fa0-8c7e-1d0cdab85fb8",
+      nextDefaultTitleIndex: 9,
+    });
+
+    const next = addWorkspaceTab(staleState);
+
+    expect(next.tab.title).toBe("Instance 2");
+  });
+
   it("normalizes legacy and sparse auto-generated titles on load", () => {
     const normalized = ensureWorkspaceHasTab(
       workspaceStateSchema.parse({

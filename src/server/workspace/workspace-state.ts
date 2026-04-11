@@ -134,16 +134,18 @@ export function addWorkspaceTab(
   title?: string,
   fixedCols = DEFAULT_FIXED_COLS,
 ): { state: WorkspaceState; tab: WorkspaceTab } {
+  const existingTabs = normalizeWorkspaceTabs(state.tabs);
   const normalizedTitle = title?.trim();
-  const resolvedTitle = normalizedTitle || createDefaultTitle(state.nextDefaultTitleIndex);
+  const resolvedTitle =
+    normalizedTitle || createDefaultTitle(resolveNextDefaultTitleIndex(existingTabs));
   const tab = {
     id: randomUUID(),
     title: resolvedTitle,
     autoNamed: !normalizedTitle,
     fixedCols,
   };
-  const tabs = normalizeWorkspaceTabs([...state.tabs, tab]);
-  const resolvedTab = tabs.at(-1) ?? tab;
+  const tabs = normalizeWorkspaceTabs([...existingTabs, tab]);
+  const resolvedTab = tabs.find((candidate) => candidate.id === tab.id) ?? tab;
 
   return {
     tab: resolvedTab,
