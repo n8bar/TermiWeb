@@ -1045,6 +1045,10 @@ button {
   order: 1;
 }
 
+.workspace-layout.is-sidebar-force-collapsed #toggle-sidebar-button {
+  display: none;
+}
+
 .workspace-layout.is-sidebar-collapsed #refresh-button {
   order: 2;
 }

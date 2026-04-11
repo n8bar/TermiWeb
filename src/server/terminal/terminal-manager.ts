@@ -116,6 +116,19 @@ export class TerminalManager extends EventEmitter<ManagerEvents> {
     return session.getSnapshot();
   }
 
+  getSnapshot(sessionId: string, clientId?: string): SessionSnapshot {
+    if (clientId && this.#clientSessions.get(clientId) !== sessionId) {
+      throw new Error("Client is not attached to that session.");
+    }
+
+    const session = this.#sessions.get(sessionId);
+    if (!session) {
+      throw new Error("Session not found.");
+    }
+
+    return session.getSnapshot();
+  }
+
   detachClient(clientId: string): void {
     const sessionId = this.#clientSessions.get(clientId);
     if (!sessionId) {

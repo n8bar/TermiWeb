@@ -16,11 +16,6 @@ import {
   type TerminalControlAction,
 } from "./ui/mobileControls.js";
 import { resolvePreferredSessionId } from "./ui/sessionSelection.js";
-import {
-  buildDesktopViewportContent,
-  computeDesktopViewportScale,
-  DESKTOP_LAYOUT_VIEWPORT_WIDTH,
-} from "./ui/mobileViewport.js";
 import { captureVisibleTerminalText } from "./ui/terminalSnapshot.js";
 import {
   computeStageLayout,
@@ -92,7 +87,6 @@ const newSessionButton = mustQuery<HTMLButtonElement>("#new-session-button");
 const focusTerminalButton = mustQuery<HTMLButtonElement>("#focus-terminal-button");
 const toggleControlsButton = mustQuery<HTMLButtonElement>("#toggle-controls-button");
 const toggleSidebarButton = mustQuery<HTMLButtonElement>("#toggle-sidebar-button");
-const viewportMeta = document.querySelector<HTMLMetaElement>('meta[name="viewport"]');
 
 const terminal = new Terminal({
   cursorBlink: false,
@@ -162,7 +156,6 @@ let sessions: SessionSummary[] = [];
 let activeSessionId: string | null = null;
 let workspaceActiveSessionId: string | null = null;
 let modifierState: ModifierState = createModifierState();
-let lastViewportOrientation: "portrait" | "landscape" | null = null;
 let hadLiveSocketConnection = false;
 let recoveryReloadRequested = false;
 let lastModifierTap:
@@ -185,7 +178,6 @@ let lastEmittedTerminalResize:
   | null = null;
 let pendingViewportResizeBroadcast = false;
 let pendingViewportScrollReset = false;
-let pendingViewportMetaRefresh = false;
 let pendingViewportSnapshotResync = false;
 const sidebarStorageKey = "termiweb.sidebar-collapsed";
 const controlsStorageKey = "termiweb.controls-collapsed";
@@ -371,14 +363,20 @@ function syncWorkspaceStage(): void {
   workspaceStage.style.transform = `scale(${layout.scale})`;
 }
 
+function setSidebarForceCollapsed(forceCollapsed: boolean): void {
+  workspaceLayout.classList.toggle("is-sidebar-force-collapsed", forceCollapsed);
+}
+
 function updateAutoSidebarPreference(): void {
   const effectiveViewportWidth = resolveEffectiveViewportWidth({
     layoutWidth: window.innerWidth,
     visualWidth: window.visualViewport?.width ?? null,
     screenWidth: window.screen?.width ?? null,
   });
+  const shouldForceCollapse = shouldAutoCollapseSidebar(effectiveViewportWidth);
+  setSidebarForceCollapsed(shouldForceCollapse);
 
-  if (shouldAutoCollapseSidebar(effectiveViewportWidth)) {
+  if (shouldForceCollapse) {
     setSidebarCollapsed(true, {
       persist: false,
     });
@@ -404,45 +402,6 @@ function isCoarsePointerDevice(): boolean {
   return (
     window.matchMedia?.("(pointer: coarse)").matches === true ||
     window.matchMedia?.("(hover: none)").matches === true
-  );
-}
-
-function resolveViewportOrientation(): "portrait" | "landscape" {
-  const viewportWidth = window.visualViewport?.width ?? window.innerWidth;
-  const viewportHeight = window.visualViewport?.height ?? window.innerHeight;
-
-  return viewportWidth >= viewportHeight ? "landscape" : "portrait";
-}
-
-function syncDesktopViewportMeta(force = false): void {
-  if (!viewportMeta || !isCoarsePointerDevice()) {
-    return;
-  }
-
-  const nextOrientation = resolveViewportOrientation();
-  if (!force && nextOrientation === lastViewportOrientation) {
-    return;
-  }
-
-  lastViewportOrientation = nextOrientation;
-
-  const effectiveViewportWidth = resolveEffectiveViewportWidth({
-    layoutWidth: window.innerWidth,
-    visualWidth: window.visualViewport?.width ?? null,
-    screenWidth: window.screen?.width ?? null,
-  });
-
-  const initialScale = computeDesktopViewportScale({
-    effectiveViewportWidth,
-    layoutViewportWidth: DESKTOP_LAYOUT_VIEWPORT_WIDTH,
-  });
-
-  viewportMeta.setAttribute(
-    "content",
-    buildDesktopViewportContent({
-      layoutViewportWidth: DESKTOP_LAYOUT_VIEWPORT_WIDTH,
-      initialScale,
-    }),
   );
 }
 
@@ -719,7 +678,6 @@ function syncViewportLayout(options: {
   sendResize?: boolean;
   scrollToOrigin?: boolean;
 } = {}): void {
-  syncDesktopViewportMeta();
   syncAppViewportHeight();
   updateAutoSidebarPreference();
   syncWorkspaceStage();
@@ -743,13 +701,11 @@ function scheduleViewportLayoutSync(
   options: {
     sendResize?: boolean;
     scrollToOrigin?: boolean;
-    forceViewportMeta?: boolean;
     requestSnapshot?: boolean;
   } = {},
 ): void {
   pendingViewportResizeBroadcast ||= options.sendResize === true;
   pendingViewportScrollReset ||= options.scrollToOrigin === true;
-  pendingViewportMetaRefresh ||= options.forceViewportMeta === true;
   pendingViewportSnapshotResync ||= options.requestSnapshot === true;
   window.clearTimeout(viewportRefitTimer);
   viewportRefitTimer = window.setTimeout(() => {
@@ -757,16 +713,10 @@ function scheduleViewportLayoutSync(
       sendResize: pendingViewportResizeBroadcast,
       scrollToOrigin: pendingViewportScrollReset,
     };
-    const shouldRefreshViewportMeta = pendingViewportMetaRefresh;
     const shouldRequestSnapshot = pendingViewportSnapshotResync;
     pendingViewportResizeBroadcast = false;
     pendingViewportScrollReset = false;
-    pendingViewportMetaRefresh = false;
     pendingViewportSnapshotResync = false;
-
-    if (shouldRefreshViewportMeta) {
-      syncDesktopViewportMeta(true);
-    }
     syncViewportLayout(layoutOptions);
     if (shouldRequestSnapshot) {
       scheduleTerminalResync(120);
@@ -783,12 +733,9 @@ function requestActiveSessionSnapshot(): void {
   if (!activeSessionId) {
     return;
   }
-
-  const size = currentSize();
   sendEvent({
-    type: "session/select",
+    type: "session/snapshot.request",
     sessionId: activeSessionId,
-    ...size,
   });
 }
 
@@ -810,6 +757,7 @@ function initializeSidebarPreference(): void {
     screenWidth: window.screen?.width ?? null,
   });
   const shouldForceCollapse = shouldAutoCollapseSidebar(effectiveViewportWidth);
+  setSidebarForceCollapsed(shouldForceCollapse);
 
   try {
     const stored = window.localStorage.getItem(sidebarStorageKey);
@@ -1512,10 +1460,13 @@ const stageViewportObserver = new ResizeObserver(() => {
 stageViewportObserver.observe(workspaceStageViewport);
 
 const handleViewportResize = () => {
-  syncViewportLayout();
-  scheduleViewportLayoutSync(isCoarsePointerDevice() ? 220 : 140, {
-    sendResize: true,
-    requestSnapshot: isCoarsePointerDevice(),
+  const coarsePointer = isCoarsePointerDevice();
+  syncViewportLayout({
+    sendResize: !coarsePointer,
+  });
+  scheduleViewportLayoutSync(coarsePointer ? 220 : 140, {
+    sendResize: !coarsePointer,
+    requestSnapshot: coarsePointer,
   });
 };
 
@@ -1537,23 +1488,10 @@ window.addEventListener("pointerdown", (event) => {
   setSessionWidthPopoverOpen(false);
 });
 window.visualViewport?.addEventListener("resize", handleViewportResize);
-window.addEventListener("orientationchange", () => {
-  syncDesktopViewportMeta(true);
-  syncViewportLayout({
-    scrollToOrigin: true,
-  });
-  scheduleViewportLayoutSync(280, {
-    sendResize: true,
-    scrollToOrigin: true,
-    forceViewportMeta: true,
-    requestSnapshot: true,
-  });
-});
 
 initializeSidebarPreference();
 initializeControlsPreference();
 renderModifierControls();
 setVersionIdentity();
-syncDesktopViewportMeta(true);
 syncViewportLayout();
 await refreshAuthState();

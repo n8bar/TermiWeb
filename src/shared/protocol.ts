@@ -38,6 +38,10 @@ export const clientEventSchema = z.discriminatedUnion("type", [
     type: z.literal("session/list.request"),
   }),
   z.object({
+    type: z.literal("session/snapshot.request"),
+    sessionId: z.string().uuid(),
+  }),
+  z.object({
     type: z.literal("session/create"),
     title: z.string().trim().min(1).max(64).optional(),
   }),

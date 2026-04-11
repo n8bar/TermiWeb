@@ -54,6 +54,20 @@ describe("protocol parsing", () => {
     expect(event.sessions[0]?.fixedCols).toBe(80);
   });
 
+  it("accepts a session snapshot request event", () => {
+    const event = parseClientEvent({
+      type: "session/snapshot.request",
+      sessionId: "54fd93ae-0f1d-4dc4-af4a-547e8b87d2af",
+    });
+
+    expect(event.type).toBe("session/snapshot.request");
+    if (event.type !== "session/snapshot.request") {
+      throw new Error("Expected session/snapshot.request event");
+    }
+
+    expect(event.sessionId).toBe("54fd93ae-0f1d-4dc4-af4a-547e8b87d2af");
+  });
+
   it("accepts a valid session column width change event", () => {
     const event = parseClientEvent({
       type: "session/cols",

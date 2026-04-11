@@ -198,6 +198,12 @@ export async function createHttpApp(options: CreateHttpAppOptions) {
             await options.terminalManager.ensureSessionAvailable();
             send(socket, createSessionListEvent());
             return;
+          case "session/snapshot.request":
+            send(socket, {
+              type: "session/snapshot",
+              snapshot: options.terminalManager.getSnapshot(parsed.sessionId, clientId),
+            });
+            return;
           case "session/create": {
             const created = await options.terminalManager.createSession(parsed.title);
             send(socket, { type: "session/created", session: created });

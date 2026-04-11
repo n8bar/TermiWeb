@@ -107,4 +107,22 @@ describe("terminal manager", () => {
     expect(manager.listSessions()[0]?.fixedCols).toBe(120);
     expect(store.listTabs()[0]?.fixedCols).toBe(120);
   });
+
+  it("can return a snapshot for an attached client without reattaching the session", async () => {
+    const store = new FakeWorkspaceStore(ensureWorkspaceHasTab(createEmptyWorkspaceState()));
+    const manager = new TerminalManager(createConfig(), store as unknown as WorkspaceStore);
+
+    await manager.initialize();
+
+    const existing = manager.listSessions()[0];
+    await manager.attachClient("client-1", existing!.id, {
+      cols: 80,
+      rows: 24,
+    });
+
+    const snapshot = manager.getSnapshot(existing!.id, "client-1");
+
+    expect(snapshot.session.id).toBe(existing!.id);
+    expect(snapshot.session.fixedCols).toBe(80);
+  });
 });
