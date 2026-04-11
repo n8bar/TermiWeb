@@ -82,6 +82,8 @@ TermiWeb provides a workstation-first browser terminal workflow that can also be
 - The workspace shell should follow the live visual viewport height so the control tray stays attached to the terminal area instead of dropping behind the on-screen keyboard.
 - Viewport and orientation changes should fully refit the terminal shell without requiring a browser refresh.
 - On coarse-pointer browsers using the desktop-style viewport, orientation changes should also reapply the fitted viewport scale so the page does not stay stuck at the previous orientation width.
+- Viewport churn from one attached device should be coalesced into a settled shared terminal resize instead of repeatedly thrashing the live session for every intermediate mobile viewport change.
+- TermiWeb should be able to rebuild the current instance from a fresh session snapshot after disruptive viewport changes without requiring a full page refresh.
 - After a live connection is interrupted by a server restart, open pages should wait for server recovery and refresh themselves instead of flapping between reconnect states.
 - When no manual sidebar preference is stored for a device, narrow viewports should default to a collapsed sidebar.
 - The control tray should keep the cursor-key cluster aligned beside the main button rows instead of stacking it below them.
