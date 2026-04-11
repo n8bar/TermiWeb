@@ -175,11 +175,14 @@ let sessionWidthAnchorButton: HTMLButtonElement | null = null;
 let pendingViewportScrollReset = false;
 let pendingViewportSnapshotResync = false;
 let pendingTextureAtlasReset = false;
+let terminalFrameWidthPx: number | null = null;
+let suppressTerminalContainerResizeObserver = false;
 const sidebarStorageKey = "termiweb.sidebar-collapsed";
 const controlsStorageKey = "termiweb.controls-collapsed";
 const modifierDoubleTapWindowMs = 360;
 const defaultTerminalFontSize = 15;
 const minTerminalFontSize = 6;
+const maxTerminalFontSize = 32;
 const minSessionCols = 20;
 const maxSessionCols = 240;
 const displayVersion = toDisplayVersion(
@@ -642,6 +645,28 @@ function resetTerminalHorizontalOverflow(): void {
   }
 }
 
+function applyTerminalFrameWidth(widthPx: number | null): void {
+  const normalizedWidth =
+    typeof widthPx === "number" && Number.isFinite(widthPx) && widthPx > 0
+      ? Math.round(widthPx)
+      : null;
+
+  if (terminalFrameWidthPx === normalizedWidth) {
+    return;
+  }
+
+  terminalFrameWidthPx = normalizedWidth;
+  suppressTerminalContainerResizeObserver = true;
+
+  const nextWidth = normalizedWidth === null ? "" : `${normalizedWidth}px`;
+  terminalContainer.style.width = nextWidth;
+  selectionPanel.style.width = nextWidth;
+
+  window.requestAnimationFrame(() => {
+    suppressTerminalContainerResizeObserver = false;
+  });
+}
+
 function fitTerminalWidth(): boolean {
   const proposed = fitAddon.proposeDimensions();
   const fittedCols = proposed?.cols;
@@ -705,6 +730,45 @@ function syncTerminalHorizontalOverflow(): boolean {
   });
 
   return true;
+}
+
+function syncTerminalFrameWidth(): void {
+  if (terminalContainer.classList.contains("is-horizontal-overflow")) {
+    applyTerminalFrameWidth(null);
+    return;
+  }
+
+  if (currentTerminalFontSize() < maxTerminalFontSize - 0.01) {
+    applyTerminalFrameWidth(null);
+    return;
+  }
+
+  const metrics = readTerminalWidthMetrics();
+  if (!metrics) {
+    applyTerminalFrameWidth(null);
+    return;
+  }
+
+  const availableWidth = terminalContainer.parentElement?.clientWidth ?? terminalContainer.clientWidth;
+  if (!Number.isFinite(availableWidth) || availableWidth <= 0) {
+    applyTerminalFrameWidth(null);
+    return;
+  }
+
+  const requiredWidth = Math.ceil(
+    computeRequiredTerminalWidth({
+      cols: fixedCols,
+      cellWidth: metrics.cellWidth,
+      horizontalPadding: metrics.horizontalPadding,
+    }) + 1,
+  );
+
+  if (requiredWidth <= 0 || requiredWidth >= availableWidth - 1) {
+    applyTerminalFrameWidth(null);
+    return;
+  }
+
+  applyTerminalFrameWidth(Math.min(requiredWidth, availableWidth));
 }
 
 function syncViewportLayout(options: {
@@ -914,7 +978,11 @@ function beginServerRecovery(): void {
 }
 
 function currentSize() {
-  const targetWidth = terminalContainer.clientWidth;
+  resetTerminalHorizontalOverflow();
+  applyTerminalFrameWidth(null);
+
+  const targetWidth =
+    terminalContainer.parentElement?.clientWidth ?? terminalContainer.clientWidth;
   const targetHeight = terminalContainer.clientHeight;
   const nextCols = fixedCols;
 
@@ -924,8 +992,6 @@ function currentSize() {
       rows: Math.max(terminal.rows, 1),
     };
   }
-
-  resetTerminalHorizontalOverflow();
 
   let rows = Math.max(terminal.rows, 1);
 
@@ -957,6 +1023,8 @@ function currentSize() {
 
     rows = overflowRows;
   }
+
+  syncTerminalFrameWidth();
 
   return {
     cols: nextCols,
@@ -1568,6 +1636,10 @@ terminal.onWriteParsed(() => {
 });
 
 const resizeObserver = new ResizeObserver(() => {
+  if (suppressTerminalContainerResizeObserver) {
+    return;
+  }
+
   currentSize();
   if (selectionMode) {
     syncSelectionText();
