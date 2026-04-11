@@ -28,7 +28,7 @@ TermiWeb provides a workstation-first browser terminal workflow that can also be
 - Runtime configuration is read from process environment and an optional repo-root `.env` file.
 - New instances start at 80 columns by default.
 - Terminal width is an instance property shared across all attached devices for that instance.
-- The UI exposes a topbar `Cols N` control for the active instance so users can change shared width deliberately without turning width into a per-device preference.
+- The UI exposes a shared width control on the active instance so users can change columns deliberately without turning width into a per-device preference.
 - The configured column count must always fit inside the visible `xterm` viewport width on each device.
 - Font sizing should make the configured columns fit inside that visible width.
 - Visible row count should then flex from the available terminal height.

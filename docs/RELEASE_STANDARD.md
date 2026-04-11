@@ -83,7 +83,6 @@ TermiWeb is close to a `0.1` release candidate, but not there yet.
 
 - `Finding 5` is the most serious known release risk right now:
   - interactive CLI rendering can still leave ghost text behind and shift visible terminal content in ways that look unpolished
-- per-instance column width is still planned work, not shipped behavior
 
 ## Out Of Scope For 0.1
 

@@ -323,19 +323,12 @@ button {
   font-size: calc(0.9rem * var(--ui-font-scale));
 }
 
-.session-width-controls {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-self: start;
-  margin-top: 0.15rem;
-}
-
 .session-width-button {
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
-  min-width: 5.6rem;
+  min-width: 0;
+  width: 100%;
   justify-content: center;
   font-family: var(--mono-font);
   font-weight: 700;
@@ -362,13 +355,14 @@ button {
 }
 
 .session-width-popover {
-  position: absolute;
-  top: calc(100% + 0.55rem);
+  position: fixed;
+  top: 0;
   left: 0;
-  z-index: 20;
+  z-index: 24;
   display: grid;
   gap: 0.8rem;
   min-width: 16rem;
+  max-width: min(18rem, calc(100vw - 1.5rem));
   padding: 0.95rem;
   border-radius: var(--radius-md);
   border: 1px solid rgba(122, 255, 178, 0.16);
@@ -463,6 +457,7 @@ button {
   grid-template-rows: auto minmax(0, 1fr) auto auto;
   gap: 1rem;
   min-height: 0;
+  overflow: visible;
 }
 
 .workspace-stage-viewport {
@@ -572,11 +567,20 @@ button {
   min-width: 0;
 }
 
+.session-list-scroller {
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-gutter: stable;
+}
+
 .session-row {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   gap: 0;
   align-items: stretch;
+  overflow: clip;
+  border-radius: var(--radius-md);
 }
 
 .session-card {
@@ -627,6 +631,11 @@ button {
 .session-meta,
 .side-panel-meta {
   font-size: calc(0.9rem * var(--ui-font-scale));
+}
+
+.session-card-actions {
+  display: grid;
+  gap: 0.5rem;
 }
 
 .side-panel-footer {
@@ -1094,6 +1103,10 @@ button {
   width: 100%;
 }
 
+.workspace-layout.is-sidebar-collapsed .session-card-actions {
+  width: 100%;
+}
+
 .workspace-layout.is-sidebar-collapsed .session-title {
   display: block;
   width: 100%;
@@ -1101,6 +1114,10 @@ button {
   line-height: 1.15;
   white-space: normal;
   word-break: break-word;
+}
+
+.workspace-layout.is-sidebar-collapsed .session-width-button {
+  padding-inline: 0.35rem;
 }
 
 .workspace-layout.is-sidebar-collapsed .session-close {

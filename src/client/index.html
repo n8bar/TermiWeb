@@ -67,56 +67,6 @@
             <p class="eyebrow">Active instance</p>
             <h3 id="active-session-title">Connecting…</h3>
             <p id="shell-label" class="topbar-shell">Shell: detecting…</p>
-            <div class="session-width-controls">
-              <button
-                id="session-width-button"
-                class="ghost-button compact session-width-button"
-                type="button"
-                aria-haspopup="dialog"
-                aria-expanded="false"
-                aria-controls="session-width-popover"
-              >
-                Cols 80
-              </button>
-              <div
-                id="session-width-popover"
-                class="session-width-popover is-hidden"
-                role="dialog"
-                aria-label="Instance column width"
-              >
-                <div class="session-width-presets">
-                  <button class="ghost-button compact session-width-preset" type="button" data-cols="80">
-                    80
-                  </button>
-                  <button class="ghost-button compact session-width-preset" type="button" data-cols="100">
-                    100
-                  </button>
-                  <button class="ghost-button compact session-width-preset" type="button" data-cols="120">
-                    120
-                  </button>
-                  <button class="ghost-button compact session-width-preset" type="button" data-cols="160">
-                    160
-                  </button>
-                </div>
-                <form id="session-width-form" class="session-width-form">
-                  <label class="session-width-field">
-                    <span>Custom</span>
-                    <input
-                      id="session-width-input"
-                      type="number"
-                      min="20"
-                      max="240"
-                      step="1"
-                      inputmode="numeric"
-                    />
-                  </label>
-                  <button id="session-width-apply" class="primary-button compact" type="submit">
-                    Apply
-                  </button>
-                </form>
-                <p class="session-width-note">Applies to this instance for all attached devices.</p>
-              </div>
-            </div>
           </div>
 
           <div class="topbar-actions">
@@ -176,7 +126,9 @@
               </div>
             </div>
 
-            <div id="session-list" class="session-list" aria-live="polite"></div>
+            <div class="session-list-scroller">
+              <div id="session-list" class="session-list" aria-live="polite"></div>
+            </div>
 
             <div class="side-panel-meta">
               <p>
@@ -189,6 +141,45 @@
                 <span class="button-icon" aria-hidden="true">⌨️</span>
                 <span class="button-label">Type</span>
               </button>
+            </div>
+
+            <div
+              id="session-width-popover"
+              class="session-width-popover is-hidden"
+              role="dialog"
+              aria-label="Instance column width"
+            >
+              <div class="session-width-presets">
+                <button class="ghost-button compact session-width-preset" type="button" data-cols="80">
+                  80
+                </button>
+                <button class="ghost-button compact session-width-preset" type="button" data-cols="100">
+                  100
+                </button>
+                <button class="ghost-button compact session-width-preset" type="button" data-cols="120">
+                  120
+                </button>
+                <button class="ghost-button compact session-width-preset" type="button" data-cols="160">
+                  160
+                </button>
+              </div>
+              <form id="session-width-form" class="session-width-form">
+                <label class="session-width-field">
+                  <span>Custom</span>
+                  <input
+                    id="session-width-input"
+                    type="number"
+                    min="20"
+                    max="240"
+                    step="1"
+                    inputmode="numeric"
+                  />
+                </label>
+                <button id="session-width-apply" class="primary-button compact" type="submit">
+                  Apply
+                </button>
+              </form>
+              <p class="session-width-note">Applies to this instance for all attached devices.</p>
             </div>
           </aside>
 
