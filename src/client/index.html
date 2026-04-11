@@ -120,18 +120,22 @@
           </div>
 
           <div class="topbar-actions">
-            <span id="active-session-status" class="status-pill">Idle</span>
-            <button id="focus-terminal-button" class="ghost-button topbar-action-button" type="button">
-              ⌨️ Type
-            </button>
-            <span id="connection-status" class="status-pill is-connecting">Connecting</span>
-            <button
-              id="logout-button"
-              class="ghost-button topbar-action-button topbar-action-button-danger"
-              type="button"
-            >
-              🚪 Logout
-            </button>
+            <div class="topbar-status-group">
+              <span id="active-session-status" class="status-pill">Idle</span>
+              <span id="connection-status" class="status-pill is-connecting">Connecting</span>
+            </div>
+            <div class="topbar-button-group">
+              <button id="focus-terminal-button" class="ghost-button topbar-action-button" type="button">
+                ⌨️ Type
+              </button>
+              <button
+                id="logout-button"
+                class="ghost-button topbar-action-button topbar-action-button-danger"
+                type="button"
+              >
+                🚪 Logout
+              </button>
+            </div>
           </div>
         </header>
 

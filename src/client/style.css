@@ -511,6 +511,8 @@ button {
 
 .terminal-shell.is-controls-collapsed .tray-toggle-button {
   align-self: end;
+  padding-top: 12px;
+  padding-bottom: 0;
 }
 
 .panel-header {
@@ -959,12 +961,19 @@ button {
 }
 
 .topbar-actions {
+  display: grid;
+  gap: 0.6rem;
+  justify-content: flex-end;
+  justify-self: end;
+}
+
+.topbar-status-group,
+.topbar-button-group {
   display: flex;
   gap: 0.65rem;
   flex-wrap: wrap;
   align-items: center;
   justify-content: flex-end;
-  justify-self: end;
 }
 
 .form-message {

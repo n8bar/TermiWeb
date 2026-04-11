@@ -77,3 +77,4 @@
 2026-04-09 Increased general UI typography by 50 percent outside the terminal and cursor cluster, moved the host pill back under the branding without side margins, and made the sidebar forcibly auto-collapse below 800px.
 2026-04-09 Tightened the keyboard tray toggle metrics, put the sidebar title and collapse button on the same row with refresh on its own right-aligned row, restored status-pill text to its pre-scale size, converted session metadata to two stacked lines, and widened the session area relative to the branding block.
 2026-04-09 Replaced the bad `topbar-session` width hack with a saner topbar grid split and restyled the focus/logout controls as clearer action buttons with emoji labels instead of pill-like chips.
+2026-04-10 Separated topbar status pills from action buttons into distinct groups and made the collapsed tray toggle use top padding instead of bottom padding.
