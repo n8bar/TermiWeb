@@ -1387,22 +1387,12 @@ function handleServerEvent(event: ServerEvent): void {
       }
       setSelectionMode(false);
       terminal.reset();
-      const snapshotSessionId = event.snapshot.session.id;
       terminal.write(event.snapshot.history, () => {
         scheduleTerminalPaintRefresh({
           clearTextureAtlas: true,
         });
         renderSessions();
         terminal.focus();
-        if (
-          activeSessionId === snapshotSessionId &&
-          event.snapshot.session.status === "running"
-        ) {
-          sendEvent({
-            type: "session/redraw.request",
-            sessionId: snapshotSessionId,
-          });
-        }
       });
       return;
     case "session/output":

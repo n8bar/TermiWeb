@@ -185,14 +185,6 @@ export class TerminalManager extends EventEmitter<ManagerEvents> {
     this.#emitSessions();
   }
 
-  requestSessionRedraw(sessionId: string, clientId?: string): void {
-    if (clientId && this.#clientSessions.get(clientId) !== sessionId) {
-      return;
-    }
-
-    this.#sessions.get(sessionId)?.requestRedraw();
-  }
-
   getShellLabel(): string {
     return this.#shell;
   }

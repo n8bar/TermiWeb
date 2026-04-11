@@ -25,7 +25,7 @@ This document tracks dogfood findings that are worth fixing later, without inter
 - First seen: `2026-04-06`
 - Area: `terminal`
 - Summary: While using full-screen or highly interactive CLI tools such as Claude Code or Codex, the terminal can leave ghost text behind in odd positions and sometimes shifts visible text upward when it should not.
-- Notes: A first mitigation now forces xterm repaint after parsed output and asks the live PTY for a same-size redraw after snapshot-driven rebuilds, but the finding stays open until dogfooding shows the drift is no longer common.
+- Notes: The current mitigation forces local xterm repaint after parsed output and snapshot-driven rebuilds, but the finding stays open until dogfooding shows the drift is no longer common. Device-local cleanup must not mutate the shared PTY.
 
 ## Closed
 

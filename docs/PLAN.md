@@ -26,4 +26,4 @@ Dogfood the first usable 0.1 browser terminal, polish the release-critical auth 
 
 ## Next Action
 
-Continue `M5` release polish with `Finding 5` in [FINDINGS.md](FINDINGS.md): interactive CLI rendering drift and ghost text, now validating the first xterm repaint plus same-size PTY redraw recovery pass while dogfooding the clarified width-fit behavior from [the focused spec](specs/v0.1-per-instance-column-width.md).
+Continue `M5` release polish with `Finding 5` in [FINDINGS.md](FINDINGS.md): interactive CLI rendering drift and ghost text, now validating a client-side xterm repaint recovery pass that avoids mutating the shared PTY during device-local cleanup while dogfooding the clarified width-fit behavior from [the focused spec](specs/v0.1-per-instance-column-width.md).

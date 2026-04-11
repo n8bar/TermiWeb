@@ -89,7 +89,7 @@ TermiWeb provides a workstation-first browser terminal workflow that can also be
 - Viewport churn from one attached device should stay local after session startup rather than repeatedly rewriting the live PTY rows for every browser resize or mobile rotation.
 - The live PTY row count should be established when a shell starts and should not keep changing just because attached devices have different viewport heights.
 - TermiWeb should be able to rebuild the current instance from a fresh session snapshot after disruptive viewport changes without requiring a full page refresh.
-- Snapshot-driven terminal rebuilds should force a local xterm repaint and request a same-size PTY redraw so interactive CLI apps have a chance to repaint cleanly after attach or recovery.
+- Snapshot-driven terminal rebuilds should force a local xterm repaint after attach or recovery, without mutating the shared PTY just because one device needed a local cleanup pass.
 - After a live connection is interrupted by a server restart, open pages should wait for server recovery and refresh themselves instead of flapping between reconnect states.
 - When no manual sidebar preference is stored for a device, narrow viewports should default to a collapsed sidebar.
 - The control tray should keep the cursor-key cluster aligned beside the main button rows instead of stacking it below them.

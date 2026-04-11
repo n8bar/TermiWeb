@@ -170,14 +170,6 @@ export class TerminalSession extends EventEmitter<TerminalSessionEvents> {
     this.#emitSummary();
   }
 
-  requestRedraw(): void {
-    if (!this.#pty) {
-      return;
-    }
-
-    this.#pty.resize(this.#cols, this.#rows);
-  }
-
   dispose(): void {
     this.#clientIds.clear();
     this.#pty?.kill();

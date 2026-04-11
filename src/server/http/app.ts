@@ -204,9 +204,6 @@ export async function createHttpApp(options: CreateHttpAppOptions) {
               snapshot: options.terminalManager.getSnapshot(parsed.sessionId, clientId),
             });
             return;
-          case "session/redraw.request":
-            options.terminalManager.requestSessionRedraw(parsed.sessionId, clientId);
-            return;
           case "session/create": {
             const created = await options.terminalManager.createSession(parsed.title);
             send(socket, { type: "session/created", session: created });
