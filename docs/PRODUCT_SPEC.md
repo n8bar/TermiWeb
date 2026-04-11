@@ -53,6 +53,7 @@ TermiWeb provides a workstation-first browser terminal workflow that can also be
 - The current product version should remain visible before and after login so the running build is obvious on every device.
 - The instance rail can collapse horizontally, but instance selection and close actions must remain available.
 - The instance rail should favor larger touch targets over maximum density.
+- The terminal `Type` action should live in the sidebar so it remains available in both expanded and collapsed rail states without competing with topbar status/actions.
 - In collapsed mode, the collapse toggle should sit above refresh instead of sharing a row with it.
 - When narrow width forces the sidebar collapsed, the manual collapse toggle should disappear instead of pretending the user can expand it at that width.
 - A device chooses its active instance locally after initial attach; switching on one device must not force-switch another device.

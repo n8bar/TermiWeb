@@ -460,8 +460,9 @@ button {
 
 .side-panel {
   display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto auto;
   gap: 1rem;
-  align-content: start;
+  min-height: 0;
 }
 
 .workspace-stage-viewport {
@@ -626,6 +627,18 @@ button {
 .session-meta,
 .side-panel-meta {
   font-size: calc(0.9rem * var(--ui-font-scale));
+}
+
+.side-panel-footer {
+  margin-top: auto;
+}
+
+.side-panel-action-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  width: 100%;
 }
 
 .session-meta {
@@ -1055,6 +1068,11 @@ button {
 
 .workspace-layout.is-sidebar-collapsed #new-session-button {
   order: 3;
+  justify-content: center;
+  padding-inline: 0;
+}
+
+.workspace-layout.is-sidebar-collapsed .side-panel-action-button {
   justify-content: center;
   padding-inline: 0;
 }
