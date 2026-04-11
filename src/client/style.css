@@ -330,8 +330,8 @@ button {
   min-width: 0;
   width: 100%;
   justify-content: center;
-  font-family: var(--mono-font);
-  font-weight: 700;
+  font-family: var(--ui-font);
+  font-weight: 650;
   font-size: 1rem;
   padding-inline: 0.9rem;
   border-color: rgba(122, 255, 178, 0.18);
@@ -359,7 +359,7 @@ button {
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 24;
+  z-index: 1200;
   display: grid;
   gap: 0.8rem;
   min-width: 16rem;
@@ -566,13 +566,14 @@ button {
   display: grid;
   gap: 0.65rem;
   min-width: 0;
+  width: 100%;
 }
 
 .session-list-scroller {
   min-height: 0;
   overflow-y: auto;
   overflow-x: hidden;
-  scrollbar-gutter: stable;
+  width: 100%;
 }
 
 .session-row {
@@ -641,10 +642,36 @@ button {
 
 .session-width-button.is-rail-button {
   min-height: 2.2rem;
-  border-radius: 0;
+  border-radius: 0 0 var(--radius-md) var(--radius-md);
   border-top-width: 0;
-  border-bottom-width: 0;
   box-shadow: none;
+}
+
+.session-row.has-width-button {
+  grid-template-areas:
+    "card close"
+    "width width";
+}
+
+.session-row.has-width-button .session-card {
+  grid-area: card;
+  border-bottom-left-radius: 0;
+  border-bottom-width: 0;
+}
+
+.session-row.has-width-button .session-close {
+  grid-area: close;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  border-bottom-width: 0;
+}
+
+.session-row.has-width-button .session-width-button.is-rail-button {
+  grid-area: width;
+  border-left-width: 1px;
+  border-right-width: 1px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
 }
 
 .side-panel-footer {
@@ -1106,6 +1133,7 @@ button {
   grid-template-columns: 1fr;
   gap: 0;
   justify-items: stretch;
+  width: 100%;
 }
 
 .workspace-layout.is-sidebar-collapsed .session-card-head {
@@ -1129,15 +1157,18 @@ button {
   padding-inline: 0.35rem;
 }
 
-.workspace-layout.is-sidebar-collapsed .session-row.has-width-button .session-card {
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0;
-  border-bottom-width: 0;
+.workspace-layout.is-sidebar-collapsed .session-row.has-width-button {
+  grid-template-columns: 1fr;
+  grid-template-areas:
+    "card"
+    "width"
+    "close";
 }
 
 .workspace-layout.is-sidebar-collapsed .session-row.has-width-button .session-width-button.is-rail-button {
-  border-left-width: 1px;
-  border-right-width: 1px;
+  width: 100%;
+  border-bottom-width: 0;
+  border-radius: 0;
 }
 
 .workspace-layout.is-sidebar-collapsed .session-close {
@@ -1158,6 +1189,8 @@ button {
 
 .workspace-layout.is-sidebar-collapsed .session-row.has-width-button .session-close {
   border-top-width: 0;
+  border-bottom-left-radius: var(--radius-md);
+  border-bottom-right-radius: var(--radius-md);
 }
 
 .workspace-layout.is-sidebar-collapsed .session-card {

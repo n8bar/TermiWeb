@@ -289,14 +289,14 @@ function positionSessionWidthPopover(): void {
 
   const popoverRect = sessionWidthPopover.getBoundingClientRect();
   const preferredLeft = sidebarCollapsed
-    ? anchorRect.right + 8
+    ? anchorRect.right + 4
     : anchorRect.left;
   const maxLeft = Math.max(viewportPadding, window.innerWidth - popoverRect.width - viewportPadding);
   const left = Math.min(Math.max(viewportPadding, preferredLeft), maxLeft);
 
   let top = sidebarCollapsed
-    ? anchorRect.top + (anchorRect.height - popoverRect.height) / 2
-    : anchorRect.bottom + 6;
+    ? anchorRect.top - 2
+    : anchorRect.bottom + 4;
   const maxTop = Math.max(viewportPadding, window.innerHeight - popoverRect.height - viewportPadding);
   if (top > maxTop) {
     top = Math.max(viewportPadding, anchorRect.top - popoverRect.height - 10);
@@ -1100,8 +1100,8 @@ function renderSessions(): void {
   for (const session of sessions) {
     const row = document.createElement("div");
     row.className = `session-row${session.id === activeSessionId ? " is-active" : ""}`;
-    const showExternalWidthButton = sidebarCollapsed && session.id === activeSessionId;
-    if (showExternalWidthButton) {
+    const showWidthButton = session.id === activeSessionId;
+    if (showWidthButton) {
       row.classList.add("has-width-button");
     }
 
@@ -1135,7 +1135,7 @@ function renderSessions(): void {
 
     const widthButton = document.createElement("button");
     widthButton.type = "button";
-    widthButton.className = `ghost-button compact session-width-button${showExternalWidthButton ? " is-rail-button" : ""}`;
+    widthButton.className = "ghost-button compact session-width-button is-rail-button";
     widthButton.textContent = getSessionWidthButtonLabel(session.fixedCols);
     widthButton.setAttribute("aria-label", `Change columns for ${session.title}`);
     widthButton.setAttribute("aria-expanded", "false");
@@ -1175,18 +1175,7 @@ function renderSessions(): void {
       setSessionWidthPopoverOpen(shouldOpen, widthButton);
     });
 
-    if (session.id === activeSessionId) {
-      if (showExternalWidthButton) {
-        card.append(head, meta);
-      } else {
-        const actions = document.createElement("div");
-        actions.className = "session-card-actions";
-        actions.append(widthButton);
-        card.append(head, meta, actions);
-      }
-    } else {
-      card.append(head, meta);
-    }
+    card.append(head, meta);
 
     const close = document.createElement("button");
     close.type = "button";
@@ -1203,10 +1192,14 @@ function renderSessions(): void {
     });
 
     row.append(card);
-    if (showExternalWidthButton) {
-      row.append(widthButton);
-    }
     row.append(close);
+    if (showWidthButton) {
+      if (sidebarCollapsed) {
+        row.insertBefore(widthButton, close);
+      } else {
+        row.append(widthButton);
+      }
+    }
     sessionList.append(row);
   }
 
