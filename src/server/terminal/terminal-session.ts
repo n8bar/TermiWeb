@@ -4,6 +4,7 @@ import { EventEmitter } from "node:events";
 import { spawn, type IPty } from "node-pty";
 
 import type { SessionSnapshot, SessionSummary, TerminalStatus } from "../../shared/protocol.js";
+import { resolveNextTerminalRows } from "./row-policy.js";
 
 interface TerminalSessionOptions {
   id: string;
@@ -79,7 +80,7 @@ export class TerminalSession extends EventEmitter<TerminalSessionEvents> {
   async ensureStarted(size?: { cols: number; rows: number }): Promise<void> {
     if (size) {
       this.#cols = size.cols;
-      this.#rows = size.rows;
+      this.#rows = resolveNextTerminalRows(this.#rows, size.rows);
     }
 
     if (this.#pty || this.#status === "starting") {
@@ -124,8 +125,8 @@ export class TerminalSession extends EventEmitter<TerminalSessionEvents> {
 
   attachClient(clientId: string, rows: number): void {
     this.#clientIds.add(clientId);
-    this.#rows = rows;
-    this.#pty?.resize(this.#cols, rows);
+    this.#rows = resolveNextTerminalRows(this.#rows, rows);
+    this.#pty?.resize(this.#cols, this.#rows);
     this.#emitSummary();
   }
 
@@ -142,8 +143,8 @@ export class TerminalSession extends EventEmitter<TerminalSessionEvents> {
 
   resize(cols: number, rows: number): void {
     this.#cols = cols;
-    this.#rows = rows;
-    this.#pty?.resize(cols, rows);
+    this.#rows = resolveNextTerminalRows(this.#rows, rows);
+    this.#pty?.resize(cols, this.#rows);
   }
 
   setFixedCols(cols: number, rows = this.#rows): void {

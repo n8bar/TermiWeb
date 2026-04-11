@@ -23,6 +23,7 @@ TermiWeb provides a workstation-first browser terminal workflow that can also be
 - If a browser session reaches an empty workspace on login or reconnect, the app should seed `Instance 1` automatically.
 - Authentication uses a single configured app password suitable for trusted private deployments in `0.1`.
 - Authenticated browser sessions should survive a normal server restart until they expire or are revoked.
+- A server restart should come back with one fresh active `Instance 1` rather than restoring dead instances from the prior process.
 - The host platform is Windows-first.
 - Runtime configuration is read from process environment and an optional repo-root `.env` file.
 - New instances start at 80 columns by default.
@@ -45,7 +46,7 @@ TermiWeb provides a workstation-first browser terminal workflow that can also be
 - No built-in multi-user authorization model beyond the configured app password.
 - No built-in TLS termination.
 - No PTY/session resurrection after process or server restart.
-- Persist only the workspace metadata needed to restore the instance list and session labels.
+- No workspace-instance persistence across server restart; only authenticated browser sessions may survive restart.
 - Restart-stable auth state may persist lightweight server-side session records under `.termiweb/`, but that does not imply session resurrection for PTYs or shells.
 - Mobile users must have access to terminal-essential keys even when the OS keyboard is limited.
 - The host machine identity should remain visible before and after login.
@@ -83,6 +84,7 @@ TermiWeb provides a workstation-first browser terminal workflow that can also be
 - Viewport and orientation changes should fully refit the terminal shell without requiring a browser refresh.
 - On coarse-pointer browsers using the desktop-style viewport, orientation changes should also reapply the fitted viewport scale so the page does not stay stuck at the previous orientation width.
 - Viewport churn from one attached device should be coalesced into a settled shared terminal resize instead of repeatedly thrashing the live session for every intermediate mobile viewport change.
+- The live PTY should not shrink its row count in response to a smaller attached device or transient mobile viewport change; smaller devices should scroll locally instead of rewriting shared terminal history downward.
 - TermiWeb should be able to rebuild the current instance from a fresh session snapshot after disruptive viewport changes without requiring a full page refresh.
 - After a live connection is interrupted by a server restart, open pages should wait for server recovery and refresh themselves instead of flapping between reconnect states.
 - When no manual sidebar preference is stored for a device, narrow viewports should default to a collapsed sidebar.

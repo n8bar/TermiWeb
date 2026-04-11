@@ -79,3 +79,4 @@
 2026-04-09 Replaced the bad `topbar-session` width hack with a saner topbar grid split and restyled the focus/logout controls as clearer action buttons with emoji labels instead of pill-like chips.
 2026-04-10 Separated topbar status pills from action buttons into distinct groups and made the collapsed tray toggle use top padding instead of bottom padding.
 2026-04-10 Coalesced mobile viewport churn into a settled shared terminal resize, removed visual-viewport scroll resize spam, and added in-session snapshot resync after disruptive viewport changes and width changes so the terminal can recover without a full page refresh.
+2026-04-10 Changed restart semantics to return to one fresh active `Instance 1` instead of restoring dead instances, and made live PTY row resizing grow-only so smaller devices and transient mobile viewport changes do not rewrite shared terminal history downward.
