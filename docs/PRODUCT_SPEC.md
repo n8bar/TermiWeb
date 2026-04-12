@@ -47,6 +47,8 @@ TermiWeb provides a workstation-first browser terminal workflow that can also be
 - Font sizing should make the shared column count fit inside the visible viewport width.
 - If width fit reaches the minimum font-size floor and configured columns still cannot fit, the terminal should expose a local horizontal scrollbar rather than clipping columns.
 - The visible terminal surface should support touch scrolling through xterm scrollback without relying on a dead outer scrollbar.
+- If a device cannot display the full shared real-screen height at once, the client may expose a separate local viewport scroll for the current shared screen without redefining shared terminal geometry.
+- That local viewport scroll is distinct from xterm scrollback, which still represents buffer history older than the current shared screen.
 - The rendered terminal cursor should present as a single solid insertion cursor rather than showing an extra blinking cursor artifact.
 
 ## 0.1 Constraints
