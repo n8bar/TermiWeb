@@ -2,18 +2,42 @@
 
 ## Current Focus
 
-Dogfood the now mostly settled 0.1 browser terminal, keep the release-polish work aligned with the docs, and drive the release toward the `0.1` bar defined in [the release standard](RELEASE_STANDARD.md) with interactive CLI rendering integrity as the main blocker.
+Finish `M5` through continued dogfooding of interactive CLI rendering integrity while starting `M6` in parallel so installer work does not wait on the final rendering verdict. Keep the release-polish work aligned with the docs and drive the release toward the `0.1` bar defined in [the release standard](RELEASE_STANDARD.md).
 
 ## Milestones
 
-- [x] 2026-04-06 M1: Repository bootstrap and docs baseline
-- [x] 2026-04-06 M2: Shared terminal backend and session model
-- [x] 2026-04-06 M3: Browser UI with instances, auth, and mobile controls
-- [x] 2026-04-07 M4: Local verification and launch polish
-- [ ] 2026-04-11 M5: 0.1 release polish and rendering integrity
-- [ ] 2026-04-18 M6: Installer experience
-- [ ] 2026-04-25 M7: 0.1 release and GitHub Pages download website
-- [ ] 2026-05-23 M8: Marketing for an open-source, free-to-use product
+- [x] M1: Repository bootstrap and docs baseline
+  - Start: 2026-04-06
+  - End: 2026-04-06
+  - Basis: earliest git activity in the current repo history lands on 2026-04-06
+- [x] M2: Shared terminal backend and session model
+  - Start: 2026-04-06
+  - End: 2026-04-06
+  - Basis: git history shows the backend/session-model work landing during the same initial push as M1
+- [x] M3: Browser UI with instances, auth, and mobile controls
+  - Start: 2026-04-06
+  - End: 2026-04-06
+  - Basis: git history shows the first working browser UI and mobile-control work landing on the same day as M1 and M2
+- [x] M4: Local verification and launch polish
+  - Start: 2026-04-07
+  - End: 2026-04-07
+  - Basis: the next distinct phase in git history starts on 2026-04-07 with launch and polish work
+- [ ] M5: 0.1 release polish and rendering integrity
+  - Start: 2026-04-08
+  - Target End: 2026-04-18
+  - Notes: extended by one week; still open because dogfooding remains the bottleneck on interactive CLI rendering truth
+- [ ] M6: Installer experience
+  - Start: 2026-04-12
+  - Target End: 2026-04-18
+  - Overlap: runs in parallel with the final week of M5
+- [ ] M7: 0.1 release and GitHub Pages download website
+  - Start: 2026-04-19
+  - Target End: 2026-04-25
+  - Blocked By: M5 and M6
+- [ ] M8: Marketing for an open-source, free-to-use product
+  - Start: 2026-04-26
+  - Target End: 2026-05-23
+  - Blocked By: M7
 
 ## Future Candidates
 
@@ -27,4 +51,4 @@ Dogfood the now mostly settled 0.1 browser terminal, keep the release-polish wor
 
 ## Next Action
 
-Keep `M5` focused on `Finding 5` in [FINDINGS.md](FINDINGS.md): wrong-place input, ghost text, and viewport drift in interactive CLI tools such as Claude Code and Codex. The current sub-pass is local cursor-follow and viewport behavior for active typing, followed by more dogfooding of the improved TUI scrolling model before deciding whether remaining CLI rendering defects are release-blocking.
+Run `M5` and `M6` in parallel. Keep `M5` focused on `Finding 5` in [FINDINGS.md](FINDINGS.md): wrong-place input, ghost text, and viewport drift in interactive CLI tools such as Claude Code and Codex. Start `M6` installer work now while dogfooding continues, but do not let `M7` release work begin until both `M5` and `M6` are genuinely closed.
