@@ -102,3 +102,4 @@
 2026-04-12 Reworked the roadmap to use explicit milestone start and target-end dates, backdated M1-M4 from git history, extended M5 by one week for continued dogfooding, and intentionally started M6 in parallel with the final stretch of M5.
 2026-04-12 Tightened the roadmap evidence language so M1 uses the earliest filesystem creation date in the repo, while M2-M4 simply cite git history without extra caveats.
 2026-04-12 Removed milestone evidence citations from the roadmap so the plan reads as a plain schedule rather than annotated source justification.
+2026-04-12 Added short descriptive summaries for every roadmap milestone so the plan explains what each phase is supposed to accomplish instead of showing only titles and dates.
