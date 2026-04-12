@@ -19,6 +19,27 @@ export function computeRequiredTerminalWidth(options: {
   return cols * cellWidth + horizontalPadding;
 }
 
+export function computeRequiredTerminalHeight(options: {
+  rows: number;
+  cellHeight: number;
+  verticalPadding: number;
+}): number {
+  const { rows, cellHeight, verticalPadding } = options;
+
+  if (
+    !Number.isFinite(rows) ||
+    !Number.isFinite(cellHeight) ||
+    !Number.isFinite(verticalPadding) ||
+    rows <= 0 ||
+    cellHeight <= 0 ||
+    verticalPadding < 0
+  ) {
+    return 0;
+  }
+
+  return rows * cellHeight + verticalPadding;
+}
+
 export function fitFontSizeToCols(options: {
   currentFontSize: number;
   fittedCols: number;

@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  computeRequiredTerminalHeight,
   computeRequiredTerminalWidth,
   fitFontSizeToCols,
 } from "../../src/client/ui/terminalSizing.js";
@@ -14,6 +15,16 @@ describe("terminal sizing helpers", () => {
         horizontalPadding: 24,
       }),
     ).toBe(704);
+  });
+
+  it("computes the height needed to display all rows", () => {
+    expect(
+      computeRequiredTerminalHeight({
+        rows: 30,
+        cellHeight: 18,
+        verticalPadding: 28,
+      }),
+    ).toBe(568);
   });
 
   it("scales font size to fit the target column count", () => {

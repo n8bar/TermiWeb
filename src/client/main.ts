@@ -24,6 +24,7 @@ import {
   shouldAutoCollapseSidebar,
 } from "./ui/workspaceStage.js";
 import {
+  computeRequiredTerminalHeight,
   computeRequiredTerminalWidth,
   fitFontSizeToCols,
 } from "./ui/terminalSizing.js";
@@ -123,6 +124,7 @@ if (terminal.textarea) {
 if (terminal.element) {
   attachTerminalTouchScroll({
     surface: terminal.element,
+    viewport: terminalContainer,
     terminal,
     getCellHeight: () => {
       const renderDimensions = (
@@ -632,7 +634,14 @@ function requestSessionWidthChange(nextCols: number): void {
   maybeRefocusTerminalAfterControl();
 }
 
-function readTerminalWidthMetrics(): { cellWidth: number; horizontalPadding: number } | null {
+function readTerminalMetrics():
+  | {
+      cellWidth: number;
+      cellHeight: number;
+      horizontalPadding: number;
+      verticalPadding: number;
+    }
+  | null {
   const terminalElement = terminal.element;
   const renderDimensions = (
     terminal as Terminal & {
@@ -642,6 +651,7 @@ function readTerminalWidthMetrics(): { cellWidth: number; horizontalPadding: num
             css?: {
               cell?: {
                 width?: number;
+                height?: number;
               };
             };
           };
@@ -651,10 +661,13 @@ function readTerminalWidthMetrics(): { cellWidth: number; horizontalPadding: num
   )._core?._renderService?.dimensions;
 
   const cellWidth = renderDimensions?.css?.cell?.width;
+  const cellHeight = renderDimensions?.css?.cell?.height;
   if (
     !terminalElement ||
     typeof cellWidth !== "number" ||
+    typeof cellHeight !== "number" ||
     !Number.isFinite(cellWidth) ||
+    !Number.isFinite(cellHeight) ||
     cellWidth <= 0
   ) {
     return null;
@@ -664,10 +677,15 @@ function readTerminalWidthMetrics(): { cellWidth: number; horizontalPadding: num
   const horizontalPadding =
     parseFloat(terminalStyles.getPropertyValue("padding-left")) +
     parseFloat(terminalStyles.getPropertyValue("padding-right"));
+  const verticalPadding =
+    parseFloat(terminalStyles.getPropertyValue("padding-top")) +
+    parseFloat(terminalStyles.getPropertyValue("padding-bottom"));
 
   return {
     cellWidth,
+    cellHeight,
     horizontalPadding,
+    verticalPadding,
   };
 }
 
@@ -675,6 +693,13 @@ function resetTerminalHorizontalOverflow(): void {
   terminalContainer.classList.remove("is-horizontal-overflow");
   if (terminal.element) {
     terminal.element.style.width = "";
+  }
+}
+
+function resetTerminalVerticalOverflow(): void {
+  terminalContainer.classList.remove("is-vertical-overflow");
+  if (terminal.element) {
+    terminal.element.style.height = "";
   }
 }
 
@@ -741,7 +766,7 @@ function syncTerminalHorizontalOverflow(): boolean {
     return false;
   }
 
-  const metrics = readTerminalWidthMetrics();
+  const metrics = readTerminalMetrics();
   if (!metrics) {
     return false;
   }
@@ -765,6 +790,38 @@ function syncTerminalHorizontalOverflow(): boolean {
   return true;
 }
 
+function syncTerminalVerticalOverflow(): boolean {
+  const metrics = readTerminalMetrics();
+  if (!metrics) {
+    return false;
+  }
+
+  const availableHeight = terminalContainer.clientHeight;
+  if (!Number.isFinite(availableHeight) || availableHeight <= 0) {
+    return false;
+  }
+
+  const requiredHeight = Math.ceil(
+    computeRequiredTerminalHeight({
+      rows: terminal.rows,
+      cellHeight: metrics.cellHeight,
+      verticalPadding: metrics.verticalPadding,
+    }) + 1,
+  );
+
+  if (requiredHeight <= 0 || requiredHeight <= availableHeight + 1) {
+    resetTerminalVerticalOverflow();
+    return false;
+  }
+
+  terminalContainer.classList.add("is-vertical-overflow");
+  if (terminal.element) {
+    terminal.element.style.height = `${requiredHeight}px`;
+  }
+
+  return true;
+}
+
 function syncTerminalFrameWidth(): void {
   if (terminalContainer.classList.contains("is-horizontal-overflow")) {
     applyTerminalFrameWidth(null);
@@ -776,7 +833,7 @@ function syncTerminalFrameWidth(): void {
     return;
   }
 
-  const metrics = readTerminalWidthMetrics();
+  const metrics = readTerminalMetrics();
   if (!metrics) {
     applyTerminalFrameWidth(null);
     return;
@@ -1030,6 +1087,7 @@ function beginServerRecovery(): void {
 
 function currentSize() {
   resetTerminalHorizontalOverflow();
+  resetTerminalVerticalOverflow();
   applyTerminalFrameWidth(null);
 
   const targetWidth =
@@ -1058,6 +1116,8 @@ function currentSize() {
       terminal.resize(nextCols, nextRows);
     }
   }
+
+  syncTerminalVerticalOverflow();
 
   syncTerminalFrameWidth();
 

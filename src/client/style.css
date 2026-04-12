@@ -831,6 +831,17 @@ button {
   scrollbar-color: rgba(122, 255, 178, 0.42) rgba(255, 255, 255, 0.05);
 }
 
+.terminal-container.is-vertical-overflow {
+  overflow-y: auto;
+  scrollbar-width: auto;
+  scrollbar-color: rgba(122, 255, 178, 0.42) rgba(255, 255, 255, 0.05);
+}
+
+.terminal-container.is-horizontal-overflow.is-vertical-overflow {
+  overflow-x: auto;
+  overflow-y: auto;
+}
+
 .terminal-container .xterm {
   padding: 0.85rem;
   height: 100%;
@@ -857,11 +868,24 @@ button {
   height: 0.95rem;
 }
 
+.terminal-container.is-vertical-overflow::-webkit-scrollbar {
+  width: 0.95rem;
+}
+
 .terminal-container.is-horizontal-overflow::-webkit-scrollbar-track {
   background: rgba(255, 255, 255, 0.05);
 }
 
+.terminal-container.is-vertical-overflow::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+}
+
 .terminal-container.is-horizontal-overflow::-webkit-scrollbar-thumb {
+  background: rgba(122, 255, 178, 0.42);
+  border-radius: 999px;
+}
+
+.terminal-container.is-vertical-overflow::-webkit-scrollbar-thumb {
   background: rgba(122, 255, 178, 0.42);
   border-radius: 999px;
 }
