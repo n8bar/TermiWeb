@@ -60,6 +60,7 @@ TermiWeb is a workstation-first shared terminal for Windows. The browser UI is t
 ## Documentation
 
 - [Project plan](docs/PLAN.md)
+- [M6 installer and first-run worklist](docs/worklists/m6-installer-and-first-run-experience.md)
 - [Release standard](docs/RELEASE_STANDARD.md)
 - [Product spec](docs/PRODUCT_SPEC.md)
 - [Deployment philosophy](docs/DEPLOYMENT_PHILOSOPHY.md)

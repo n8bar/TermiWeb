@@ -109,3 +109,4 @@
 2026-04-12 Renumbered `AGENTS.md` headings and rules for easier reference, and formally defined `docs/worklists/` as the repo's detailed execution-doc layer separate from high-level milestone planning in `docs/PLAN.md`.
 2026-04-12 Removed the pointless top-level numeric prefix from `AGENTS.md` while keeping numbered subheadings and rules for referenceability.
 2026-04-12 Flattened `AGENTS.md` section numbering from `1.x` style to plain section numbers so the headings are easier to scan and reference.
+2026-04-12 Expanded M6 from installer-only scope to installer plus first-run experience, added the first M6 worklist under `docs/worklists/`, and linked that execution doc from the README.

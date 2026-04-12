@@ -2,7 +2,7 @@
 
 ## Current Focus
 
-Finish `M5` through continued dogfooding of interactive CLI rendering integrity while starting `M6` in parallel so installer work does not wait on the final rendering verdict. Keep the release-polish work aligned with the docs and drive the release toward the `0.1` bar defined in [the release standard](RELEASE_STANDARD.md).
+Finish `M5` through continued dogfooding of interactive CLI rendering integrity while starting `M6` in parallel so installer and first-run experience work does not wait on the final rendering verdict. Keep the release-polish work aligned with the docs and drive the release toward the `0.1` bar defined in [the release standard](RELEASE_STANDARD.md).
 
 ## Milestones
 
@@ -27,8 +27,8 @@ Finish `M5` through continued dogfooding of interactive CLI rendering integrity 
   - Start: 2026-04-08
   - Target End: 2026-04-18
   - Notes: extended by one week; still open because dogfooding remains the bottleneck on interactive CLI rendering truth
-- [ ] M6: Installer experience
-  - Summary: This milestone should add the packaging, launch scripts, distribution layout, and any supporting docs needed for a non-dev Windows install/run path. The target is concrete installer/distribution code, not just another README pass.
+- [ ] M6: Installer and first-run experience
+  - Summary: This milestone should add the packaging, launch scripts, distribution layout, and supporting docs needed for a non-dev Windows install/run path. It also includes the first-run walkthrough that gets a newly installed user to one live shared session visible from two devices at the same time.
   - Start: 2026-04-12
   - Target End: 2026-04-18
   - Overlap: runs in parallel with the final week of M5
@@ -54,4 +54,4 @@ Finish `M5` through continued dogfooding of interactive CLI rendering integrity 
 
 ## Next Action
 
-Run `M5` and `M6` in parallel. Keep `M5` focused on `Finding 5` in [FINDINGS.md](FINDINGS.md): wrong-place input, ghost text, and viewport drift in interactive CLI tools such as Claude Code and Codex. Start `M6` installer work now while dogfooding continues, but do not let `M7` release work begin until both `M5` and `M6` are genuinely closed.
+Run `M5` and `M6` in parallel. Keep `M5` focused on `Finding 5` in [FINDINGS.md](FINDINGS.md): wrong-place input, ghost text, and viewport drift in interactive CLI tools such as Claude Code and Codex. Start `M6` installer and first-run work now while dogfooding continues, but do not let `M7` release work begin until both `M5` and `M6` are genuinely closed.
