@@ -2,7 +2,7 @@
 
 ## Current Focus
 
-Dogfood the first usable 0.1 browser terminal, polish the release-critical auth and rendering gaps, and drive the release toward the `0.1` bar defined in [the release standard](RELEASE_STANDARD.md).
+Dogfood the now mostly settled 0.1 browser terminal, keep the release-polish work aligned with the docs, and drive the release toward the `0.1` bar defined in [the release standard](RELEASE_STANDARD.md) with interactive CLI rendering integrity as the main blocker.
 
 ## Milestones
 
@@ -10,7 +10,7 @@ Dogfood the first usable 0.1 browser terminal, polish the release-critical auth 
 - [x] 2026-04-06 M2: Shared terminal backend and session model
 - [x] 2026-04-06 M3: Browser UI with instances, auth, and mobile controls
 - [x] 2026-04-07 M4: Local verification and launch polish
-- [ ] 2026-04-11 M5: Per-instance custom width and release polish
+- [ ] 2026-04-11 M5: 0.1 release polish and rendering integrity
 - [ ] 2026-04-18 M6: Installer experience
 - [ ] 2026-04-25 M7: 0.1 release and GitHub Pages download website
 - [ ] 2026-05-23 M8: Marketing for an open-source, free-to-use product
@@ -23,8 +23,8 @@ Dogfood the first usable 0.1 browser terminal, polish the release-critical auth 
 ## Release Gate
 
 - `0.1` should ship only when it meets [the release standard](RELEASE_STANDARD.md).
-- The most serious known gap against that standard right now is `Finding 5` in [FINDINGS.md](FINDINGS.md): interactive CLI rendering drift and ghost text.
+- The most serious known gap against that standard right now is `Finding 5` in [FINDINGS.md](FINDINGS.md): interactive CLI rendering truth for tools such as Claude Code and Codex.
 
 ## Next Action
 
-Continue `M5` release polish with `Finding 5` in [FINDINGS.md](FINDINGS.md): interactive CLI rendering drift and ghost text, now validating a client-side xterm repaint recovery pass that avoids mutating the shared PTY during device-local cleanup while dogfooding the clarified width-fit behavior from [the focused spec](specs/v0.1-per-instance-column-width.md).
+Finish the doc-alignment pass for the current `0.1` state, then keep `M5` focused on `Finding 5` in [FINDINGS.md](FINDINGS.md): wrong-place input, ghost text, and viewport drift in interactive CLI tools such as Claude Code and Codex. Treat that rendering-truth problem as the primary remaining release blocker while continuing to dogfood the clarified width-fit behavior from [the focused spec](specs/v0.1-per-instance-column-width.md).

@@ -5,6 +5,7 @@
   - `docs/PLAN.md` for milestone order, current focus, and the next implementation target
   - `docs/PRODUCT_SPEC.md` for product-level behavior and invariants
   - `docs/FINDINGS.md` for dogfood findings and deferred polish work
+  - `docs/RELEASE_STANDARD.md` for the current `0.1` quality/completeness bar
   - `docs/specs/**` for focused technical or feature specs
   - `docs/CHANGELOG.log` for chronological project change notes
 - Maintain `docs/CHANGELOG.log` as plain text in chronological order with new entries appended at the bottom.
@@ -12,6 +13,7 @@
 - Docs are primarily internal engineering documents for future maintenance, not end-user documentation.
 - Keep `AGENTS.md` updated when the repo workflow or project-specific constraints change.
 - During dogfooding, log issues in `docs/FINDINGS.md` instead of treating every observation as an immediate implementation task.
+- During release polish, keep `docs/PLAN.md`, `docs/FINDINGS.md`, and `docs/RELEASE_STANDARD.md` aligned on the actual blocker instead of letting milestone text drift behind reality.
 - If the user is asking for input or feedback, answer first and confirm before making changes when the request is still decision-seeking.
 - If asked to implement code before a spec exists, recommend capturing the scope in docs first unless the user explicitly wants to skip that step.
 - If a new doc or spec materially shapes future implementation scope, pause for user review before treating that doc as approved direction.

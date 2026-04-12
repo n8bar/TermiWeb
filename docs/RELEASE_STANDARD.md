@@ -77,12 +77,13 @@ TermiWeb is close to a `0.1` release candidate, but not there yet.
 - core shared-session workflow exists and is usable
 - cross-device use is materially better than the first working build
 - Windows background launch is now cleaner
+- `0.1` release polish has materially improved the dogfoodability of the product rather than just adding cosmetic churn
 - docs are much more honest and directionally aligned than they were at bootstrap
 
 ### Current Risks
 
 - `Finding 5` is the most serious known release risk right now:
-  - interactive CLI rendering can still leave ghost text behind and shift visible terminal content in ways that look unpolished
+  - interactive CLI rendering can still place typed text and generated output in the wrong place, leave ghost text behind, and shift visible terminal content in ways that make primary CLI workflows feel untrustworthy
 
 ## Out Of Scope For 0.1
 

@@ -20,12 +20,12 @@ This document tracks dogfood findings that are worth fixing later, without inter
 
 ## Open
 
-### Finding 5: Long-running CLI output can leave ghost text behind
+### Finding 5: Interactive CLI rendering truth breaks down under real use
 - Status: `Open`
 - First seen: `2026-04-06`
 - Area: `terminal`
-- Summary: While using full-screen or highly interactive CLI tools such as Claude Code or Codex, the terminal can leave ghost text behind in odd positions and sometimes shifts visible text upward when it should not.
-- Notes: The current mitigation forces local xterm repaint after parsed output and snapshot-driven rebuilds, but the finding stays open until dogfooding shows the drift is no longer common. Device-local cleanup must not mutate the shared PTY.
+- Summary: While using full-screen or highly interactive CLI tools such as Claude Code or Codex, typed text and generated text can appear in the wrong place, ghost text can linger, and visible text can shift upward or out of order.
+- Notes: This is now the main `0.1` release blocker because it undermines normal dogfooding of primary CLI workflows. The current mitigation forces local xterm repaint after parsed output and snapshot-driven rebuilds, but the finding stays open until dogfooding shows the drift is no longer common. Refresh is no longer a reliable cleanup path; column changes have sometimes cleaned up the viewport. Device-local cleanup must not mutate the shared PTY.
 
 ## Closed
 
