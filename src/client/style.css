@@ -279,7 +279,7 @@ button {
 
 .workspace-shell {
   display: grid;
-  grid-template-rows: auto minmax(0, 1fr);
+  grid-template-rows: auto auto minmax(0, 1fr);
   gap: 1rem;
   width: 100%;
   min-width: 0;
@@ -287,8 +287,19 @@ button {
   height: 100%;
 }
 
+.workspace-shell.is-topbar-collapsed {
+  gap: 0.35rem;
+}
+
 .is-hidden {
   display: none !important;
+}
+
+.topbar-reveal-strip {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  min-height: 0;
 }
 
 .topbar {
@@ -300,6 +311,14 @@ button {
   position: relative;
   z-index: 12;
   overflow: visible;
+}
+
+.topbar-toggle-button {
+  min-width: 1.85rem;
+  min-height: 1.85rem;
+  padding: 0;
+  line-height: 1;
+  font-size: calc(0.84rem * var(--ui-font-scale));
 }
 
 .topbar-session {

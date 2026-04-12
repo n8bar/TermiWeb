@@ -48,7 +48,21 @@
       </section>
 
       <section id="workspace-panel" class="workspace-shell is-hidden">
-        <header class="topbar card">
+        <div id="topbar-reveal-strip" class="topbar-reveal-strip is-hidden">
+          <button
+            id="reveal-topbar-button"
+            class="ghost-button compact icon-button topbar-toggle-button"
+            type="button"
+            aria-expanded="false"
+            aria-controls="topbar"
+            aria-label="Expand top bar"
+            title="Expand top bar"
+          >
+            ⌄
+          </button>
+        </div>
+
+        <header id="topbar" class="topbar card">
           <div class="brand-block compact">
             <span class="brand-mark small">TW</span>
             <div>
@@ -75,6 +89,17 @@
               <span id="connection-status" class="status-pill is-connecting">Connecting</span>
             </div>
             <div class="topbar-button-group">
+              <button
+                id="toggle-topbar-button"
+                class="ghost-button compact icon-button topbar-toggle-button"
+                type="button"
+                aria-expanded="true"
+                aria-controls="topbar"
+                aria-label="Collapse top bar"
+                title="Collapse top bar"
+              >
+                ⌃
+              </button>
               <button
                 id="logout-button"
                 class="ghost-button topbar-action-button topbar-action-button-danger"

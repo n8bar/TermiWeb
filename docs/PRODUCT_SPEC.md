@@ -79,6 +79,8 @@ TermiWeb provides a workstation-first browser terminal workflow that can also be
 - The keyboard control tray should stay anchored inside the outer terminal shell, below the scaled stage, rather than floating against the screen edge.
 - The keyboard control tray should be collapsible so a device can trade button space for more visible terminal rows.
 - Keyboard tray collapse should be a per-device browser preference and must not propagate through shared session state.
+- The top bar should also be locally collapsible per browser so constrained views can reclaim vertical space without affecting other attached devices.
+- When collapsed, the top bar should leave behind only a tiny reveal button instead of a full header strip.
 - The keyboard-tray collapse control should live on the seam between the terminal viewport and the tray instead of consuming its own header row.
 - The main header and the active-terminal header should be merged to preserve vertical space.
 - The terminal workspace stage should top-align within its viewport and use the full available height rather than discarding rows through a global aspect-ratio cap.

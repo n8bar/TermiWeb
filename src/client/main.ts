@@ -58,6 +58,8 @@ const loginVersion = mustQuery<HTMLElement>("#login-version");
 const appHostname = mustQuery<HTMLElement>("#app-hostname");
 const appAddress = mustQuery<HTMLElement>("#app-address");
 const appVersion = mustQuery<HTMLElement>("#app-version");
+const topbar = mustQuery<HTMLElement>("#topbar");
+const topbarRevealStrip = mustQuery<HTMLElement>("#topbar-reveal-strip");
 const workspaceLayout = mustQuery<HTMLElement>("#workspace-layout");
 const sessionList = mustQuery<HTMLElement>("#session-list");
 const sessionListScroller = mustQuery<HTMLElement>(".session-list-scroller");
@@ -88,6 +90,8 @@ const newSessionButton = mustQuery<HTMLButtonElement>("#new-session-button");
 const focusTerminalButton = mustQuery<HTMLButtonElement>("#focus-terminal-button");
 const toggleControlsButton = mustQuery<HTMLButtonElement>("#toggle-controls-button");
 const toggleSidebarButton = mustQuery<HTMLButtonElement>("#toggle-sidebar-button");
+const toggleTopbarButton = mustQuery<HTMLButtonElement>("#toggle-topbar-button");
+const revealTopbarButton = mustQuery<HTMLButtonElement>("#reveal-topbar-button");
 
 const terminal = new Terminal({
   cursorBlink: false,
@@ -169,6 +173,7 @@ let lastModifierTap:
 let sidebarCollapsed = false;
 let sidebarPreferenceMode: "auto" | "manual" = "auto";
 let controlsCollapsed = false;
+let topbarCollapsed = false;
 let selectionMode = false;
 let fixedCols = 80;
 let sessionWidthAnchorButton: HTMLButtonElement | null = null;
@@ -179,6 +184,7 @@ let terminalFrameWidthPx: number | null = null;
 let suppressTerminalContainerResizeObserver = false;
 const sidebarStorageKey = "termiweb.sidebar-collapsed";
 const controlsStorageKey = "termiweb.controls-collapsed";
+const topbarStorageKey = "termiweb.topbar-collapsed";
 const modifierDoubleTapWindowMs = 360;
 const defaultTerminalFontSize = 15;
 const minTerminalFontSize = 6;
@@ -391,6 +397,34 @@ function setControlsCollapsed(
   if (options.persist ?? true) {
     try {
       window.localStorage.setItem(controlsStorageKey, String(collapsed));
+    } catch {
+      // Ignore local storage failures and keep the state in-memory for this device.
+    }
+  }
+}
+
+function setTopbarCollapsed(
+  collapsed: boolean,
+  options: {
+    persist?: boolean;
+  } = {},
+): void {
+  topbarCollapsed = collapsed;
+  workspacePanel.classList.toggle("is-topbar-collapsed", collapsed);
+  topbar.classList.toggle("is-hidden", collapsed);
+  topbarRevealStrip.classList.toggle("is-hidden", !collapsed);
+  toggleTopbarButton.textContent = collapsed ? "⌄" : "⌃";
+  toggleTopbarButton.setAttribute("aria-expanded", String(!collapsed));
+  toggleTopbarButton.setAttribute(
+    "aria-label",
+    collapsed ? "Expand top bar" : "Collapse top bar",
+  );
+  toggleTopbarButton.title = collapsed ? "Expand top bar" : "Collapse top bar";
+  revealTopbarButton.setAttribute("aria-expanded", String(!collapsed));
+
+  if (options.persist ?? true) {
+    try {
+      window.localStorage.setItem(topbarStorageKey, String(collapsed));
     } catch {
       // Ignore local storage failures and keep the state in-memory for this device.
     }
@@ -908,6 +942,24 @@ function initializeControlsPreference(): void {
   }
 
   setControlsCollapsed(false, {
+    persist: false,
+  });
+}
+
+function initializeTopbarPreference(): void {
+  try {
+    const stored = window.localStorage.getItem(topbarStorageKey);
+    if (stored === "true" || stored === "false") {
+      setTopbarCollapsed(stored === "true", {
+        persist: false,
+      });
+      return;
+    }
+  } catch {
+    // Fall through to default expanded state.
+  }
+
+  setTopbarCollapsed(false, {
     persist: false,
   });
 }
@@ -1548,6 +1600,17 @@ focusTerminalButton.addEventListener("click", () => {
   terminal.focus();
 });
 
+toggleTopbarButton.addEventListener("click", () => {
+  setSessionWidthPopoverOpen(false);
+  setTopbarCollapsed(true);
+  syncViewportLayout();
+});
+
+revealTopbarButton.addEventListener("click", () => {
+  setTopbarCollapsed(false);
+  syncViewportLayout();
+});
+
 toggleSidebarButton.addEventListener("click", () => {
   setSessionWidthPopoverOpen(false);
   const effectiveViewportWidth = resolveEffectiveViewportWidth({
@@ -1682,6 +1745,7 @@ window.visualViewport?.addEventListener("resize", handleViewportResize);
 
 initializeSidebarPreference();
 initializeControlsPreference();
+initializeTopbarPreference();
 renderModifierControls();
 setVersionIdentity();
 syncViewportLayout();
