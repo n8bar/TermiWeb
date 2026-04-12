@@ -7,38 +7,38 @@ Finish `M5` through continued dogfooding of interactive CLI rendering integrity 
 ## Milestones
 
 - [x] M1: Repository bootstrap and docs baseline
-  - Summary: Established the repo skeleton, core docs, and the initial product frame so later work had a stable place to land. This phase defined the project as a Windows-first workstation browser terminal rather than a vague remote-shell experiment.
+  - Summary: Added the initial repo structure, TypeScript/Vite/server scaffolding, baseline docs, and the first environment/runtime conventions. This is the phase that created the project skeleton later milestones could actually build on.
   - Start: 2026-04-06
   - End: 2026-04-06
 - [x] M2: Shared terminal backend and session model
-  - Summary: Built the shared-session server path, lightweight workspace state, and the core attach/create/close flow for instances. This is the phase that turned TermiWeb into a real multi-client terminal host instead of a static frontend.
+  - Summary: Added the server-side PTY/session manager, protocol, auth/session handling, and lightweight workspace persistence. This is where instance creation, attach/select, close, and shared terminal I/O became real code paths instead of placeholders.
   - Start: 2026-04-06
   - End: 2026-04-06
 - [x] M3: Browser UI with instances, auth, and mobile controls
-  - Summary: Added the browser UI, authenticated access, instance rail, and the first complete mobile control surface. By the end of this phase, the app was usable from both desktop and phone, even if the UX still needed heavy polish.
+  - Summary: Added the browser client, login flow, instance rail, xterm integration, and the first usable mobile control surface. By the end of this phase, desktop and phone clients could both attach to the same live instance through the browser UI.
   - Start: 2026-04-06
   - End: 2026-04-06
 - [x] M4: Local verification and launch polish
-  - Summary: Tightened the initial run story with local verification, restart handling, and the first launch-quality UX cleanup. This phase made the project feel intentionally runnable instead of only developer-accessible.
+  - Summary: Added the first serious verification loop, tightened restart/reconnect behavior, and cleaned up the initial launch/run path enough for real local use. This is also where the project stopped feeling like a dev-only prototype and started behaving like an intentional app.
   - Start: 2026-04-07
   - End: 2026-04-07
 - [ ] M5: 0.1 release polish and rendering integrity
-  - Summary: This phase absorbs the concentrated UX polish, cross-device cleanup, and terminal-behavior fixes needed to make `0.1` feel professional. The remaining risk is interactive CLI rendering truth, so dogfooding is still the bottleneck on closing this milestone.
+  - Summary: This milestone contains the major UI/layout refinements, per-instance width controls, mobile behavior fixes, local viewport scrolling, shared terminal geometry cleanup, and the current follow-cursor work. What remains open here is the rendering-truth problem in interactive CLI tools, which still needs dogfood validation before `0.1` can be called clean.
   - Start: 2026-04-08
   - Target End: 2026-04-18
   - Notes: extended by one week; still open because dogfooding remains the bottleneck on interactive CLI rendering truth
 - [ ] M6: Installer experience
-  - Summary: Package the Windows install/run story so `0.1` does not feel tied to a development workflow. This milestone can overlap with late M5 dogfooding because packaging work is mostly independent of the remaining rendering verdict.
+  - Summary: This milestone should add the packaging, launch scripts, distribution layout, and any supporting docs needed for a non-dev Windows install/run path. The target is concrete installer/distribution code, not just another README pass.
   - Start: 2026-04-12
   - Target End: 2026-04-18
   - Overlap: runs in parallel with the final week of M5
 - [ ] M7: 0.1 release and GitHub Pages download website
-  - Summary: Cut the actual `0.1` release and publish a simple download/distribution website on GitHub Pages. This milestone should stay blocked until both the release bar and the installer story are genuinely ready.
+  - Summary: This milestone should produce the tagged `0.1` release artifacts plus the GitHub Pages download site that points to them. The code/doc work here is release packaging, distribution metadata, and the website content that turns the build into an actual downloadable release.
   - Start: 2026-04-19
   - Target End: 2026-04-25
   - Blocked By: M5 and M6
 - [ ] M8: Marketing for an open-source, free-to-use product
-  - Summary: Treat launch communication as its own phase rather than an afterthought, with the goal of getting real marketing experience around an open-source free product. This comes after release so messaging is based on a real shipped artifact rather than promises.
+  - Summary: This milestone covers the launch materials that sit around the shipped product: messaging, announcement copy, screenshots, demos, and any supporting site/repo polish. It is intentionally after release so the material can describe real code and real workflows instead of promises.
   - Start: 2026-04-26
   - Target End: 2026-05-23
   - Blocked By: M7
