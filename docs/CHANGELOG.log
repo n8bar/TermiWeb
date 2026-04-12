@@ -107,3 +107,4 @@
 2026-04-12 Corrected M8 in the roadmap so it represents the full marketing phase, not just launch materials, and removed the false dependency that treated marketing as blocked by M7.
 2026-04-12 Reserved `.cybercreek/` as an untracked local-only workspace for marketing scratch files and other dev-environment-specific material, and documented that convention in `AGENTS.md`.
 2026-04-12 Renumbered `AGENTS.md` headings and rules for easier reference, and formally defined `docs/worklists/` as the repo's detailed execution-doc layer separate from high-level milestone planning in `docs/PLAN.md`.
+2026-04-12 Removed the pointless top-level numeric prefix from `AGENTS.md` while keeping numbered subheadings and rules for referenceability.

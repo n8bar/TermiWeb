@@ -1,4 +1,4 @@
-# 1. AGENTS
+# AGENTS
 
 ## 1.1 Working Style
 1. Keep canonical docs in sync with every meaningful scope or architecture change:
