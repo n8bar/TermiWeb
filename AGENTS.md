@@ -13,19 +13,20 @@
 3. Specs come first: align on the requirement in the docs, implement, then update docs to match what actually shipped.
 4. Docs are primarily internal engineering documents for future maintenance, not end-user documentation.
 5. Keep `AGENTS.md` updated when the repo workflow or project-specific constraints change.
-6. During dogfooding, log issues in `docs/FINDINGS.md` instead of treating every observation as an immediate implementation task.
-7. During release polish, keep `docs/PLAN.md`, `docs/FINDINGS.md`, and `docs/RELEASE_STANDARD.md` aligned on the actual blocker instead of letting milestone text drift behind reality.
-8. If the user is asking for input or feedback, answer first and confirm before making changes when the request is still decision-seeking.
-9. If asked to implement code before a spec exists, recommend capturing the scope in docs first unless the user explicitly wants to skip that step.
-10. If a new doc or spec materially shapes future implementation scope, pause for user review before treating that doc as approved direction.
-11. Preserve unrelated local changes. Do not revert work you did not make.
-12. Use path-scoped git staging and commits so unrelated work is never swept into a change by accident.
-13. GitHub is used as the canonical remote, but tests stay local by default unless the user explicitly asks for hosted automation.
-14. Branches for new work should follow `codex/<task>` unless an existing branch/PR already owns the work.
-15. Keep README documentation links current when adding or renaming docs.
-16. Do not add artificial numbering to a document's lone title heading.
-17. If a document uses numbered headings, the first numbered heading at any tier starts at `1`.
-18. Heading level choice should follow the document structure; numbering rules do not imply a required heading depth.
+6. When adding or editing `AGENTS.md` rules, avoid overly restrictive or micromanaging wording. Prefer the minimum rule needed to protect the repo's actual workflow and quality bar.
+7. During dogfooding, log issues in `docs/FINDINGS.md` instead of treating every observation as an immediate implementation task.
+8. During release polish, keep `docs/PLAN.md`, `docs/FINDINGS.md`, and `docs/RELEASE_STANDARD.md` aligned on the actual blocker instead of letting milestone text drift behind reality.
+9. If the user is asking for input or feedback, answer first and confirm before making changes when the request is still decision-seeking.
+10. If asked to implement code before a spec exists, recommend capturing the scope in docs first unless the user explicitly wants to skip that step.
+11. If a new doc or spec materially shapes future implementation scope, pause for user review before treating that doc as approved direction.
+12. Preserve unrelated local changes. Do not revert work you did not make.
+13. Use path-scoped git staging and commits so unrelated work is never swept into a change by accident.
+14. GitHub is used as the canonical remote, but tests stay local by default unless the user explicitly asks for hosted automation.
+15. Branches for new work should follow `codex/<task>` unless an existing branch/PR already owns the work.
+16. Keep README documentation links current when adding or renaming docs.
+17. Do not add artificial numbering to a document's lone title heading.
+18. If a document uses numbered headings, the first numbered heading at any tier starts at `1`.
+19. Heading level choice should follow the document structure; numbering rules do not imply a required heading depth.
 
 ## 2. Worklists
 1. Use `docs/worklists/` for worklists: execution docs and todo lists.
