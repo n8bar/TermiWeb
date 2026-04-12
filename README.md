@@ -69,7 +69,6 @@ TermiWeb is a workstation-first shared terminal for Windows. The browser UI is t
 - [0.1 per-instance column width](docs/specs/v0.1-per-instance-column-width.md)
 - [0.1 persistent auth sessions](docs/specs/v0.1-persistent-auth-sessions.md)
 - [0.2 browser session candidate](docs/specs/v0.2-browser-session-candidate.md)
-- [0.2 QR connect candidate](docs/specs/v0.2-qr-connect-candidate.md)
 - [0.2 side-by-side instances candidate](docs/specs/v0.2-side-by-side-instances-candidate.md)
 - [Change log](docs/CHANGELOG.log)
 
