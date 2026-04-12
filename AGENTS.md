@@ -43,16 +43,17 @@
    4. blockers
    5. partial completion notes
    6. handoff notes
-5. Worklists must not replace specs.
-6. Specs define requirements, scope, constraints, and acceptance criteria.
-7. Plans define milestone-level schedule and focus.
-8. Changelog records what already happened.
-9. A worklist may target:
+5. When worklist items are actionable tasks or verification points, use numbered checkboxes so they can carry both status and referenceability.
+6. Worklists must not replace specs.
+7. Specs define requirements, scope, constraints, and acceptance criteria.
+8. Plans define milestone-level schedule and focus.
+9. Changelog records what already happened.
+10. A worklist may target:
    1. one whole milestone
    2. one clearly bounded portion of one milestone when that milestone is large enough to justify separate execution tracking
-10. A worklist must never span multiple milestones.
-11. If execution changes milestone order, timing, or current focus, update `docs/PLAN.md`.
-12. If execution changes requirements or scope, update the relevant spec instead of the worklist.
+11. A worklist must never span multiple milestones.
+12. If execution changes milestone order, timing, or current focus, update `docs/PLAN.md`.
+13. If execution changes requirements or scope, update the relevant spec instead of the worklist.
 
 ## 3. Testing Strategy
 1. Use TDD where it materially reduces ambiguity:

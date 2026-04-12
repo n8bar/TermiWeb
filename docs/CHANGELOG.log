@@ -115,3 +115,4 @@
 2026-04-12 Relaxed the heading-numbering rules in `AGENTS.md` so they govern numbering only, not heading-level choice, and no longer imply that a specific document must use H1/H2 structure a certain way.
 2026-04-12 Added an `AGENTS.md` rule against writing new agent rules in an overly restrictive or micromanaging way, so workflow guidance stays minimal and proportional to the repo's real needs.
 2026-04-12 Reformatted the M6 worklist so non-task sections read as prose, work items use checkboxes, verification items use checkboxes, and the work breakdown no longer hides explanatory text inside fake nested task lists.
+2026-04-12 Switched the M6 worklist action items and verification items to numbered checkboxes, and added an `AGENTS.md` rule that worklist tasks and verification points should use numbered checkboxes when they need both status and referenceability.
