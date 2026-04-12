@@ -1,4 +1,4 @@
-# 1. M6 Installer And First-Run Experience Worklist
+# M6 Installer And First-Run Experience Worklist
 
 ## 2. Scope
 1. This worklist covers the detailed execution layer for milestone `M6`.
