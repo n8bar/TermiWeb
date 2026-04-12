@@ -18,6 +18,7 @@ Dogfood the first usable 0.1 browser terminal, polish the release-critical auth 
 ## Future Candidates
 
 - `0.2` candidate: isolated workstation-hosted `Browser` instances with one tab and basic browser chrome
+- `0.2` candidate: side-by-side instance view for very wide workstation windows
 
 ## Release Gate
 
