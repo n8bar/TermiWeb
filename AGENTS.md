@@ -1,6 +1,6 @@
 # AGENTS
 
-## 1.1 Working Style
+## 1. Working Style
 1. Keep canonical docs in sync with every meaningful scope or architecture change:
    1. `docs/PLAN.md` for milestone order, current focus, and the next implementation target
    2. `docs/PRODUCT_SPEC.md` for product-level behavior and invariants
@@ -24,7 +24,7 @@
 14. Branches for new work should follow `codex/<task>` unless an existing branch/PR already owns the work.
 15. Keep README documentation links current when adding or renaming docs.
 
-## 1.2 Worklists
+## 2. Worklists
 1. Use `docs/worklists/` for worklists: execution docs and todo lists.
 2. `docs/PLAN.md` remains the high-level execution document:
    1. milestone order
@@ -50,7 +50,7 @@
 11. If execution changes milestone order, timing, or current focus, update `docs/PLAN.md`.
 12. If execution changes requirements or scope, update the relevant spec instead of the worklist.
 
-## 1.3 Testing Strategy
+## 3. Testing Strategy
 1. Use TDD where it materially reduces ambiguity:
    1. auth/session logic
    2. workspace/tab state transitions
@@ -67,7 +67,7 @@
    2. `npm test`
    3. any task-specific manual browser checks documented in the relevant spec or README
 
-## 1.4 Project Rules
+## 4. Project Rules
 1. Treat the browser UI as the session of record for both desktop and remote access.
 2. Do not add a separate native-terminal control path unless the user explicitly changes scope.
 3. Target Windows hosts first and prefer ConPTY-capable integrations.
@@ -76,14 +76,14 @@
 6. Persist only lightweight session metadata in v1; do not claim session resurrection that does not actually exist.
 7. Mobile terminal controls are part of the core product, not a stretch goal. Preserve usable access to modifiers and navigation keys whenever the terminal UI changes.
 
-## 1.5 Multi-Agent Coordination
+## 5. Multi-Agent Coordination
 1. Use subagents only for path-scoped, non-overlapping work that clearly reduces cycle time.
 2. Keep the critical path with the primary agent: architecture, integration, final verification, and the user-facing summary stay local.
 3. Assign concrete ownership when delegating. Avoid overlapping write scopes.
 4. Expect dirty working trees. Stop only when unexpected changes collide with the exact files you need to edit.
 5. Leave a short handoff note in the final summary when work is paused or partially complete.
 
-## 1.6 Handy Commands
+## 6. Handy Commands
 ```bash
 npm install
 npm run dev
@@ -92,7 +92,7 @@ npm test
 npm run build
 ```
 
-## 1.7 Environment Notes
+## 7. Environment Notes
 1. The default local URL is `http://127.0.0.1:22443`.
 2. Runtime configuration lives in `.env`; start from `.env.example`.
 3. Local state belongs under `.termiweb/` and must stay untracked.
