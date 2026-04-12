@@ -22,29 +22,36 @@ The result should feel intentional, not like a source checkout with a few extra 
   Make the user-facing start, restart, and stop path obvious after install or unpack. The hidden/background launch path should be part of the supported experience, not just an advanced script.
 
 3. [ ] Define and implement configuration expectations.
-  Make it clear how the user sets or confirms the configured app password on first use. Choose defaults that do not force unnecessary manual editing.
+  Make it clear how the user sets or confirms the configured app password on first use. Keep `.env.example` as the product defaults, but support running a dev checkout alongside the installed pre-release by moving the dev env off the default port and any other settings that would clash.
 
-4. [ ] Write the doc-first first-run guidance.
+4. [ ] Implement side-by-side coexistence between the dev checkout and the installed pre-release.
+  Running both at once should not collide just because they share a host. Port separation is required, and auth cookie isolation should also be part of the coexistence story so the two instances do not step on each other's browser sessions.
+
+5. [ ] Write the doc-first first-run guidance.
   For `0.1`, keep first-run guidance doc-heavy and embedded UI guidance minimal. The UI should lean toward being self-explanatory rather than explanatory.
 
-5. [ ] Write the first shared-session walkthrough.
+6. [ ] Write the first shared-session walkthrough.
   The walkthrough should open TermiWeb on the workstation, log in, use the seeded `Instance 1`, open the LAN URL from a second device, and confirm both devices are attached to the same live shell.
 
-6. [ ] Add the tiny fallback note about `+ New Instance`.
+7. [ ] Add the tiny fallback note about `+ New Instance`.
   Mention briefly in the docs that a user can create a new instance if they closed the seeded one or want another session. Keep that note intentionally minimal.
 
-7. [ ] Publish the first-run guidance in the right places.
+8. [ ] Publish the first-run guidance in the right places.
   Bias `0.1` toward release-package docs, adding only minimal in-app guidance where it is cheap and high-value. Decide whether the website download page also needs a condensed version.
 
-8. [ ] Package the verification artifacts.
+9. [ ] Add the repo-or-fork coexistence note once the behavior is real.
+  Document changing `TERMIWEB_PORT` for users who want to maintain a repo or fork alongside an installed pre-release, but only once the coexistence story is actually complete enough to be truthful.
+
+10. [ ] Package the verification artifacts.
   Cover install or unpack steps, launch steps, stop/restart steps, and the first-run two-device walkthrough. Do not add QR codes or similar convenience aids in `0.1` unless a real failure proves they are needed.
 
 ## 4. Verification Checklist
 1. [ ] A fresh Windows machine or Windows user profile can start the shipped artifact without a development-oriented setup.
 2. [ ] The user can identify the local URL, LAN URL, and password expectations without guessing.
 3. [ ] The user can attach from a second device and see the same live shell.
-4. [ ] The documented steps match the shipped artifact exactly.
-5. [ ] The first-run path does not depend on hidden tribal knowledge from the repo.
+4. [ ] A dev checkout and an installed pre-release can run side by side on the same machine without port or auth-cookie collisions.
+5. [ ] The documented steps match the shipped artifact exactly.
+6. [ ] The first-run path does not depend on hidden tribal knowledge from the repo.
 
 ## 5. Current Status
-Created. The M6 direction is now baked into the task wording instead of being tracked as fake completed decision items. Remaining work is execution detail, packaging detail, and writing the actual first-run flow.
+Created. The M6 direction is now baked into the task wording instead of being tracked as fake completed decision items. Remaining work is execution detail, coexistence support, packaging detail, and writing the actual first-run flow.
