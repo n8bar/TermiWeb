@@ -23,7 +23,9 @@
 13. GitHub is used as the canonical remote, but tests stay local by default unless the user explicitly asks for hosted automation.
 14. Branches for new work should follow `codex/<task>` unless an existing branch/PR already owns the work.
 15. Keep README documentation links current when adding or renaming docs.
-16. Do not add artificial outline numbering to the single top-level H1 of a document. If a doc uses numbered sections, start numbering at `1` on the next heading level.
+16. Do not add artificial numbering to a document's lone title heading.
+17. If a document uses numbered headings, the first numbered heading at any tier starts at `1`.
+18. Heading level choice should follow the document structure; numbering rules do not imply a required heading depth.
 
 ## 2. Worklists
 1. Use `docs/worklists/` for worklists: execution docs and todo lists.
