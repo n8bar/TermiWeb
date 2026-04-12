@@ -1,54 +1,47 @@
 # M6 Installer And First-Run Experience Worklist
 
 ## 1. Scope
-1. This worklist covers the detailed execution layer for milestone `M6`.
-2. `M6` includes both:
-   1. packaging/install/run experience for a non-dev Windows user
-   2. first-run guidance that gets a newly installed user to one shared session visible from two devices at the same time
-3. This worklist does not replace the product docs or release standard.
+This worklist covers the detailed execution layer for milestone `M6`.
+
+`M6` includes both packaging/install/run experience for a non-dev Windows user and first-run guidance that gets a newly installed user to one shared session visible from two devices at the same time.
+
+This worklist does not replace the product docs or release standard.
 
 ## 2. Desired Outcome
-1. A Windows user should be able to install or unpack TermiWeb, launch it without a developer workflow, and understand how to reach it locally.
-2. That same user should be able to reach their first shared live shell from a second device without having to reverse-engineer the product.
-3. The result should feel intentional, not like a source checkout with a few extra scripts.
+A Windows user should be able to install or unpack TermiWeb, launch it without a developer workflow, and understand how to reach it locally.
+
+That same user should be able to reach their first shared live shell from a second device without having to reverse-engineer the product.
+
+The result should feel intentional, not like a source checkout with a few extra scripts.
 
 ## 3. Work Breakdown
-1. Decide the release packaging shape.
-   1. Choose whether `0.1` ships as a packaged folder, installer, or another Windows-first distribution form.
-   2. Confirm what runtime dependencies, if any, the end user still needs on the target machine.
-2. Define the launch surface.
-   1. Decide what the user actually clicks or runs after install/unpack.
-   2. Ensure the hidden/background launch path is part of the supported experience, not just an advanced script.
-3. Define configuration expectations.
-   1. Decide how the user sets or confirms the configured app password on first use.
-   2. Decide what defaults are acceptable without forcing immediate manual editing.
-4. Design the first-run guidance.
-   1. Show the local URL and LAN URL clearly.
-   2. Make the user aware of the configured password.
-   3. Guide them to open the same live session from a second device.
-5. Define the first shared-session walkthrough.
-   1. Open TermiWeb on the workstation.
-   2. Log in.
-   3. Use or create `Instance 1`.
-   4. Open the LAN URL from a second device.
-   5. Confirm both devices are attached to the same live shell.
-6. Decide where that guidance lives.
-   1. Release package docs
-   2. app UI
-   3. website download page
-   4. or a deliberate combination
-7. Package verification artifacts.
-   1. install/unpack steps
-   2. launch steps
-   3. stop/restart steps
-   4. first-run/two-device walkthrough
+- [ ] Decide the release packaging shape.
+  Choose whether `0.1` ships as a packaged folder, installer, or another Windows-first distribution form. Confirm what runtime dependencies, if any, the end user still needs on the target machine.
+
+- [ ] Define the launch surface.
+  Decide what the user actually clicks or runs after install or unpack. Ensure the hidden/background launch path is part of the supported experience, not just an advanced script.
+
+- [ ] Define configuration expectations.
+  Decide how the user sets or confirms the configured app password on first use. Decide what defaults are acceptable without forcing immediate manual editing.
+
+- [ ] Design the first-run guidance.
+  Show the local URL and LAN URL clearly. Make the user aware of the configured password and guide them to open the same live session from a second device.
+
+- [ ] Define the first shared-session walkthrough.
+  Open TermiWeb on the workstation, log in, use or create `Instance 1`, open the LAN URL from a second device, and confirm both devices are attached to the same live shell.
+
+- [ ] Decide where the first-run guidance lives.
+  Decide whether the guidance belongs in release package docs, the app UI, the website download page, or a deliberate combination.
+
+- [ ] Package the verification artifacts.
+  Cover install or unpack steps, launch steps, stop/restart steps, and the first-run two-device walkthrough.
 
 ## 4. Verification Checklist
-1. A fresh Windows machine or Windows user profile can start the shipped artifact without a development-oriented setup.
-2. The user can identify the local URL, LAN URL, and password expectations without guessing.
-3. The user can attach from a second device and see the same live shell.
-4. The documented steps match the shipped artifact exactly.
-5. The first-run path does not depend on hidden tribal knowledge from the repo.
+- [ ] A fresh Windows machine or Windows user profile can start the shipped artifact without a development-oriented setup.
+- [ ] The user can identify the local URL, LAN URL, and password expectations without guessing.
+- [ ] The user can attach from a second device and see the same live shell.
+- [ ] The documented steps match the shipped artifact exactly.
+- [ ] The first-run path does not depend on hidden tribal knowledge from the repo.
 
 ## 5. Open Questions
 1. What is the actual `0.1` distribution form: packaged folder, installer, or something lighter?
@@ -57,6 +50,4 @@
 4. Do we want any convenience aid such as a QR code in `0.1`, or is that post-`0.1`?
 
 ## 6. Current Status
-1. Created.
-2. Not yet broken into concrete implementation tasks.
-3. Waiting for the first M6 execution pass.
+Created. Not yet broken into concrete implementation tasks. Waiting for the first M6 execution pass.
