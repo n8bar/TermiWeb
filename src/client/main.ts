@@ -5,6 +5,7 @@ import { FitAddon } from "@xterm/addon-fit";
 import { Terminal } from "@xterm/xterm";
 
 import { parseServerEvent, type ServerEvent, type SessionSummary } from "../shared/protocol.js";
+import { resolveSharedTerminalRows } from "../shared/terminal-geometry.js";
 import {
   advanceModifierState,
   applyModifiersToInput,
@@ -25,7 +26,6 @@ import {
 import {
   computeRequiredTerminalWidth,
   fitFontSizeToCols,
-  resolveTerminalRows,
 } from "./ui/terminalSizing.js";
 import { applyTerminalInputAttributes } from "./ui/terminalInput.js";
 import { attachTerminalTouchScroll } from "./ui/terminalScroll.js";
@@ -703,6 +703,7 @@ function applyTerminalFrameWidth(widthPx: number | null): void {
 function fitTerminalWidth(): boolean {
   const proposed = fitAddon.proposeDimensions();
   const fittedCols = proposed?.cols;
+  const targetRows = resolveSharedTerminalRows(fixedCols);
   if (
     typeof fittedCols !== "number" ||
     !Number.isFinite(fittedCols) ||
@@ -714,7 +715,9 @@ function fitTerminalWidth(): boolean {
   const nextFontSize = fitFontSizeToCols({
     currentFontSize: currentTerminalFontSize(),
     fittedCols,
+    fittedRows: proposed?.rows,
     targetCols: fixedCols,
+    targetRows,
     minFontSize: minTerminalFontSize,
   });
 
@@ -1036,50 +1039,34 @@ function currentSize() {
     terminalContainer.parentElement?.clientWidth ?? terminalContainer.clientWidth;
   const targetHeight = terminalContainer.clientHeight;
   const nextCols = fixedCols;
+  const nextRows = resolveSharedTerminalRows(nextCols);
 
   if (targetWidth <= 0 || targetHeight <= 0) {
     return {
       cols: nextCols,
-      rows: Math.max(terminal.rows, 1),
+      rows: nextRows,
     };
   }
-
-  let rows = Math.max(terminal.rows, 1);
 
   for (let attempt = 0; attempt < 2; attempt += 1) {
     fitTerminalWidth();
 
-    const proposed = fitAddon.proposeDimensions();
-    const nextRows = resolveTerminalRows({
-      proposedRows: proposed?.rows,
-      fallbackRows: rows,
-    });
-
     if (terminal.cols !== nextCols || terminal.rows !== nextRows) {
       terminal.resize(nextCols, nextRows);
     }
-
-    rows = nextRows;
   }
 
   if (syncTerminalHorizontalOverflow()) {
-    const overflowRows = resolveTerminalRows({
-      proposedRows: fitAddon.proposeDimensions()?.rows,
-      fallbackRows: rows,
-    });
-
-    if (terminal.cols !== nextCols || terminal.rows !== overflowRows) {
-      terminal.resize(nextCols, overflowRows);
+    if (terminal.cols !== nextCols || terminal.rows !== nextRows) {
+      terminal.resize(nextCols, nextRows);
     }
-
-    rows = overflowRows;
   }
 
   syncTerminalFrameWidth();
 
   return {
     cols: nextCols,
-    rows,
+    rows: nextRows,
   };
 }
 

@@ -110,10 +110,9 @@ export class TerminalManager extends EventEmitter<ManagerEvents> {
     }
 
     this.#clientSessions.set(clientId, sessionId);
-    session.attachClient(clientId, size.rows);
+    session.attachClient(clientId);
     await session.ensureStarted({
       cols: session.getFixedCols(),
-      rows: size.rows,
     });
     await this.#workspaceStore.selectTab(sessionId);
     this.#emitSessions();

@@ -41,10 +41,10 @@ TermiWeb provides a workstation-first browser terminal workflow that can also be
 
 - New instances start at 80 columns by default.
 - Terminal width is an instance property shared across all attached devices for that instance.
+- Terminal rows are also shared per instance and should be derived from the shared column count using a stable `80x30` baseline shape rather than from live device viewport churn.
 - The UI exposes a shared width control on the active instance so users can change columns deliberately without turning width into a per-device preference.
 - The configured column count must always fit inside the visible `xterm` viewport width on each device.
-- Font sizing should make the configured columns fit inside that visible width.
-- Visible row count should then flex from the available terminal height.
+- Font sizing should make the shared terminal geometry fit inside the visible viewport when possible.
 - If width fit reaches the minimum font-size floor and configured columns still cannot fit, the terminal should expose a local horizontal scrollbar rather than clipping columns.
 - The visible terminal surface should support touch scrolling through xterm scrollback without relying on a dead outer scrollbar.
 - The rendered terminal cursor should present as a single solid insertion cursor rather than showing an extra blinking cursor artifact.
@@ -98,6 +98,6 @@ Detailed browser-terminal interaction behavior lives in [the focused `0.1` brows
 - Viewport and orientation changes should fully refit the terminal shell without requiring a browser refresh.
 - On coarse-pointer browsers, rotation should be treated as a local layout refit rather than a shared terminal event.
 - Viewport churn from one attached device should stay local after session startup rather than repeatedly rewriting the live PTY rows for every browser resize or mobile rotation.
-- The live PTY row count should be established when a shell starts and should not keep changing just because attached devices have different viewport heights.
+- The live PTY row count should follow the shared per-instance geometry and should not keep changing just because attached devices have different viewport heights.
 - TermiWeb should be able to rebuild the current instance from a fresh session snapshot after disruptive viewport changes without requiring a full page refresh.
 - Snapshot-driven terminal rebuilds should force a local xterm repaint after attach or recovery, without mutating the shared PTY just because one device needed a local cleanup pass.

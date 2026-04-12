@@ -34,11 +34,10 @@ describe("terminal session row handling", () => {
 
     await session.ensureStarted({
       cols: 80,
-      rows: 24,
     });
     resizeMock.mockClear();
 
-    session.attachClient("client-1", 40);
+    session.attachClient("client-1");
 
     expect(resizeMock).not.toHaveBeenCalled();
   });
@@ -54,7 +53,6 @@ describe("terminal session row handling", () => {
 
     await session.ensureStarted({
       cols: 80,
-      rows: 24,
     });
     resizeMock.mockClear();
 
@@ -74,12 +72,11 @@ describe("terminal session row handling", () => {
 
     await session.ensureStarted({
       cols: 80,
-      rows: 24,
     });
     resizeMock.mockClear();
 
     session.setFixedCols(100, 60);
 
-    expect(resizeMock).toHaveBeenCalledWith(100, 32);
+    expect(resizeMock).toHaveBeenCalledWith(100, 38);
   });
 });

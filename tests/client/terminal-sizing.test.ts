@@ -3,7 +3,6 @@ import { describe, expect, it } from "vitest";
 import {
   computeRequiredTerminalWidth,
   fitFontSizeToCols,
-  resolveTerminalRows,
 } from "../../src/client/ui/terminalSizing.js";
 
 describe("terminal sizing helpers", () => {
@@ -35,6 +34,18 @@ describe("terminal sizing helpers", () => {
     ).toBe(22.5);
   });
 
+  it("also respects row fit when a shared terminal shape is taller than the local viewport", () => {
+    expect(
+      fitFontSizeToCols({
+        currentFontSize: 15,
+        fittedCols: 120,
+        fittedRows: 24,
+        targetCols: 80,
+        targetRows: 30,
+      }),
+    ).toBe(12);
+  });
+
   it("clamps the fitted font size to the configured bounds", () => {
     expect(
       fitFontSizeToCols({
@@ -53,30 +64,5 @@ describe("terminal sizing helpers", () => {
         minFontSize: 6,
       }),
     ).toBe(6);
-  });
-
-  it("lets rows shrink to whatever fits instead of enforcing a larger floor", () => {
-    expect(
-      resolveTerminalRows({
-        proposedRows: 11,
-        fallbackRows: 24,
-      }),
-    ).toBe(11);
-  });
-
-  it("falls back cleanly and never returns fewer than one row", () => {
-    expect(
-      resolveTerminalRows({
-        proposedRows: null,
-        fallbackRows: 7,
-      }),
-    ).toBe(7);
-
-    expect(
-      resolveTerminalRows({
-        proposedRows: 0,
-        fallbackRows: 0,
-      }),
-    ).toBe(1);
   });
 });

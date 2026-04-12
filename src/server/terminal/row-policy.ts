@@ -1,8 +1,5 @@
-export function resolveNextTerminalRows(currentRows: number, requestedRows: number): number {
-  const safeCurrentRows =
-    Number.isFinite(currentRows) && currentRows > 0 ? Math.floor(currentRows) : 1;
-  const safeRequestedRows =
-    Number.isFinite(requestedRows) && requestedRows > 0 ? Math.floor(requestedRows) : 1;
+import { resolveSharedTerminalRows } from "../../shared/terminal-geometry.js";
 
-  return Math.max(safeCurrentRows, safeRequestedRows);
+export function resolveSessionRowsForCols(cols: number): number {
+  return resolveSharedTerminalRows(cols);
 }
