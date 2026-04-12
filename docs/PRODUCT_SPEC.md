@@ -49,6 +49,8 @@ TermiWeb provides a workstation-first browser terminal workflow that can also be
 - The visible terminal surface should support touch scrolling through xterm scrollback without relying on a dead outer scrollbar.
 - If a device cannot display the full shared real-screen height at once, the client may expose a separate local viewport scroll for the current shared screen without redefining shared terminal geometry.
 - That local viewport scroll is distinct from xterm scrollback, which still represents buffer history older than the current shared screen.
+- Each client should keep a local follow-cursor mode for the active instance so typing or otherwise returning to live use brings the active cursor/input area back into view without mutating the shared PTY.
+- That local follow-cursor mode should disable itself when the user intentionally scrolls away from the live area, and re-enable when the user resumes typing or explicitly returns to live use.
 - The rendered terminal cursor should present as a single solid insertion cursor rather than showing an extra blinking cursor artifact.
 
 ## 0.1 Constraints

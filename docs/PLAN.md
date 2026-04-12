@@ -27,4 +27,4 @@ Dogfood the now mostly settled 0.1 browser terminal, keep the release-polish wor
 
 ## Next Action
 
-Finish the doc-alignment pass for the current `0.1` state, then keep `M5` focused on `Finding 5` in [FINDINGS.md](FINDINGS.md): wrong-place input, ghost text, and viewport drift in interactive CLI tools such as Claude Code and Codex. Treat that rendering-truth problem as the primary remaining release blocker while continuing to dogfood the clarified width-fit behavior from [the focused spec](specs/v0.1-per-instance-column-width.md).
+Keep `M5` focused on `Finding 5` in [FINDINGS.md](FINDINGS.md): wrong-place input, ghost text, and viewport drift in interactive CLI tools such as Claude Code and Codex. The current sub-pass is local cursor-follow and viewport behavior for active typing, followed by more dogfooding of the improved TUI scrolling model before deciding whether remaining CLI rendering defects are release-blocking.

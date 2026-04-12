@@ -30,6 +30,10 @@ import {
 } from "./ui/terminalSizing.js";
 import { applyTerminalInputAttributes } from "./ui/terminalInput.js";
 import { attachTerminalTouchScroll } from "./ui/terminalScroll.js";
+import {
+  computeCursorViewportScrollTop,
+  computeCursorXtermScrollDelta,
+} from "./ui/cursorFollow.js";
 import { getDisplaySessionTitle } from "./ui/sessionTitle.js";
 import { toDisplayVersion } from "./ui/version.js";
 
@@ -126,6 +130,9 @@ if (terminal.element) {
     surface: terminal.element,
     viewport: terminalContainer,
     terminal,
+    onUserScroll: () => {
+      setFollowCursor(false);
+    },
     getCellHeight: () => {
       const renderDimensions = (
         terminal as Terminal & {
@@ -184,6 +191,8 @@ let pendingViewportSnapshotResync = false;
 let pendingTextureAtlasReset = false;
 let terminalFrameWidthPx: number | null = null;
 let suppressTerminalContainerResizeObserver = false;
+let suppressViewportFollowScrollEvent = false;
+let followCursor = true;
 const sidebarStorageKey = "termiweb.sidebar-collapsed";
 const controlsStorageKey = "termiweb.controls-collapsed";
 const topbarStorageKey = "termiweb.topbar-collapsed";
@@ -489,6 +498,64 @@ function currentTerminalFontSize(): number {
     : defaultTerminalFontSize;
 }
 
+function setFollowCursor(next: boolean): void {
+  followCursor = next;
+}
+
+function withSuppressedViewportFollowScroll(callback: () => void): void {
+  suppressViewportFollowScrollEvent = true;
+  callback();
+  window.requestAnimationFrame(() => {
+    suppressViewportFollowScrollEvent = false;
+  });
+}
+
+function ensureCursorVisible(bottomSlackRows = 1): void {
+  if (!followCursor || selectionMode) {
+    return;
+  }
+
+  const buffer = terminal.buffer.active;
+  if (!buffer) {
+    return;
+  }
+
+  const xtermScrollDelta = computeCursorXtermScrollDelta({
+    cursorAbsoluteY: buffer.baseY + buffer.cursorY,
+    viewportY: buffer.viewportY,
+    viewportRows: terminal.rows,
+    bottomSlackRows,
+  });
+
+  if (xtermScrollDelta !== 0) {
+    terminal.scrollLines(xtermScrollDelta);
+  }
+
+  const metrics = readTerminalMetrics();
+  if (!metrics) {
+    return;
+  }
+
+  const refreshedBuffer = terminal.buffer.active;
+  const maxScrollTop = Math.max(0, terminalContainer.scrollHeight - terminalContainer.clientHeight);
+  const cursorTop = metrics.paddingTop + refreshedBuffer.cursorY * metrics.cellHeight;
+  const cursorBottom = cursorTop + metrics.cellHeight;
+  const nextScrollTop = computeCursorViewportScrollTop({
+    currentScrollTop: terminalContainer.scrollTop,
+    viewportHeight: terminalContainer.clientHeight,
+    maxScrollTop,
+    cursorTop,
+    cursorBottom,
+    bottomSlackPx: metrics.cellHeight * Math.max(0, bottomSlackRows),
+  });
+
+  if (Math.abs(nextScrollTop - terminalContainer.scrollTop) >= 1) {
+    withSuppressedViewportFollowScroll(() => {
+      terminalContainer.scrollTop = nextScrollTop;
+    });
+  }
+}
+
 function isCoarsePointerDevice(): boolean {
   return (
     window.matchMedia?.("(pointer: coarse)").matches === true ||
@@ -638,6 +705,7 @@ function readTerminalMetrics():
   | {
       cellWidth: number;
       cellHeight: number;
+      paddingTop: number;
       horizontalPadding: number;
       verticalPadding: number;
     }
@@ -674,16 +742,18 @@ function readTerminalMetrics():
   }
 
   const terminalStyles = window.getComputedStyle(terminalElement);
+  const paddingTop = parseFloat(terminalStyles.getPropertyValue("padding-top")) || 0;
   const horizontalPadding =
     parseFloat(terminalStyles.getPropertyValue("padding-left")) +
     parseFloat(terminalStyles.getPropertyValue("padding-right"));
   const verticalPadding =
-    parseFloat(terminalStyles.getPropertyValue("padding-top")) +
+    paddingTop +
     parseFloat(terminalStyles.getPropertyValue("padding-bottom"));
 
   return {
     cellWidth,
     cellHeight,
+    paddingTop,
     horizontalPadding,
     verticalPadding,
   };
@@ -872,6 +942,8 @@ function syncViewportLayout(options: {
 
   if (selectionMode) {
     syncSelectionText();
+  } else {
+    ensureCursorVisible();
   }
 
   if (options.scrollToOrigin) {
@@ -1232,6 +1304,8 @@ function renderModifierControls(): void {
           sessionId: activeSessionId,
           data: transformed.data,
         });
+        setFollowCursor(true);
+        ensureCursorVisible();
         modifierState = transformed.nextState;
         lastModifierTap = null;
         renderModifierControls();
@@ -1255,15 +1329,17 @@ function renderModifierControls(): void {
           const pasted = await navigator.clipboard.readText();
           if (activeSessionId && pasted) {
             const transformed = applyModifiersToInput(pasted, modifierState);
-            sendEvent({
-              type: "terminal/input",
-              sessionId: activeSessionId,
-              data: transformed.data,
-            });
-            modifierState = transformed.nextState;
-            lastModifierTap = null;
-            renderModifierControls();
-          }
+          sendEvent({
+            type: "terminal/input",
+            sessionId: activeSessionId,
+            data: transformed.data,
+          });
+          setFollowCursor(true);
+          ensureCursorVisible();
+          modifierState = transformed.nextState;
+          lastModifierTap = null;
+          renderModifierControls();
+        }
         } catch {
           setConnectionState("error", "Clipboard blocked");
         } finally {
@@ -1416,6 +1492,7 @@ function attachToSession(sessionId: string): void {
     setFixedCols(targetSession.fixedCols);
   }
 
+  setFollowCursor(true);
   activeSessionId = sessionId;
   setSessionWidthPopoverOpen(false);
   setSelectionMode(false);
@@ -1431,6 +1508,7 @@ function attachToSession(sessionId: string): void {
 
 function maybeAttachDefaultSession(): void {
   if (sessions.length === 0) {
+    setFollowCursor(true);
     activeSessionId = null;
     workspaceActiveSessionId = null;
     setSelectionMode(false);
@@ -1451,6 +1529,7 @@ function maybeAttachDefaultSession(): void {
       setFixedCols(active.fixedCols);
       syncViewportLayout();
     }
+    ensureCursorVisible();
     return;
   }
 
@@ -1480,6 +1559,7 @@ function handleServerEvent(event: ServerEvent): void {
       if (event.snapshot.session.id !== activeSessionId) {
         return;
       }
+      setFollowCursor(true);
       setSelectionMode(false);
       terminal.reset();
       terminal.write(event.snapshot.history, () => {
@@ -1487,6 +1567,7 @@ function handleServerEvent(event: ServerEvent): void {
           clearTextureAtlas: true,
         });
         renderSessions();
+        ensureCursorVisible();
         terminal.focus();
       });
       return;
@@ -1639,8 +1720,10 @@ newSessionButton.addEventListener("click", () => {
 
 focusTerminalButton.addEventListener("click", () => {
   setSessionWidthPopoverOpen(false);
+  setFollowCursor(true);
   setSelectionMode(false);
   terminal.focus();
+  ensureCursorVisible();
 });
 
 toggleTopbarButton.addEventListener("click", () => {
@@ -1707,7 +1790,9 @@ copySelectionButton.addEventListener("click", async () => {
 });
 
 closeSelectionButton.addEventListener("click", () => {
+  setFollowCursor(true);
   setSelectionMode(false);
+  ensureCursorVisible();
 });
 
 terminal.onData((data) => {
@@ -1715,6 +1800,7 @@ terminal.onData((data) => {
     return;
   }
 
+  setFollowCursor(true);
   const transformed = applyModifiersToInput(data, modifierState);
   modifierState = transformed.nextState;
   lastModifierTap = null;
@@ -1725,10 +1811,12 @@ terminal.onData((data) => {
     sessionId: activeSessionId,
     data: transformed.data,
   });
+  ensureCursorVisible();
 });
 
 terminal.onWriteParsed(() => {
   scheduleTerminalPaintRefresh();
+  ensureCursorVisible();
 });
 
 const resizeObserver = new ResizeObserver(() => {
@@ -1739,7 +1827,10 @@ const resizeObserver = new ResizeObserver(() => {
   currentSize();
   if (selectionMode) {
     syncSelectionText();
+    return;
   }
+
+  ensureCursorVisible();
 });
 
 resizeObserver.observe(terminalContainer);
@@ -1776,6 +1867,13 @@ window.addEventListener("pointerdown", (event) => {
   }
 
   setSessionWidthPopoverOpen(false);
+});
+terminalContainer.addEventListener("scroll", () => {
+  if (suppressViewportFollowScrollEvent) {
+    return;
+  }
+
+  setFollowCursor(false);
 });
 sessionListScroller.addEventListener("scroll", () => {
   if (sessionWidthPopover.classList.contains("is-hidden")) {

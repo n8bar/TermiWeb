@@ -65,8 +65,9 @@ export function attachTerminalTouchScroll(options: {
   viewport: HTMLElement;
   terminal: Terminal;
   getCellHeight: () => number;
+  onUserScroll?: () => void;
 }): void {
-  const { surface, viewport, terminal, getCellHeight } = options;
+  const { surface, viewport, terminal, getCellHeight, onUserScroll } = options;
   let activeTouchId: number | null = null;
   let lastY = 0;
   let pixelRemainder = 0;
@@ -90,6 +91,9 @@ export function attachTerminalTouchScroll(options: {
             ? Math.max(viewport.clientHeight, 1)
             : 1;
       const pixelDelta = event.deltaY * deltaMultiplier;
+      if (pixelDelta !== 0) {
+        onUserScroll?.();
+      }
       const { nextOffset, remainingPixelDelta } = consumeViewportScrollDelta({
         currentOffset: viewport.scrollTop,
         maxOffset: getViewportMaxOffset(),
@@ -158,6 +162,9 @@ export function attachTerminalTouchScroll(options: {
       }
 
       const pixelDelta = lastY - touch.clientY;
+      if (pixelDelta !== 0) {
+        onUserScroll?.();
+      }
       const previousOffset = viewport.scrollTop;
       const { nextOffset, remainingPixelDelta } = consumeViewportScrollDelta({
         currentOffset: previousOffset,
