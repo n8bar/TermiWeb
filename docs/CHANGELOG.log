@@ -92,3 +92,4 @@
 2026-04-11 Restyled the top-bar collapse control to match the keyboard seam toggle more closely, and made a collapsed keyboard tray stop reserving terminal/side-panel height once hidden.
 2026-04-11 Removed the top-bar reveal strip from the workspace grid so hidden-header mode no longer steals terminal height, and reversed the top-bar chevron padding treatment so collapse/expand match their arrow direction.
 2026-04-11 Added side-by-side visible instances on very wide workstation windows as a tracked `0.2` candidate, with a focused backlog spec linked from the plan and README.
+2026-04-11 Relaxed the `0.2` side-by-side instances candidate language so it no longer implies a hard maximum of two visible instances, while still describing an initial conservative split-view shape.
