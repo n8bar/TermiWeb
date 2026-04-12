@@ -22,18 +22,14 @@ export function computeRequiredTerminalWidth(options: {
 export function fitFontSizeToCols(options: {
   currentFontSize: number;
   fittedCols: number;
-  fittedRows?: number | null | undefined;
   targetCols: number;
-  targetRows?: number | null | undefined;
   minFontSize?: number;
   maxFontSize?: number;
 }): number {
   const {
     currentFontSize,
     fittedCols,
-    fittedRows,
     targetCols,
-    targetRows,
     minFontSize = 6,
     maxFontSize = 32,
   } = options;
@@ -49,17 +45,7 @@ export function fitFontSizeToCols(options: {
     return currentFontSize;
   }
 
-  const widthScale = fittedCols / targetCols;
-  const heightScale =
-    typeof fittedRows === "number" &&
-    Number.isFinite(fittedRows) &&
-    fittedRows > 0 &&
-    typeof targetRows === "number" &&
-    Number.isFinite(targetRows) &&
-    targetRows > 0
-      ? fittedRows / targetRows
-      : widthScale;
-  const scaledFontSize = currentFontSize * Math.min(widthScale, heightScale);
+  const scaledFontSize = currentFontSize * (fittedCols / targetCols);
   const roundedFontSize = Math.round(scaledFontSize * 10) / 10;
 
   return Math.min(maxFontSize, Math.max(minFontSize, roundedFontSize));

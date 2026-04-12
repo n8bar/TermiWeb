@@ -34,18 +34,6 @@ describe("terminal sizing helpers", () => {
     ).toBe(22.5);
   });
 
-  it("also respects row fit when a shared terminal shape is taller than the local viewport", () => {
-    expect(
-      fitFontSizeToCols({
-        currentFontSize: 15,
-        fittedCols: 120,
-        fittedRows: 24,
-        targetCols: 80,
-        targetRows: 30,
-      }),
-    ).toBe(12);
-  });
-
   it("clamps the fitted font size to the configured bounds", () => {
     expect(
       fitFontSizeToCols({

@@ -44,7 +44,7 @@ TermiWeb provides a workstation-first browser terminal workflow that can also be
 - Terminal rows are also shared per instance and should be derived from the shared column count using a stable `80x30` baseline shape rather than from live device viewport churn.
 - The UI exposes a shared width control on the active instance so users can change columns deliberately without turning width into a per-device preference.
 - The configured column count must always fit inside the visible `xterm` viewport width on each device.
-- Font sizing should make the shared terminal geometry fit inside the visible viewport when possible.
+- Font sizing should make the shared column count fit inside the visible viewport width.
 - If width fit reaches the minimum font-size floor and configured columns still cannot fit, the terminal should expose a local horizontal scrollbar rather than clipping columns.
 - The visible terminal surface should support touch scrolling through xterm scrollback without relying on a dead outer scrollbar.
 - The rendered terminal cursor should present as a single solid insertion cursor rather than showing an extra blinking cursor artifact.

@@ -703,7 +703,6 @@ function applyTerminalFrameWidth(widthPx: number | null): void {
 function fitTerminalWidth(): boolean {
   const proposed = fitAddon.proposeDimensions();
   const fittedCols = proposed?.cols;
-  const targetRows = resolveSharedTerminalRows(fixedCols);
   if (
     typeof fittedCols !== "number" ||
     !Number.isFinite(fittedCols) ||
@@ -715,9 +714,7 @@ function fitTerminalWidth(): boolean {
   const nextFontSize = fitFontSizeToCols({
     currentFontSize: currentTerminalFontSize(),
     fittedCols,
-    fittedRows: proposed?.rows,
     targetCols: fixedCols,
-    targetRows,
     minFontSize: minTerminalFontSize,
   });
 
