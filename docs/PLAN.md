@@ -38,10 +38,9 @@ Finish `M5` through continued dogfooding of interactive CLI rendering integrity 
   - Target End: 2026-04-25
   - Blocked By: M5 and M6
 - [ ] M8: Marketing for an open-source, free-to-use product
-  - Summary: This milestone covers the launch materials that sit around the shipped product: messaging, announcement copy, screenshots, demos, and any supporting site/repo polish. It is intentionally after release so the material can describe real code and real workflows instead of promises.
+  - Summary: This milestone is the full marketing phase around the product, not just a bundle of launch materials. It includes messaging, positioning, outreach, demos, screenshots, announcements, and the practical work of getting attention on a shipped open-source product.
   - Start: 2026-04-26
   - Target End: 2026-05-23
-  - Blocked By: M7
 
 ## Future Candidates
 
