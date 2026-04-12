@@ -111,3 +111,4 @@
 2026-04-12 Flattened `AGENTS.md` section numbering from `1.x` style to plain section numbers so the headings are easier to scan and reference.
 2026-04-12 Expanded M6 from installer-only scope to installer plus first-run experience, added the first M6 worklist under `docs/worklists/`, and linked that execution doc from the README.
 2026-04-12 Removed the fake top-level outline number from the M6 worklist H1 and added an `AGENTS.md` rule against numbering the single top-level heading of a document.
+2026-04-12 Renumbered the M6 worklist sections to start at `1` under the plain H1, and clarified in `AGENTS.md` that numbered section hierarchies begin at `1` on the next heading level.
