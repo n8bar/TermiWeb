@@ -46,6 +46,7 @@ Finish `M5` through continued dogfooding of interactive CLI rendering integrity 
 
 - `0.2` candidate: isolated workstation-hosted `Browser` instances with one tab and basic browser chrome
 - `0.2` candidate: side-by-side instance view for very wide workstation windows
+- `0.2` candidate: top-bar QR connect affordance when the current access address is not loopback
 
 ## Release Gate
 

@@ -12,6 +12,7 @@ TermiWeb provides a workstation-first browser terminal workflow that can also be
 - Advanced remote or internet-enabled deployments should be documented as operator-managed patterns around the app rather than treated as misuse.
 - Future instance types may extend beyond terminals; the current leading candidate after `0.1` is an isolated workstation-hosted browser session.
 - Future workstation layouts may also extend beyond a single visible instance; the leading post-`0.1` candidate there is an optional side-by-side instance view for very wide windows.
+- Future access affordances may also improve device handoff; the leading post-`0.1` candidate there is a top-bar QR connect affordance that appears only when the current access address is not loopback.
 - Documentation should clearly separate current product behavior from deployment patterns users may layer around the app themselves.
 
 ## Core Behavior
