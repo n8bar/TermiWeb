@@ -314,11 +314,18 @@ button {
 }
 
 .topbar-toggle-button {
-  min-width: 1.85rem;
-  min-height: 1.85rem;
-  padding: 0;
-  line-height: 1;
+  min-width: 3.2rem;
+  min-height: 2.25rem;
+  padding-inline: 0.7rem;
+  white-space: pre-line;
+  line-height: 0.4;
+  padding-bottom: 12px;
   font-size: calc(0.84rem * var(--ui-font-scale));
+}
+
+.topbar-toggle-button.is-reveal {
+  padding-top: 12px;
+  padding-bottom: 0;
 }
 
 .topbar-session {
@@ -782,6 +789,10 @@ button {
   min-height: 0;
   height: 100%;
   position: relative;
+}
+
+.terminal-shell.is-controls-collapsed {
+  grid-template-rows: minmax(0, 1fr) 0 0;
 }
 
 .terminal-stage {

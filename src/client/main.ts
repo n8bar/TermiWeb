@@ -413,7 +413,6 @@ function setTopbarCollapsed(
   workspacePanel.classList.toggle("is-topbar-collapsed", collapsed);
   topbar.classList.toggle("is-hidden", collapsed);
   topbarRevealStrip.classList.toggle("is-hidden", !collapsed);
-  toggleTopbarButton.textContent = collapsed ? "⌄" : "⌃";
   toggleTopbarButton.setAttribute("aria-expanded", String(!collapsed));
   toggleTopbarButton.setAttribute(
     "aria-label",

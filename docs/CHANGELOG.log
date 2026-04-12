@@ -89,3 +89,4 @@
 2026-04-11 Made the visible terminal frame contract to the rendered xterm width once font sizing hits its maximum on very wide windows, so the right edge stays visually obvious instead of leaving ambiguous dead space inside the terminal container.
 2026-04-11 Removed the same-size PTY redraw assist from snapshot recovery so device-local cleanup no longer mutates the shared session when a phone rotates or another browser needs a local terminal repaint.
 2026-04-11 Added a per-browser top-bar collapse mode that hides the full header and leaves only a tiny reveal button so constrained mobile landscape views can reclaim terminal rows.
+2026-04-11 Restyled the top-bar collapse control to match the keyboard seam toggle more closely, and made a collapsed keyboard tray stop reserving terminal/side-panel height once hidden.
