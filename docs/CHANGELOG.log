@@ -105,3 +105,4 @@
 2026-04-12 Added short descriptive summaries for every roadmap milestone so the plan explains what each phase is supposed to accomplish instead of showing only titles and dates.
 2026-04-12 Rewrote the milestone summaries to describe the code and system work in each phase instead of reading like status blurbs or project-management commentary.
 2026-04-12 Corrected M8 in the roadmap so it represents the full marketing phase, not just launch materials, and removed the false dependency that treated marketing as blocked by M7.
+2026-04-12 Reserved `.cybercreek/` as an untracked local-only workspace for marketing scratch files and other dev-environment-specific material, and documented that convention in `AGENTS.md`.

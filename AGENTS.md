@@ -69,4 +69,5 @@ npm run build
 - The default local URL is `http://127.0.0.1:22443`.
 - Runtime configuration lives in `.env`; start from `.env.example`.
 - Local state belongs under `.termiweb/` and must stay untracked.
+- Local marketing scratch files and other dev-environment-specific material belong under `.cybercreek/` and must stay untracked.
 - This project currently assumes a Windows host. If cross-platform support is introduced, update the specs and AGENTS guidance together.
