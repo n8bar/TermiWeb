@@ -90,3 +90,4 @@
 2026-04-11 Removed the same-size PTY redraw assist from snapshot recovery so device-local cleanup no longer mutates the shared session when a phone rotates or another browser needs a local terminal repaint.
 2026-04-11 Added a per-browser top-bar collapse mode that hides the full header and leaves only a tiny reveal button so constrained mobile landscape views can reclaim terminal rows.
 2026-04-11 Restyled the top-bar collapse control to match the keyboard seam toggle more closely, and made a collapsed keyboard tray stop reserving terminal/side-panel height once hidden.
+2026-04-11 Removed the top-bar reveal strip from the workspace grid so hidden-header mode no longer steals terminal height, and reversed the top-bar chevron padding treatment so collapse/expand match their arrow direction.
