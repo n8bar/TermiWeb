@@ -128,4 +128,5 @@
 2026-04-12 Reworded the M6 worklist to use concrete release-package terms such as `layout`, `release package`, and `files` instead of vague placeholders like `shape`, `artifact`, and `payloads`.
 2026-04-12 Added an AGENTS wording rule against using `shape` as vague shorthand for packaging, distribution, or document structure when a more concrete term would be clearer.
 2026-04-12 Broadened the AGENTS wording rule so it discourages vague placeholder words like `shape` in general, not just narrow packaging or doc-structure cases.
+2026-04-12 Added a `0.2` backlog candidate for a password-change UI for the configured app password.
 2026-04-12 Folded the resolved M6 `5.x` decisions back into the work breakdown, removed the now-obsolete open-questions section, and updated the worklist status text so it reflects decisions already made rather than pretending they are still unsettled.

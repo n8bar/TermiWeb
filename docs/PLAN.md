@@ -48,6 +48,7 @@ Finish `M5` through continued dogfooding of interactive CLI rendering integrity 
 - `0.2` candidate: side-by-side instance view for very wide workstation windows
 - `0.2` candidate: top-bar QR connect affordance when the current access address is not loopback
 - `0.2` candidate: Windows-service hosting mode for boot-start installs
+- `0.2` candidate: password-change UI for the configured app password
 
 ## Release Gate
 
