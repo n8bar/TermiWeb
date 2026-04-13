@@ -17,14 +17,14 @@ The packaged experience should also support optional boot-time startup and a cle
 The result should feel intentional, not like a source checkout with a few extra scripts.
 
 ## 3. Work Breakdown
-1. [ ] Define the `0.1` release packaging basic structure.
-  Lock the packaged Windows folder or zip shape, including the built app, bundled runtime, required dependencies, and simple launchers. The source repo remains the real hacker and developer surface.
+1. [ ] Define the `0.1` release package layout.
+  Lock the packaged Windows folder or zip layout, including the built app, bundled runtime, required dependencies, and simple launchers. The source repo remains the real hacker and developer surface.
 
 2. [ ] Create the third-party notices inventory before packaging.
-  Add and maintain a third-party notices file for the shipped production dependencies so the release package has a clear licensing and attribution surface before we finalize the installer artifact.
+  Add and maintain a third-party notices file for the shipped production dependencies so the release package has a clear licensing and attribution surface before we finalize the packaged release.
 
 3. [ ] Add the shipped disclaimer notice before packaging.
-  Include a plain-language disclaimer file in the release materials so the packaged artifact does not rely on the repository license alone to communicate the no-warranty and operator-responsibility posture.
+  Include a plain-language disclaimer file in the release materials so the packaged release does not rely on the repository license alone to communicate the no-warranty and operator-responsibility posture.
 
 4. [ ] Define and implement the launch surface.
   Make the user-facing start, restart, and stop path obvious after install or unpack. The hidden/background launch path should be part of the supported experience, not just an advanced script.
@@ -56,13 +56,13 @@ The result should feel intentional, not like a source checkout with a few extra 
 13. [ ] Add the repo-or-fork coexistence note once the behavior is real.
   Document changing `TERMIWEB_PORT` for users who want to maintain a repo or fork alongside an installed pre-release, but only once the coexistence story is actually complete enough to be truthful.
 
-14. [ ] Assemble the packaged release artifact and its verification materials.
-  Build the actual packaged folder or zip and cover install or unpack steps, launch steps, optional boot auto-start, uninstall, stop/restart steps, the disclaimer and third-party notices payloads, and the first-run two-device walkthrough. 
+14. [ ] Assemble the packaged release and its verification materials.
+  Build the actual packaged folder or zip and cover install or unpack steps, launch steps, optional boot auto-start, uninstall, stop/restart steps, the disclaimer and third-party notices files, and the first-run two-device walkthrough. 
 
 ## 4. Verification Checklist
-1. [ ] A fresh Windows machine or Windows user profile can start the shipped artifact without a development-oriented setup.
-2. [ ] The shipped artifact includes a third-party notices file that matches the packaged production dependency set closely enough to be truthful and reviewable.
-3. [ ] The shipped artifact includes a plain-language disclaimer file alongside the license and third-party notices.
+1. [ ] A fresh Windows machine or Windows user profile can start the shipped release package without a development-oriented setup.
+2. [ ] The shipped release package includes a third-party notices file that matches the packaged production dependency set closely enough to be truthful and reviewable.
+3. [ ] The shipped release package includes a plain-language disclaimer file alongside the license and third-party notices.
 4. [ ] Optional boot auto-start works through a startup task for the current installing user without requiring an interactive logon.
 5. [ ] The uninstall path removes the packaged runtime artifacts and any startup task we created without leaving the machine in a confusing state.
 6. [ ] The user can identify the local URL, LAN URL, and password expectations without guessing.
