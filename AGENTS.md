@@ -27,6 +27,7 @@
 17. Do not add artificial numbering to a document's lone title heading.
 18. If a document uses numbered headings, the first numbered heading at any tier starts at `1`.
 19. Heading level choice should follow the document structure; numbering rules do not imply a required heading depth.
+20. Do not use `shape` as vague shorthand for packaging, distribution, or document structure. Prefer more concrete terms such as `layout`, `structure`, `contents`, or another term that says what is actually meant.
 
 ## 2. Worklists
 1. Use `docs/worklists/` for worklists: execution docs and todo lists.
