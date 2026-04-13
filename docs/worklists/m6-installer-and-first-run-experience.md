@@ -17,8 +17,8 @@ The packaged experience should also support optional boot-time startup and a cle
 The result should feel intentional, not like a source checkout with a few extra scripts.
 
 ## 3. Work Breakdown
-1. [ ] Build the `0.1` release packaging basic structure.
-  Ship a packaged Windows folder or zip with the built app, bundled runtime, required dependencies, and simple launchers. The source repo remains the real hacker and developer surface.
+1. [ ] Define the `0.1` release packaging basic structure.
+  Lock the packaged Windows folder or zip shape, including the built app, bundled runtime, required dependencies, and simple launchers. The source repo remains the real hacker and developer surface.
 
 2. [ ] Create the third-party notices inventory before packaging.
   Add and maintain a third-party notices file for the shipped production dependencies so the release package has a clear licensing and attribution surface before we finalize the installer artifact.
@@ -56,8 +56,8 @@ The result should feel intentional, not like a source checkout with a few extra 
 13. [ ] Add the repo-or-fork coexistence note once the behavior is real.
   Document changing `TERMIWEB_PORT` for users who want to maintain a repo or fork alongside an installed pre-release, but only once the coexistence story is actually complete enough to be truthful.
 
-14. [ ] Package the verification artifacts.
-  Cover install or unpack steps, launch steps, optional boot auto-start, uninstall, stop/restart steps, the disclaimer and third-party notices payloads, and the first-run two-device walkthrough. 
+14. [ ] Assemble the packaged release artifact and its verification materials.
+  Build the actual packaged folder or zip and cover install or unpack steps, launch steps, optional boot auto-start, uninstall, stop/restart steps, the disclaimer and third-party notices payloads, and the first-run two-device walkthrough. 
 
 ## 4. Verification Checklist
 1. [ ] A fresh Windows machine or Windows user profile can start the shipped artifact without a development-oriented setup.
