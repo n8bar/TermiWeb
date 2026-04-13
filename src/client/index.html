@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta
       name="viewport"
-      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+      content="width=1024, minimum-scale=0.1, maximum-scale=10.0, user-scalable=yes, viewport-fit=cover"
     />
     <title>TermiWeb</title>
     <meta
@@ -18,12 +18,15 @@
         <div class="brand-block">
           <span class="brand-mark">TW</span>
           <div>
-            <h1>TermiWeb</h1>
-            <p id="login-hostname" class="host-name">Loading host…</p>
-            <p id="login-address" class="host-address">Connecting…</p>
-            <p class="lede">
-              One terminal session, shared between your workstation and any device.
-            </p>
+            <div class="brand-heading">
+              <h1>TermiWeb</h1>
+              <span id="login-version" class="version-label">v0.1</span>
+            </div>
+            <div class="host-pill">
+              <p id="login-hostname" class="host-name">Loading host…</p>
+              <p id="login-address" class="host-address">Connecting…</p>
+            </div>
+            <p class="lede">One browser terminal for your workstation and other devices.</p>
           </div>
         </div>
 
@@ -45,39 +48,78 @@
       </section>
 
       <section id="workspace-panel" class="workspace-shell is-hidden">
-        <header class="topbar card">
+        <div id="topbar-reveal-strip" class="topbar-reveal-strip is-hidden">
+          <button
+            id="reveal-topbar-button"
+            class="ghost-button compact topbar-toggle-button is-reveal"
+            type="button"
+            aria-expanded="false"
+            aria-controls="topbar"
+            aria-label="Expand top bar"
+            title="Expand top bar"
+          >
+            ⌄
+            ⌄
+          </button>
+        </div>
+
+        <header id="topbar" class="topbar card">
           <div class="brand-block compact">
             <span class="brand-mark small">TW</span>
             <div>
-              <h2>TermiWeb</h2>
-              <p id="app-hostname" class="host-name compact">Loading host…</p>
-              <p id="app-address" class="host-address">Connecting…</p>
+              <div class="brand-heading compact">
+                <h2>TermiWeb</h2>
+                <span id="app-version" class="version-label compact">v0.1</span>
+              </div>
+              <div class="host-pill compact">
+                <p id="app-hostname" class="host-name compact">Loading host…</p>
+                <p id="app-address" class="host-address">Connecting…</p>
+              </div>
             </div>
           </div>
 
+          <div class="topbar-session">
+            <p class="eyebrow">Active instance</p>
+            <h3 id="active-session-title">Connecting…</h3>
+            <p id="shell-label" class="topbar-shell">Shell: detecting…</p>
+          </div>
+
           <div class="topbar-actions">
-            <span id="connection-status" class="status-pill is-connecting">Connecting</span>
-            <button id="logout-button" class="ghost-button" type="button">Logout</button>
+            <div class="topbar-status-group">
+              <span id="active-session-status" class="status-pill">Idle</span>
+              <span id="connection-status" class="status-pill is-connecting">Connecting</span>
+            </div>
+            <div class="topbar-button-group">
+              <button
+                id="toggle-topbar-button"
+                class="ghost-button compact topbar-toggle-button"
+                type="button"
+                aria-expanded="true"
+                aria-controls="topbar"
+                aria-label="Collapse top bar"
+                title="Collapse top bar"
+              >
+                ⌃
+                ⌃
+              </button>
+              <button
+                id="logout-button"
+                class="ghost-button topbar-action-button topbar-action-button-danger"
+                type="button"
+              >
+                🚪 Logout
+              </button>
+            </div>
           </div>
         </header>
 
         <div id="workspace-layout" class="workspace-layout">
           <aside class="card side-panel">
             <div class="panel-header">
-              <div>
-                <p class="eyebrow">Instances</p>
-                <h3>Shared shells</h3>
+              <div class="panel-header-copy">
+                <h3>Instances</h3>
               </div>
               <div class="panel-header-actions">
-                <button
-                  id="refresh-button"
-                  class="ghost-button compact icon-button"
-                  type="button"
-                  aria-label="Refresh instances"
-                  title="Refresh instances"
-                >
-                  ↻
-                </button>
                 <button
                   id="toggle-sidebar-button"
                   class="ghost-button compact icon-button"
@@ -89,66 +131,141 @@
                 >
                   «
                 </button>
-                <button id="new-session-button" class="primary-button compact" type="button">
-                  New instance
+                <button
+                  id="refresh-button"
+                  class="ghost-button compact icon-button"
+                  type="button"
+                  aria-label="Refresh instances"
+                  title="Refresh instances"
+                >
+                  ↻
+                </button>
+                <button
+                  id="new-session-button"
+                  class="primary-button compact"
+                  type="button"
+                  aria-label="Create instance"
+                  title="Create instance"
+                >
+                  <span class="button-icon" aria-hidden="true">+</span>
+                  <span class="button-label">New instance</span>
                 </button>
               </div>
             </div>
 
-            <div id="session-list" class="session-list" aria-live="polite"></div>
+            <div class="session-list-scroller">
+              <div id="session-list" class="session-list" aria-live="polite"></div>
+              <div class="side-panel-meta">
+                <p>
+                  Your workstation and other devices can attach to the same browser shell.
+                </p>
+              </div>
+            </div>
 
-            <div class="side-panel-meta">
-              <p id="shell-label">Shell: detecting…</p>
-              <p>
-                Your workstation and any device share this same browser shell. Instances persist;
-                live shell processes do not.
-              </p>
+            <div class="side-panel-footer">
+              <button id="focus-terminal-button" class="ghost-button compact side-panel-action-button" type="button">
+                <span class="button-icon" aria-hidden="true">⌨️</span>
+                <span class="button-label">Type</span>
+              </button>
+            </div>
+
+            <div
+              id="session-width-popover"
+              class="session-width-popover is-hidden"
+              role="dialog"
+              aria-label="Instance column width"
+            >
+              <div class="session-width-presets">
+                <button class="ghost-button compact session-width-preset" type="button" data-cols="80">
+                  80
+                </button>
+                <button class="ghost-button compact session-width-preset" type="button" data-cols="100">
+                  100
+                </button>
+                <button class="ghost-button compact session-width-preset" type="button" data-cols="120">
+                  120
+                </button>
+                <button class="ghost-button compact session-width-preset" type="button" data-cols="160">
+                  160
+                </button>
+              </div>
+              <form id="session-width-form" class="session-width-form">
+                <label class="session-width-field">
+                  <span>Custom</span>
+                  <input
+                    id="session-width-input"
+                    type="number"
+                    min="20"
+                    max="240"
+                    step="1"
+                    inputmode="numeric"
+                  />
+                </label>
+                <button id="session-width-apply" class="primary-button compact" type="submit">
+                  Apply
+                </button>
+              </form>
+              <p class="session-width-note">Applies to this instance for all attached devices.</p>
             </div>
           </aside>
 
-          <main class="card terminal-shell">
-            <div class="terminal-header">
-              <div>
-                <p class="eyebrow">Active instance</p>
-                <h3 id="active-session-title">Connecting…</h3>
-              </div>
-              <div class="terminal-header-actions">
-                <span id="active-session-status" class="status-pill">Idle</span>
-                <button id="focus-terminal-button" class="ghost-button" type="button">
-                  Focus keyboard
-                </button>
-              </div>
-            </div>
-
-            <div id="terminal-container" class="terminal-container" aria-label="Terminal"></div>
-            <section
-              id="selection-panel"
-              class="selection-panel is-hidden"
-              aria-label="Select terminal text"
-            >
-              <div class="selection-panel-header">
-                <div>
-                  <p class="eyebrow">Select text</p>
-                  <h3>Selection mode</h3>
+          <section class="workspace-main">
+            <main id="terminal-shell" class="card terminal-shell">
+              <section id="workspace-stage-viewport" class="workspace-stage-viewport">
+                <div id="workspace-stage" class="workspace-stage">
+                  <div class="terminal-stage">
+                    <div id="terminal-container" class="terminal-container" aria-label="Terminal"></div>
+                    <section
+                      id="selection-panel"
+                      class="selection-panel is-hidden"
+                      aria-label="Select terminal text"
+                    >
+                      <div class="selection-panel-header">
+                        <div>
+                          <p class="eyebrow">Select text</p>
+                          <h3>Selection mode</h3>
+                        </div>
+                        <div class="selection-panel-actions">
+                          <button id="copy-selection-button" class="ghost-button" type="button">
+                            Copy
+                          </button>
+                          <button id="close-selection-button" class="ghost-button" type="button">
+                            Done
+                          </button>
+                        </div>
+                      </div>
+                      <textarea
+                        id="selection-text"
+                        class="selection-text"
+                        readonly
+                        spellcheck="false"
+                        wrap="off"
+                      ></textarea>
+                    </section>
+                  </div>
                 </div>
-                <div class="selection-panel-actions">
-                  <button id="copy-selection-button" class="ghost-button" type="button">
-                    Copy
-                  </button>
-                  <button id="close-selection-button" class="ghost-button" type="button">
-                    Done
-                  </button>
-                </div>
-              </div>
-              <textarea
-                id="selection-text"
-                class="selection-text"
-                readonly
-                spellcheck="false"
-              ></textarea>
-            </section>
-            <div id="mobile-controls" class="mobile-controls" aria-label="Terminal controls"></div>
-          </main>
+              </section>
+              <button
+                id="toggle-controls-button"
+                class="ghost-button compact tray-toggle-button"
+                type="button"
+                aria-expanded="true"
+                aria-controls="control-tray"
+                aria-label="Collapse keyboard controls"
+                title="Collapse keyboard controls"
+              >
+                ⌄
+                ⌄
+              </button>
+              <section id="control-tray" class="control-tray" aria-label="Terminal controls">
+                <div
+                  id="mobile-controls"
+                  class="mobile-controls"
+                  aria-label="Keyboard controls"
+                ></div>
+              </section>
+            </main>
+          </section>
         </div>
       </section>
     </div>

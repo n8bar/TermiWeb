@@ -4,7 +4,7 @@
   "private": true,
   "license": "MIT",
   "type": "module",
-  "description": "Browser-first shared Windows terminal for desktop and phone.",
+  "description": "Browser-first shared Windows terminal for workstations and other devices.",
   "engines": {
     "node": ">=22"
   },
@@ -12,6 +12,9 @@
     "dev": "tsx watch src/server/dev-server.ts",
     "build": "vite build && tsc -p tsconfig.server.json",
     "start": "node dist/server/server/index.js",
+    "start:hidden": "powershell -ExecutionPolicy Bypass -File scripts/start-hidden.ps1",
+    "restart:hidden": "powershell -ExecutionPolicy Bypass -File scripts/start-hidden.ps1 -Restart",
+    "stop:hidden": "powershell -ExecutionPolicy Bypass -File scripts/stop-hidden.ps1",
     "typecheck": "tsc -p tsconfig.client.json --noEmit && tsc -p tsconfig.server.json --noEmit && tsc -p tsconfig.tests.json --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",

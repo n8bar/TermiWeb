@@ -8,6 +8,8 @@ export const terminalStatusSchema = z.enum([
   "error",
 ]);
 
+const fixedColsSchema = z.number().int().min(20).max(240);
+
 export const sessionSummarySchema = z.object({
   id: z.string().uuid(),
   title: z.string().min(1).max(64),
@@ -15,6 +17,7 @@ export const sessionSummarySchema = z.object({
   clientCount: z.number().int().min(0),
   shell: z.string().nullable(),
   lastExitCode: z.number().int().nullable(),
+  fixedCols: fixedColsSchema,
 });
 
 export const sessionSnapshotSchema = z.object({
@@ -24,7 +27,7 @@ export const sessionSnapshotSchema = z.object({
 
 const sizeFields = {
   cols: z.number().int().min(10).max(500),
-  rows: z.number().int().min(5).max(400),
+  rows: z.number().int().min(1).max(400),
 };
 
 export const clientEventSchema = z.discriminatedUnion("type", [
@@ -33,6 +36,10 @@ export const clientEventSchema = z.discriminatedUnion("type", [
   }),
   z.object({
     type: z.literal("session/list.request"),
+  }),
+  z.object({
+    type: z.literal("session/snapshot.request"),
+    sessionId: z.string().uuid(),
   }),
   z.object({
     type: z.literal("session/create"),
@@ -56,6 +63,12 @@ export const clientEventSchema = z.discriminatedUnion("type", [
     type: z.literal("terminal/resize"),
     sessionId: z.string().uuid(),
     ...sizeFields,
+  }),
+  z.object({
+    type: z.literal("session/cols"),
+    sessionId: z.string().uuid(),
+    cols: fixedColsSchema,
+    rows: sizeFields.rows,
   }),
 ]);
 

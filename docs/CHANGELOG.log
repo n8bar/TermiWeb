@@ -7,3 +7,125 @@
 2026-04-06 Refined the browser UI with clearer host identity, instance terminology, a collapsible instance rail, and a keyboard-style arrow cluster for mobile controls.
 2026-04-06 Added shared-active-instance metadata, a select mode for copying terminal text, home-directory shell starts, and icon-based refresh/collapse controls.
 2026-04-06 Made LAN binding the default path, added a fixed 120-column terminal width, swapped the rail icons, and exposed a Del key for mobile control.
+2026-04-06 Stopped cross-device instance auto-following, made sidebar collapse local to each browser, switched select mode to a rendered viewport snapshot, narrowed the collapsed rail and control cluster, and changed the shared terminal width default to 40 columns.
+2026-04-06 Removed the separate mobile layout in favor of one shared cross-device layout, doubled the main control density per row, separated collapsed instance close buttons from card hit targets, and changed the shared terminal width default to 80 columns.
+2026-04-06 Removed page-level forced workspace width so phones fit the UI to the viewport again, while keeping zoom enabled and leaving overflow localized to the terminal surface.
+2026-04-06 Switched the default viewport metadata to a desktop-style layout width so phones behave more like "Desktop Site" mode without requiring a per-device browser toggle.
+2026-04-06 Removed the forced `initial-scale=1.0` from the desktop-style mobile viewport so browsers can choose a more zoomed-out initial fit on their own.
+2026-04-06 Added `Home` and `End` to the compact mobile key cluster and placed them above the left and right arrow keys.
+2026-04-06 Reworked `Ctrl` and `Alt` so a single tap arms the next key, a double tap locks the modifier, and the buttons visibly distinguish armed and locked states.
+2026-04-06 Merged the terminal header into the main header, moved the terminal workspace into a top-aligned 4:3-aware stage, kept the sidebar outside the scaled stage, and defaulted the sidebar to collapsed on narrow viewports when no local preference exists.
+2026-04-06 Moved the keyboard control tray out of the scaled workspace stage so the terminal buttons stay finger-sized on phones.
+2026-04-06 Changed terminal sizing so 80 columns fit the available width while rows stay elastic, and aligned the cursor-key cluster beside the main control rows.
+2026-04-06 Expanded the control tray into three taller main-button rows and matched the non-arrow button height to the cursor-key buttons for better touch targets.
+2026-04-06 Changed the 4:3 stage behavior to keep full width and trim height instead of scaling the entire workspace down on narrow viewports.
+2026-04-06 Tied the workspace shell to the live visual viewport height so the control tray stays above the on-screen keyboard on phones.
+2026-04-06 Moved the control tray inside the outer terminal shell and reordered the main keys to Esc/Bksp/Del, Tab/Select/Copy, and Ctrl/Alt/Paste with Enter under the cursor cluster.
+2026-04-06 Reused the lowest available auto-generated instance number, normalized legacy Terminal-style instance names forward to Instance naming, and enlarged the instance rail targets.
+2026-04-06 Stacked the collapsed rail actions vertically so the collapse toggle sits above refresh instead of beside it.
+2026-04-06 Added a findings log for dogfood issues and updated the repo workflow/docs to batch polish work from recorded findings.
+2026-04-06 Fixed the first findings batch by making on-screen navigation keys application-cursor aware, stabilizing touch control focus and viewport refits, switching to a single solid terminal cursor, and auto-seeding Instance 1 when a login reaches an empty workspace.
+2026-04-06 Tightened the first findings batch by giving on-screen Home and End a fallback sequence path and by reapplying the fitted desktop-style mobile viewport scale after orientation changes.
+2026-04-06 Replaced the restart-time websocket reconnect flap with server recovery polling so live pages wait for the server and refresh themselves once it is back.
+2026-04-06 Moved the control tray off synthetic mobile click handling onto direct touch/pointer activation, and increased the control tray key height while keeping the cursor cluster square.
+2026-04-07 Reframed the docs around TermiWeb as a workstation-first tool, added deployment-philosophy guidance for trusted-network defaults plus operator-managed remote deployments, and aligned the 0.1 specs with that direction without claiming unshipped features.
+2026-04-07 Corrected the deployment docs so careful WAN exposure is treated as a legitimate advanced TermiWeb use case, while keeping the trusted-network default and the current 0.1 security boundaries explicit.
+2026-04-07 Added a collapsible keyboard control tray with a per-browser preference so users can trade control-panel space for more visible terminal rows.
+2026-04-07 Added hidden Windows background start/restart scripts so TermiWeb can be launched without spawning an extra empty console window.
+2026-04-07 Moved the keyboard-tray collapse handle onto the seam between the terminal and tray so it no longer spends a dedicated header row.
+2026-04-07 Documented an isolated single-tab Browser Session as a possible `0.2` instance type, without committing to Brave-profile or sync integration.
+2026-04-08 Documented per-instance column width as the next 0.1 feature, with `80` as the new-instance default and a topbar shared-session control for changing width.
+2026-04-08 Added an explicit 0.1 release standard, linked it from the plan and README, and called out interactive CLI rendering drift as the main known gap against that release bar.
+2026-04-08 Added dated milestones through M7 in the project plan, including 0.1 release polish, a GitHub Pages download site, and a later marketing phase while keeping TermiWeb open source and free to use.
+2026-04-08 Inserted a dedicated installer-experience milestone into the roadmap and shifted the release-site and marketing milestones out by one week.
+2026-04-08 Added a visible `0.1` version badge to the login and main workspace UI, sourced from the package version so the running build is obvious before and after login.
+2026-04-08 Removed the instance-card exit-status caption so cards no longer show the awkward "Fresh shell when opened" copy.
+2026-04-08 Disabled autocorrect, autocapitalize, spellcheck, and Grammarly-style text assistance on the live terminal input so mobile keyboards stop trying to reinterpret commands.
+2026-04-08 Hid the dead outer terminal scrollbar, widened the real xterm scrollbar for touch devices, and added one-finger touch scrolling on the visible terminal surface for mobile scrollback.
+2026-04-08 Switched terminal touch scrolling to xterm's real scroll model, hid the native xterm viewport scrollbar, and enlarged the custom scrollbar thumb for better mobile dragging.
+2026-04-09 Shipped per-instance shared column width with a topbar `Cols N` control, preset/custom widths, shared-session confirmation, persisted width metadata, and layout rules that preserve the existing scaling model around the chosen column count.
+2026-04-09 Raised the top bar above the workspace stack so the shared-width popover opens in front of the sidebar and terminal instead of behind them.
+2026-04-09 Replaced the shared-width popover's `132`-column preset with `160`.
+2026-04-09 Removed the global 4:3 workspace-stage cap so the terminal can use the full available height and recover rows that were being discarded before xterm fit calculations.
+2026-04-09 Added a focused `0.1` spec for restart-stable shared-password sessions so recovery refreshes can preserve login state across normal server restarts.
+2026-04-09 Persisted shared-password browser sessions under `.termiweb/` so automatic refresh after a normal server restart no longer forces a fresh login when the cookie is still valid.
+2026-04-09 Replaced `shared-password` wording in the docs with `configured app password` or `authenticated session` so the language matches the actual access model without implying password-sharing as a practice.
+2026-04-09 Clarified the terminal width-fit spec so configured columns must always fit inside the visible `xterm` viewport width, with font sizing owning width fit and rows then flowing from height.
+2026-04-09 Simplified terminal width fitting to use xterm's own proposed column fit, made the xterm root fill the available width directly, and removed the older visible-width heuristics from the font-sizing path.
+2026-04-09 Lowered the width-fit floor to `6px` and added a terminal-local horizontal scrollbar fallback for cases where the configured columns still cannot fit without clipping.
+2026-04-09 Lowered the websocket/client protocol minimum row count from `5` to `1` so mobile viewport churn and tiny-height terminal states no longer throw resize validation errors.
+2026-04-09 Replaced the responsive expanded sidebar width with a fixed `16.5rem` rail so the instance panel stops resizing as aggressively with the viewport.
+2026-04-09 Split the instance status pill and the New instance action onto their own rows so the sidebar rail reads more cleanly and wraps less aggressively.
+2026-04-09 Joined each instance card and its close button into a single seam-aligned control in both expanded and collapsed sidebar layouts.
+2026-04-09 Restored the collapsed instance card's top-right corner radius and changed the close glyph to a darker red for clearer visual separation.
+2026-04-09 Enlarged the instance close glyph, returned it to white, and gave the close control a soft red border/background treatment instead of the default neutral or accent styling.
+2026-04-09 Removed the shared seam border between each instance card and its close control in both expanded and collapsed sidebar layouts.
+2026-04-09 Removed the redundant sidebar eyebrow so the interface now shows only one `Instances` label in the side panel header.
+2026-04-09 Switched the instance-card seam to true zero-width contacting borders instead of transparent-edge and overlap tricks in both expanded and collapsed sidebar layouts.
+2026-04-09 Restored the collapsed instance card's right outer border and the close control's left outer border so the stacked layout keeps its full outside frame while the shared seam stays borderless.
+2026-04-09 Changed collapsed auto-named instance labels to show only their number and removed the collapsed-mode small-font override so those labels keep the expanded title size.
+2026-04-09 Made collapsed-instance labels update immediately when the sidebar toggles and removed the ambiguous live-process note from the sidebar helper copy.
+2026-04-09 Wrapped hostname and address together inside a single host pill in both headers and converted the version from a pill badge to plain secondary text.
+2026-04-09 Increased host pill padding and host/address text sizes, and restyled the `Cols` control as a clearer dropdown-style action with stronger button affordance and a caret.
+2026-04-09 Removed the gap between the product name and version so the mixed-font wordmark reads as a single unit in both headers.
+2026-04-09 Increased the host pill to a materially wider shared padding in both headers so the hostname/address chip reads with clear horizontal breathing room.
+2026-04-09 Restored the host pill's original vertical padding while keeping the wider horizontal padding so the chip reads broader without getting taller.
+2026-04-09 Increased the host pill's horizontal padding substantially in both headers so the hostname/address chip has clearly visible side breathing room without growing taller.
+2026-04-09 Replaced the previous host-pill padding workaround with real horizontal margin in both headers and returned the internal spacing to a saner level.
+2026-04-09 Doubled the host pill's real horizontal margin in both headers for much stronger left/right separation from surrounding header content.
+2026-04-09 Set the version label to the `small` font size in both headers so it reads as quieter secondary metadata.
+2026-04-09 Increased general UI typography by 50 percent outside the terminal and cursor cluster, moved the host pill back under the branding without side margins, and made the sidebar forcibly auto-collapse below 800px.
+2026-04-09 Tightened the keyboard tray toggle metrics, put the sidebar title and collapse button on the same row with refresh on its own right-aligned row, restored status-pill text to its pre-scale size, converted session metadata to two stacked lines, and widened the session area relative to the branding block.
+2026-04-09 Replaced the bad `topbar-session` width hack with a saner topbar grid split and restyled the focus/logout controls as clearer action buttons with emoji labels instead of pill-like chips.
+2026-04-10 Separated topbar status pills from action buttons into distinct groups and made the collapsed tray toggle use top padding instead of bottom padding.
+2026-04-10 Coalesced mobile viewport churn into a settled shared terminal resize, removed visual-viewport scroll resize spam, and added in-session snapshot resync after disruptive viewport changes and width changes so the terminal can recover without a full page refresh.
+2026-04-10 Changed restart semantics to return to one fresh active `Instance 1` instead of restoring dead instances, and made live PTY row resizing grow-only so smaller devices and transient mobile viewport changes do not rewrite shared terminal history downward.
+2026-04-10 Simplified phone rotation further by removing runtime viewport-meta rewriting and orientation choreography, using local snapshot resync instead of session reattach for coarse-pointer viewport changes, and hiding the manual sidebar-collapse toggle when narrow width forces the sidebar collapsed.
+2026-04-10 Moved the terminal `Type` action into the sidebar so it remains available in expanded and collapsed rail states, and hardened terminal input attributes with stricter no-assistance hints for mobile keyboards.
+2026-04-10 Moved the shared columns control out of the topbar and onto the active instance, added a dedicated vertically scrollable instances rail, and tightened the instance-row join so the close control reads as part of the same widget.
+2026-04-10 Simplified live resize behavior so viewport changes stay local after shell startup, kept live PTY rows stable across later device resizes, moved the collapsed `Cols` control into the joined instance widget, and fixed stale auto-instance numbering to ignore outdated counters.
+2026-04-10 Refined the active-instance `Columns` control into a joined lower segment in expanded view, tightened collapsed-width behavior by removing idle scrollbar gutter reservation, and brought the `Cols` flyout closer to its launching control with a higher overlay priority.
+2026-04-11 Reparented the `Cols` flyout out of the sidebar stacking context so it can anchor beside its launching button reliably, moved the shared-shell helper note into the scrollable instance area, synced live auto-instance titles after renumbering, and added a first interactive-CLI recovery pass with forced xterm repaint plus same-size PTY redraw after snapshot rebuilds.
+2026-04-11 Made the visible terminal frame contract to the rendered xterm width once font sizing hits its maximum on very wide windows, so the right edge stays visually obvious instead of leaving ambiguous dead space inside the terminal container.
+2026-04-11 Removed the same-size PTY redraw assist from snapshot recovery so device-local cleanup no longer mutates the shared session when a phone rotates or another browser needs a local terminal repaint.
+2026-04-11 Added a per-browser top-bar collapse mode that hides the full header and leaves only a tiny reveal button so constrained mobile landscape views can reclaim terminal rows.
+2026-04-11 Restyled the top-bar collapse control to match the keyboard seam toggle more closely, and made a collapsed keyboard tray stop reserving terminal/side-panel height once hidden.
+2026-04-11 Removed the top-bar reveal strip from the workspace grid so hidden-header mode no longer steals terminal height, and reversed the top-bar chevron padding treatment so collapse/expand match their arrow direction.
+2026-04-11 Added side-by-side visible instances on very wide workstation windows as a tracked `0.2` candidate, with a focused backlog spec linked from the plan and README.
+2026-04-11 Relaxed the `0.2` side-by-side instances candidate language so it no longer implies a hard maximum of two visible instances, while still describing an initial conservative split-view shape.
+2026-04-11 Rewrote the `0.2` side-by-side instances candidate into a numbered referenceable structure, removed the overly specific first-cut wording, and clarified that visible panes should be fully interactive with one focused pane for keyboard input at a time.
+2026-04-11 Realigned the core docs around the actual `0.1` state by redefining `M5` around release polish and rendering integrity, strengthening `Finding 5` into an explicit interactive-CLI rendering blocker, trimming `PRODUCT_SPEC.md` back toward durable product rules, and adding `RELEASE_STANDARD.md` to the canonical doc set in `AGENTS.md`.
+2026-04-12 Replaced the viewport-driven live row model with a shared per-instance terminal shape derived from the column count using an `80x30` baseline, while keeping client font fitting width-driven instead of zooming out further just to fit shared rows.
+2026-04-12 Captured the two-layer terminal vertical scrolling model in the docs: a client-local viewport scroll may reveal more of the current shared screen on small devices, and only after that reaches its edge should scrolling continue into xterm scrollback history.
+2026-04-12 Added a client-side vertical viewport layer for the current shared terminal screen, with wheel and touch routing that lets the local viewport consume scroll first before overflow continues into xterm scrollback.
+2026-04-12 Added local follow-cursor behavior for the active instance so manual local scrolling disables live follow, local typing re-enables it, and the browser keeps the current cursor/input row visible without mutating shared terminal geometry.
+2026-04-12 Reworked the roadmap to use explicit milestone start and target-end dates, backdated M1-M4 from git history, extended M5 by one week for continued dogfooding, and intentionally started M6 in parallel with the final stretch of M5.
+2026-04-12 Tightened the roadmap evidence language so M1 uses the earliest filesystem creation date in the repo, while M2-M4 simply cite git history without extra caveats.
+2026-04-12 Removed milestone evidence citations from the roadmap so the plan reads as a plain schedule rather than annotated source justification.
+2026-04-12 Added short descriptive summaries for every roadmap milestone so the plan explains what each phase is supposed to accomplish instead of showing only titles and dates.
+2026-04-12 Rewrote the milestone summaries to describe the code and system work in each phase instead of reading like status blurbs or project-management commentary.
+2026-04-12 Corrected M8 in the roadmap so it represents the full marketing phase, not just launch materials, and removed the false dependency that treated marketing as blocked by M7.
+2026-04-12 Reserved `.cybercreek/` as an untracked local-only workspace for marketing scratch files and other dev-environment-specific material, and documented that convention in `AGENTS.md`.
+2026-04-12 Renumbered `AGENTS.md` headings and rules for easier reference, and formally defined `docs/worklists/` as the repo's detailed execution-doc layer separate from high-level milestone planning in `docs/PLAN.md`.
+2026-04-12 Removed the pointless top-level numeric prefix from `AGENTS.md` while keeping numbered subheadings and rules for referenceability.
+2026-04-12 Flattened `AGENTS.md` section numbering from `1.x` style to plain section numbers so the headings are easier to scan and reference.
+2026-04-12 Expanded M6 from installer-only scope to installer plus first-run experience, added the first M6 worklist under `docs/worklists/`, and linked that execution doc from the README.
+2026-04-12 Removed the fake top-level outline number from the M6 worklist H1 and added an `AGENTS.md` rule against numbering the single top-level heading of a document.
+2026-04-12 Renumbered the M6 worklist sections to start at `1` under the plain H1, and clarified in `AGENTS.md` that numbered section hierarchies begin at `1` on the next heading level.
+2026-04-12 Relaxed the heading-numbering rules in `AGENTS.md` so they govern numbering only, not heading-level choice, and no longer imply that a specific document must use H1/H2 structure a certain way.
+2026-04-12 Added an `AGENTS.md` rule against writing new agent rules in an overly restrictive or micromanaging way, so workflow guidance stays minimal and proportional to the repo's real needs.
+2026-04-12 Reformatted the M6 worklist so non-task sections read as prose, work items use checkboxes, verification items use checkboxes, and the work breakdown no longer hides explanatory text inside fake nested task lists.
+2026-04-12 Switched the M6 worklist action items and verification items to numbered checkboxes, and added an `AGENTS.md` rule that worklist tasks and verification points should use numbered checkboxes when they need both status and referenceability.
+2026-04-12 Refined the M6 worklist so resolved decisions are baked into actionable task wording instead of masquerading as completed `Decide ...` items, keeping the worklist focused on real execution work without creating a separate decisions section.
+2026-04-12 Expanded the M6 worklist to cover side-by-side dev-install coexistence explicitly, including dev-port divergence from product defaults, auth-cookie isolation, and a later README note for repo or fork maintainers once that coexistence path is actually implemented.
+2026-04-12 Added a `0.2` QR connect candidate to the backlog: a top-bar QR affordance that appears only when the current access address is not loopback, with the candidate linked from the plan, product spec, and README.
+2026-04-12 Reduced the QR connect backlog entry to a plan-level future candidate only, removing the unnecessary focused spec, product-spec direction note, and README doc link.
+2026-04-12 Expanded M6 to cover optional startup-task auto-start for the current installing user plus an uninstall path, and added Windows-service hosting as a lightweight 0.2 backlog candidate rather than a 0.1 requirement.
+2026-04-12 Refined the M6 worklist wording to emphasize install/run/uninstall plus optional boot auto-start, softened the packaging and doc-guidance phrasing, narrowed the uninstall task language, removed the stale current-status section, and added explicit references back to the plan, product spec, and release standard.
+2026-04-12 Added an initial third-party notices file for the current direct production dependencies, linked it from the README, and made license-notice preparation an explicit M6 task and verification target ahead of packaging.
+2026-04-12 Added a plain-language disclaimer file, linked it from the README, and made the shipped disclaimer notice an explicit M6 task and verification target alongside third-party notices.
+2026-04-12 Reordered the M6 packaging work so release-shape definition and notice preparation come before the actual packaged-artifact assembly step.
+2026-04-12 Reworded the M6 worklist to use concrete release-package terms such as `layout`, `release package`, and `files` instead of vague placeholders like `shape`, `artifact`, and `payloads`.
+2026-04-12 Added an AGENTS wording rule against using `shape` as vague shorthand for packaging, distribution, or document structure when a more concrete term would be clearer.
+2026-04-12 Broadened the AGENTS wording rule so it discourages vague placeholder words like `shape` in general, not just narrow packaging or doc-structure cases.
+2026-04-12 Folded the resolved M6 `5.x` decisions back into the work breakdown, removed the now-obsolete open-questions section, and updated the worklist status text so it reflects decisions already made rather than pretending they are still unsettled.

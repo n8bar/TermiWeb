@@ -3,9 +3,12 @@ import { describe, expect, it } from "vitest";
 import {
   addWorkspaceTab,
   createEmptyWorkspaceState,
+  DEFAULT_FIXED_COLS,
   ensureWorkspaceHasTab,
   removeWorkspaceTab,
   selectWorkspaceTab,
+  updateWorkspaceTabFixedCols,
+  workspaceStateSchema,
 } from "../../src/server/workspace/workspace-state.js";
 
 describe("workspace state", () => {
@@ -14,6 +17,7 @@ describe("workspace state", () => {
 
     expect(state.tabs).toHaveLength(1);
     expect(state.tabs[0]?.title).toBe("Instance 1");
+    expect(state.tabs[0]?.fixedCols).toBe(DEFAULT_FIXED_COLS);
     expect(state.lastActiveTabId).toBe(state.tabs[0]?.id ?? null);
   });
 
@@ -24,6 +28,78 @@ describe("workspace state", () => {
 
     expect(withCustom.tab.title).toBe("Logs");
     expect(withDefault.tab.title).toBe("Instance 2");
+  });
+
+  it("reuses the lowest available default instance number", () => {
+    const initial = ensureWorkspaceHasTab(createEmptyWorkspaceState());
+    const second = addWorkspaceTab(initial);
+    const removed = removeWorkspaceTab(second.state, initial.tabs[0]!.id);
+    const replacement = addWorkspaceTab(removed.state);
+
+    expect(removed.state.tabs.map((tab) => tab.title)).toEqual(["Instance 1"]);
+    expect(replacement.tab.title).toBe("Instance 2");
+  });
+
+  it("ignores a stale nextDefaultTitleIndex when creating the next auto-named tab", () => {
+    const staleState = workspaceStateSchema.parse({
+      tabs: [
+        {
+          id: "4b2734b8-2878-4fa0-8c7e-1d0cdab85fb8",
+          title: "Instance 1",
+          fixedCols: 80,
+        },
+      ],
+      lastActiveTabId: "4b2734b8-2878-4fa0-8c7e-1d0cdab85fb8",
+      nextDefaultTitleIndex: 9,
+    });
+
+    const next = addWorkspaceTab(staleState);
+
+    expect(next.tab.title).toBe("Instance 2");
+  });
+
+  it("normalizes legacy and sparse auto-generated titles on load", () => {
+    const normalized = ensureWorkspaceHasTab(
+      workspaceStateSchema.parse({
+        tabs: [
+          {
+            id: "d9bd267f-eef0-4dc3-813b-32dcb61de7dd",
+            title: "Terminal 4",
+            fixedCols: 80,
+          },
+          {
+            id: "624e3107-42d4-468a-b825-cb8a3022af0a",
+            title: "Notes",
+            fixedCols: 120,
+          },
+          {
+            id: "dbf395bd-7573-40cd-a52d-53b0fdaf1383",
+            title: "Instance 9",
+            fixedCols: 100,
+          },
+        ],
+        lastActiveTabId: "dbf395bd-7573-40cd-a52d-53b0fdaf1383",
+        nextDefaultTitleIndex: 10,
+      }),
+    );
+
+    expect(normalized.tabs.map((tab) => tab.title)).toEqual([
+      "Instance 1",
+      "Notes",
+      "Instance 2",
+    ]);
+    expect(normalized.tabs.map((tab) => tab.fixedCols)).toEqual([80, 120, 100]);
+    expect(normalized.nextDefaultTitleIndex).toBe(3);
+  });
+
+  it("updates the fixed column width for a known tab", () => {
+    const initial = ensureWorkspaceHasTab(createEmptyWorkspaceState());
+    const updated = updateWorkspaceTabFixedCols(initial, initial.tabs[0]!.id, 120);
+
+    expect(updated.tabs[0]?.fixedCols).toBe(120);
+    expect(updateWorkspaceTabFixedCols(updated, "a7c88eeb-e856-44d0-8d21-4ef32cdb35de", 132)).toBe(
+      updated,
+    );
   });
 
   it("selects a known tab and ignores unknown ones", () => {

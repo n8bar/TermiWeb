@@ -32,8 +32,9 @@ export class TerminalManager extends EventEmitter<ManagerEvents> {
 
   async initialize(): Promise<void> {
     for (const tab of this.#workspaceStore.listTabs()) {
-      this.#registerSession(tab.id, tab.title);
+      this.#registerSession(tab.id, tab.title, tab.fixedCols);
     }
+    this.#syncSessionDefinitions();
     this.#emitSessions();
   }
 
@@ -50,13 +51,24 @@ export class TerminalManager extends EventEmitter<ManagerEvents> {
     return this.listSessions()[0]?.id ?? null;
   }
 
+  async ensureSessionAvailable(): Promise<SessionSummary> {
+    const existing = this.listSessions()[0];
+    if (existing) {
+      return existing;
+    }
+
+    return this.createSession();
+  }
+
   async createSession(title?: string): Promise<SessionSummary> {
     if (this.#sessions.size >= this.#config.maxSessions) {
       throw new Error(`Maximum session count (${this.#config.maxSessions}) reached.`);
     }
 
     const tab = await this.#workspaceStore.createTab(title);
-    const session = this.#registerSession(tab.id, tab.title);
+    this.#syncSessionDefinitions();
+    const session = this.#registerSession(tab.id, tab.title, tab.fixedCols);
+    this.#syncSessionDefinitions();
     this.#emitSessions();
     return session.getSummary();
   }
@@ -77,6 +89,7 @@ export class TerminalManager extends EventEmitter<ManagerEvents> {
     }
 
     const removed = await this.#workspaceStore.closeTab(sessionId);
+    this.#syncSessionDefinitions();
     this.#emitSessions();
     return removed;
   }
@@ -97,10 +110,25 @@ export class TerminalManager extends EventEmitter<ManagerEvents> {
     }
 
     this.#clientSessions.set(clientId, sessionId);
-    session.attachClient(clientId, size);
-    await session.ensureStarted(size);
+    session.attachClient(clientId);
+    await session.ensureStarted({
+      cols: session.getFixedCols(),
+    });
     await this.#workspaceStore.selectTab(sessionId);
     this.#emitSessions();
+    return session.getSnapshot();
+  }
+
+  getSnapshot(sessionId: string, clientId?: string): SessionSnapshot {
+    if (clientId && this.#clientSessions.get(clientId) !== sessionId) {
+      throw new Error("Client is not attached to that session.");
+    }
+
+    const session = this.#sessions.get(sessionId);
+    if (!session) {
+      throw new Error("Session not found.");
+    }
+
     return session.getSnapshot();
   }
 
@@ -128,19 +156,45 @@ export class TerminalManager extends EventEmitter<ManagerEvents> {
       return;
     }
 
-    this.#sessions.get(sessionId)?.resize(cols, rows);
+    const session = this.#sessions.get(sessionId);
+    if (!session) {
+      return;
+    }
+
+    session.resize(session.getFixedCols(), rows);
+  }
+
+  async setSessionFixedCols(
+    sessionId: string,
+    cols: number,
+    rows: number,
+    clientId?: string,
+  ): Promise<void> {
+    if (clientId && this.#clientSessions.get(clientId) !== sessionId) {
+      return;
+    }
+
+    const session = this.#sessions.get(sessionId);
+    if (!session) {
+      throw new Error("Session not found.");
+    }
+
+    session.setFixedCols(cols, rows);
+    await this.#workspaceStore.setTabFixedCols(sessionId, cols);
+    this.#emitSessions();
   }
 
   getShellLabel(): string {
     return this.#shell;
   }
 
-  #registerSession(sessionId: string, title: string): TerminalSession {
+  #registerSession(sessionId: string, title: string, fixedCols: number): TerminalSession {
     const session = new TerminalSession({
       id: sessionId,
       title,
       shell: this.#shell,
       historyLimit: this.#config.historyLimit,
+      fixedCols,
     });
 
     session.on("summary", () => {
@@ -157,5 +211,11 @@ export class TerminalManager extends EventEmitter<ManagerEvents> {
 
   #emitSessions(): void {
     this.emit("sessions", this.listSessions());
+  }
+
+  #syncSessionDefinitions(): void {
+    for (const tab of this.#workspaceStore.listTabs()) {
+      this.#sessions.get(tab.id)?.setTitle(tab.title);
+    }
   }
 }

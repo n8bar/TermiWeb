@@ -1,14 +1,27 @@
 # TermiWeb
 
-TermiWeb is a browser-first shared terminal for Windows. The browser UI is the same live interface on your workstation and any other device, so one terminal session can be continued anywhere without remoting the whole desktop.
+TermiWeb is a workstation-first shared terminal for Windows. The browser UI is the live interface on your workstation and any other device you use to reach it, so one terminal session can be continued without remoting the whole desktop.
+
+## Product direction
+
+- The default TermiWeb story is still one trusted Windows machine on a private network.
+- Careful WAN exposure is also a legitimate advanced use case for people who want to reach their own workstation remotely.
+- In `0.1`, TermiWeb expects operators to supply the outer deployment controls around WAN access rather than trying to be the entire remote-access stack by itself.
+- TermiWeb does not currently ship multi-user auth, built-in TLS termination, or a turnkey public-exposure workflow.
 
 ## What's Working
 
 - Node + TypeScript backend with WebSocket-driven terminal sessions
 - `xterm.js` client with touch-oriented terminal controls
 - Shared instances backed by Windows shell processes
-- Single shared-password login for local/LAN use
-- Fixed 120-column terminal width across clients
+- Login with one configured app password for local/LAN use
+- Authenticated browser sessions that survive normal server restarts until logout or expiry
+- Empty logins seed `Instance 1` automatically so a fresh browser session never lands on an empty instance rail
+- Device-local instance selection after initial attach
+- Rendered-text select mode for reliable copying after screen clears
+- Per-instance shared column width with `80` as the default for new instances
+- One shared layout across workstation and device browsers
+- Collapsible keyboard control tray that trades button space for more visible terminal rows
 - Local-only testing and verification workflow
 
 ## Quick start
@@ -25,11 +38,21 @@ TermiWeb is a browser-first shared terminal for Windows. The browser UI is the s
 - Leave `TERMIWEB_HOST` blank unless you want an explicit bind address.
 - Browse to `http://<your-pc-lan-ip>:22443` from another device, such as your phone, on the same network.
 
+## Advanced deployments
+
+- The supported default is still a trusted private network.
+- If you want remote access across the internet or across sites, expose it deliberately behind controls you already trust, such as TLS termination, external auth, a reverse proxy, a VPN or mesh network, IP restrictions, or equivalent safeguards.
+- Those are real deployment patterns for `0.1`, but they are operator-managed patterns around the app rather than built-in product features.
+- The configured app password is part of the access story, not the whole WAN hardening story by itself.
+
 ## Scripts
 
 - `npm run dev` starts the integrated dev server.
 - `npm run build` builds the client and server output into `dist/`.
 - `npm run start` runs the production server from `dist/`.
+- `npm run start:hidden` starts the built Windows server in the background without spawning an extra console window.
+- `npm run restart:hidden` restarts that hidden Windows background server.
+- `npm run stop:hidden` stops that hidden Windows background server.
 - `npm run typecheck` runs both client and server TypeScript checks.
 - `npm test` runs the local test suite.
 - `npm run lint` runs the repo lint rules.
@@ -37,8 +60,18 @@ TermiWeb is a browser-first shared terminal for Windows. The browser UI is the s
 ## Documentation
 
 - [Project plan](docs/PLAN.md)
+- [M6 installer and first-run worklist](docs/worklists/m6-installer-and-first-run-experience.md)
+- [Release standard](docs/RELEASE_STANDARD.md)
 - [Product spec](docs/PRODUCT_SPEC.md)
-- [V1 browser terminal spec](docs/specs/v1-browser-terminal.md)
+- [Deployment philosophy](docs/DEPLOYMENT_PHILOSOPHY.md)
+- [Findings log](docs/FINDINGS.md)
+- [Disclaimer](DISCLAIMER.md)
+- [Third-party notices](THIRD_PARTY_NOTICES.md)
+- [0.1 browser terminal spec](docs/specs/v0.1-browser-terminal.md)
+- [0.1 per-instance column width](docs/specs/v0.1-per-instance-column-width.md)
+- [0.1 persistent auth sessions](docs/specs/v0.1-persistent-auth-sessions.md)
+- [0.2 browser session candidate](docs/specs/v0.2-browser-session-candidate.md)
+- [0.2 side-by-side instances candidate](docs/specs/v0.2-side-by-side-instances-candidate.md)
 - [Change log](docs/CHANGELOG.log)
 
 ## Shell behavior

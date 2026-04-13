@@ -40,6 +40,7 @@ describe("protocol parsing", () => {
           clientCount: 2,
           shell: "powershell.exe",
           lastExitCode: null,
+          fixedCols: 80,
         },
       ],
     });
@@ -50,5 +51,53 @@ describe("protocol parsing", () => {
     }
     expect(event.activeSessionId).toBe("54fd93ae-0f1d-4dc4-af4a-547e8b87d2af");
     expect(event.sessions[0]?.clientCount).toBe(2);
+    expect(event.sessions[0]?.fixedCols).toBe(80);
+  });
+
+  it("accepts a session snapshot request event", () => {
+    const event = parseClientEvent({
+      type: "session/snapshot.request",
+      sessionId: "54fd93ae-0f1d-4dc4-af4a-547e8b87d2af",
+    });
+
+    expect(event.type).toBe("session/snapshot.request");
+    if (event.type !== "session/snapshot.request") {
+      throw new Error("Expected session/snapshot.request event");
+    }
+
+    expect(event.sessionId).toBe("54fd93ae-0f1d-4dc4-af4a-547e8b87d2af");
+  });
+
+  it("accepts a valid session column width change event", () => {
+    const event = parseClientEvent({
+      type: "session/cols",
+      sessionId: "54fd93ae-0f1d-4dc4-af4a-547e8b87d2af",
+      cols: 120,
+      rows: 32,
+    });
+
+    expect(event.type).toBe("session/cols");
+    if (event.type !== "session/cols") {
+      throw new Error("Expected session/cols event");
+    }
+
+    expect(event.cols).toBe(120);
+    expect(event.rows).toBe(32);
+  });
+
+  it("accepts a tiny-height resize event when the viewport only has a few visible rows", () => {
+    const event = parseClientEvent({
+      type: "terminal/resize",
+      sessionId: "54fd93ae-0f1d-4dc4-af4a-547e8b87d2af",
+      cols: 80,
+      rows: 1,
+    });
+
+    expect(event.type).toBe("terminal/resize");
+    if (event.type !== "terminal/resize") {
+      throw new Error("Expected terminal/resize event");
+    }
+
+    expect(event.rows).toBe(1);
   });
 });

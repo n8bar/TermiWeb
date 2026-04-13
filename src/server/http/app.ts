@@ -100,7 +100,8 @@ export async function createHttpApp(options: CreateHttpAppOptions) {
     response.json({ authenticated: false });
   });
 
-  app.get("/api/workspaces", requireAuth, (_request, response) => {
+  app.get("/api/workspaces", requireAuth, async (_request, response) => {
+    await options.terminalManager.ensureSessionAvailable();
     response.json({
       sessions: options.terminalManager.listSessions(),
       activeSessionId: options.terminalManager.getActiveSessionId(),
@@ -182,7 +183,9 @@ export async function createHttpApp(options: CreateHttpAppOptions) {
   websocketServer.on("connection", (socket) => {
     const clientId = randomUUID();
     clientSockets.set(clientId, socket);
-    send(socket, createSessionListEvent());
+    void options.terminalManager.ensureSessionAvailable().then(() => {
+      send(socket, createSessionListEvent());
+    });
 
     socket.on("message", async (raw) => {
       try {
@@ -192,7 +195,14 @@ export async function createHttpApp(options: CreateHttpAppOptions) {
             send(socket, { type: "pong" });
             return;
           case "session/list.request":
+            await options.terminalManager.ensureSessionAvailable();
             send(socket, createSessionListEvent());
+            return;
+          case "session/snapshot.request":
+            send(socket, {
+              type: "session/snapshot",
+              snapshot: options.terminalManager.getSnapshot(parsed.sessionId, clientId),
+            });
             return;
           case "session/create": {
             const created = await options.terminalManager.createSession(parsed.title);
@@ -219,6 +229,14 @@ export async function createHttpApp(options: CreateHttpAppOptions) {
             return;
           case "terminal/resize":
             options.terminalManager.resize(
+              parsed.sessionId,
+              parsed.cols,
+              parsed.rows,
+              clientId,
+            );
+            return;
+          case "session/cols":
+            await options.terminalManager.setSessionFixedCols(
               parsed.sessionId,
               parsed.cols,
               parsed.rows,

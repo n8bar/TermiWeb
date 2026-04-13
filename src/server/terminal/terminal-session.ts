@@ -4,12 +4,14 @@ import { EventEmitter } from "node:events";
 import { spawn, type IPty } from "node-pty";
 
 import type { SessionSnapshot, SessionSummary, TerminalStatus } from "../../shared/protocol.js";
+import { resolveSessionRowsForCols } from "./row-policy.js";
 
 interface TerminalSessionOptions {
   id: string;
   title: string;
   shell: string;
   historyLimit: number;
+  fixedCols: number;
 }
 
 interface TerminalSessionEvents {
@@ -32,16 +34,16 @@ function defaultWorkingDirectory(): string {
 
 export class TerminalSession extends EventEmitter<TerminalSessionEvents> {
   readonly #id: string;
-  readonly #title: string;
   readonly #shell: string;
   readonly #historyLimit: number;
   readonly #clientIds = new Set<string>();
+  #title: string;
   #pty: IPty | null = null;
   #history = "";
   #status: TerminalStatus = "stopped";
   #lastExitCode: number | null = null;
-  #cols = 120;
-  #rows = 32;
+  #cols: number;
+  #rows: number;
 
   constructor(options: TerminalSessionOptions) {
     super();
@@ -49,6 +51,8 @@ export class TerminalSession extends EventEmitter<TerminalSessionEvents> {
     this.#title = options.title;
     this.#shell = options.shell;
     this.#historyLimit = options.historyLimit;
+    this.#cols = options.fixedCols;
+    this.#rows = resolveSessionRowsForCols(options.fixedCols);
   }
 
   get id(): string {
@@ -63,6 +67,7 @@ export class TerminalSession extends EventEmitter<TerminalSessionEvents> {
       clientCount: this.#clientIds.size,
       shell: this.#shell,
       lastExitCode: this.#lastExitCode,
+      fixedCols: this.#cols,
     };
   }
 
@@ -73,10 +78,10 @@ export class TerminalSession extends EventEmitter<TerminalSessionEvents> {
     };
   }
 
-  async ensureStarted(size?: { cols: number; rows: number }): Promise<void> {
-    if (size) {
+  async ensureStarted(size?: { cols: number }): Promise<void> {
+    if (size && !this.#pty && this.#status !== "starting") {
       this.#cols = size.cols;
-      this.#rows = size.rows;
+      this.#rows = resolveSessionRowsForCols(size.cols);
     }
 
     if (this.#pty || this.#status === "starting") {
@@ -119,11 +124,8 @@ export class TerminalSession extends EventEmitter<TerminalSessionEvents> {
     }
   }
 
-  attachClient(clientId: string, size: { cols: number; rows: number }): void {
+  attachClient(clientId: string): void {
     this.#clientIds.add(clientId);
-    this.#cols = size.cols;
-    this.#rows = size.rows;
-    this.#pty?.resize(size.cols, size.rows);
     this.#emitSummary();
   }
 
@@ -140,8 +142,28 @@ export class TerminalSession extends EventEmitter<TerminalSessionEvents> {
 
   resize(cols: number, rows: number): void {
     this.#cols = cols;
-    this.#rows = rows;
-    this.#pty?.resize(cols, rows);
+    if (!this.#pty) {
+      this.#rows = resolveSessionRowsForCols(cols);
+    }
+  }
+
+  setFixedCols(cols: number, rows = this.#rows): void {
+    this.#cols = cols;
+    this.#rows = resolveSessionRowsForCols(cols);
+    this.#pty?.resize(cols, this.#rows);
+  }
+
+  getFixedCols(): number {
+    return this.#cols;
+  }
+
+  setTitle(title: string): void {
+    if (this.#title === title) {
+      return;
+    }
+
+    this.#title = title;
+    this.#emitSummary();
   }
 
   dispose(): void {
