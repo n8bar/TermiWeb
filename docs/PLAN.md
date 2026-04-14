@@ -2,7 +2,7 @@
 
 ## Current Focus
 
-Finish `M5` through continued dogfooding of interactive CLI rendering integrity while starting `M6` in parallel so installer and first-run experience work does not wait on the final rendering verdict. Keep the release-polish work aligned with the docs and drive the release toward the `0.1` bar defined in [the release standard](RELEASE_STANDARD.md).
+Close `M5` — the remaining blocker for `0.1` is `Finding 5` in [FINDINGS.md](FINDINGS.md): interactive CLI rendering truth for tools such as Claude Code and Codex. `M6` is complete. `M7` is unblocked as soon as `M5` closes.
 
 ## Milestones
 
@@ -27,11 +27,10 @@ Finish `M5` through continued dogfooding of interactive CLI rendering integrity 
   - Start: 2026-04-08
   - Target End: 2026-04-18
   - Notes: extended by one week; still open because dogfooding remains the bottleneck on interactive CLI rendering truth
-- [ ] M6: Installer and first-run experience
-  - Summary: This milestone should add the packaging, launch scripts, optional startup-task auto-start path, uninstall path, distribution layout, and supporting docs needed for a non-dev Windows install/run path. It also includes the first-run walkthrough that gets a newly installed user to one live shared session visible from two devices at the same time.
+- [x] M6: Installer and first-run experience
+  - Summary: Added packaging, launch scripts, optional startup-task auto-start, uninstall, distribution layout, and first-run docs for a non-dev Windows install path. Verified fresh-machine setup, before-sign-in auto-start, uninstall cleanup, and two-device shared session on real hardware.
   - Start: 2026-04-12
-  - Target End: 2026-04-18
-  - Overlap: runs in parallel with the final week of M5
+  - End: 2026-04-13
 - [ ] M7: 0.1 release and GitHub Pages download website
   - Summary: This milestone should produce the tagged `0.1` release artifacts plus the GitHub Pages download site that points to them. The code/doc work here is release packaging, distribution metadata, and the website content that turns the build into an actual downloadable release.
   - Start: 2026-04-19
@@ -58,4 +57,4 @@ Finish `M5` through continued dogfooding of interactive CLI rendering integrity 
 
 ## Next Action
 
-Run `M5` and `M6` in parallel. Keep `M5` focused on `Finding 5` in [FINDINGS.md](FINDINGS.md): wrong-place input, ghost text, and viewport drift in interactive CLI tools such as Claude Code and Codex. Start `M6` installer and first-run work now while dogfooding continues, but do not let `M7` release work begin until both `M5` and `M6` are genuinely closed.
+Close `M5`. Keep focus on `Finding 5` in [FINDINGS.md](FINDINGS.md): wrong-place input, ghost text, and viewport drift in interactive CLI tools such as Claude Code and Codex. Do not start `M7` until `M5` is genuinely closed.
