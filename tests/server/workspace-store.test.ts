@@ -13,6 +13,7 @@ function createConfig(dataDir: string): TermiWebConfig {
   return {
     host: "127.0.0.1",
     port: 22443,
+    sessionCookieName: "termiweb_session",
     password: "change-me",
     allowLan: false,
     defaultShell: undefined,

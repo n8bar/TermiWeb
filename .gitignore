@@ -4,6 +4,7 @@ dist/
 .cybercreek/
 .env
 coverage/
+artifacts/
 *.log
 !docs/CHANGELOG.log
 .DS_Store

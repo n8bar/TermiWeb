@@ -49,6 +49,7 @@ Finish `M5` through continued dogfooding of interactive CLI rendering integrity 
 - `0.2` candidate: top-bar QR connect affordance when the current access address is not loopback
 - `0.2` candidate: Windows-service hosting mode for boot-start installs
 - `0.2` candidate: password-change UI for the configured app password
+- `0.3+` candidate: Linux host support for TermiWeb, including Linux PTY/process integration, packaged install/run/auto-start path, and cross-platform doc/spec updates
 
 ## Release Gate
 

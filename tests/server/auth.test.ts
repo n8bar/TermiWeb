@@ -27,6 +27,7 @@ class TerminalManagerStub extends EventEmitter {
 const config: TermiWebConfig = {
   host: "127.0.0.1",
   port: 4317,
+  sessionCookieName: "termiweb_session_4317",
   password: "let-me-in",
   allowLan: false,
   fixedCols: 80,
@@ -157,5 +158,61 @@ describe("auth routes", () => {
 
     expect(session.status).toBe(200);
     expect(session.body.authenticated).toBe(true);
+  });
+
+  it("isolates browser auth cookies between differently configured local ports", async () => {
+    const dataDir = createTempDataDir();
+    const firstConfig = {
+      ...config,
+      port: 22443,
+      sessionCookieName: "termiweb_session",
+      dataDir,
+    };
+    const secondConfig = {
+      ...config,
+      port: 32443,
+      sessionCookieName: "termiweb_session_32443",
+      dataDir,
+    };
+
+    const firstApp = await createHttpApp({
+      config: firstConfig,
+      authStore: new SessionStore({
+        ttlHours: firstConfig.sessionTtlHours,
+        dataDir,
+      }),
+      terminalManager: new TerminalManagerStub() as never,
+    });
+
+    const login = await request(firstApp.app).post("/api/auth/login").send({
+      password: firstConfig.password,
+    });
+    const firstCookies = login.headers["set-cookie"];
+    expect(firstCookies?.[0]).toContain("termiweb_session=");
+    if (!firstCookies) {
+      throw new Error("Expected auth cookie");
+    }
+
+    const secondApp = await createHttpApp({
+      config: secondConfig,
+      authStore: new SessionStore({
+        ttlHours: secondConfig.sessionTtlHours,
+        dataDir,
+      }),
+      terminalManager: new TerminalManagerStub() as never,
+    });
+
+    const secondSession = await request(secondApp.app)
+      .get("/api/auth/session")
+      .set("Cookie", firstCookies);
+
+    expect(secondSession.status).toBe(200);
+    expect(secondSession.body.authenticated).toBe(false);
+
+    const secondLogin = await request(secondApp.app).post("/api/auth/login").send({
+      password: secondConfig.password,
+    });
+
+    expect(secondLogin.headers["set-cookie"]?.[0]).toContain("termiweb_session_32443=");
   });
 });

@@ -27,14 +27,25 @@ TermiWeb is a workstation-first shared terminal for Windows. The browser UI is t
 ## Quick start
 
 1. Copy `.env.example` to `.env`.
-2. Set `TERMIWEB_PASSWORD`.
+2. Set `TERMIWEB_PASSWORD` to the value you want before first run.
 3. Install dependencies with `npm install`.
 4. Start the app with `npm run dev`.
 5. Open `http://127.0.0.1:22443`.
 
+## Running Two Copies On One Machine
+
+- Keep `.env.example` as the product-default config for packaged or single-copy use.
+- If you want a repo checkout to run beside another local TermiWeb copy, start that checkout from `.env.dev.example` instead of `.env.example`.
+- `.env.dev.example` moves the repo checkout to port `32443`, which keeps it off the product default port.
+- Nondefault ports automatically get a matching session-cookie name, so browser login state does not bleed between the two copies.
+- Optional before-sign-in auto-start uses a matching port-derived Task Scheduler name too, so the packaged default and a repo checkout do not fight over one startup-task registration when both keep their supported ports.
+- Set `TERMIWEB_SESSION_COOKIE_NAME` explicitly only if you need a custom cookie name instead of the port-based default.
+
 ## LAN Access
 
 - TermiWeb binds to your LAN by default.
+- On the first LAN-bound launch, Windows may show a firewall prompt for the Node-hosted server process.
+- Allow private-network access at that prompt if you want phones or other devices on the same LAN to reach TermiWeb.
 - Leave `TERMIWEB_HOST` blank unless you want an explicit bind address.
 - Browse to `http://<your-pc-lan-ip>:22443` from another device, such as your phone, on the same network.
 
@@ -53,9 +64,15 @@ TermiWeb is a workstation-first shared terminal for Windows. The browser UI is t
 - `npm run start:hidden` starts the built Windows server in the background without spawning an extra console window.
 - `npm run restart:hidden` restarts that hidden Windows background server.
 - `npm run stop:hidden` stops that hidden Windows background server.
+- `npm run notices:third-party` regenerates `THIRD_PARTY_NOTICES.md` from the installed production dependency graph.
+- `npm run package:release` assembles the Windows release folder and zip under `artifacts/release/`.
 - `npm run typecheck` runs both client and server TypeScript checks.
 - `npm test` runs the local test suite.
 - `npm run lint` runs the repo lint rules.
+- `Set Up TermiWeb.cmd` is the lightweight packaged setup flow: it creates `.env` if needed, prompts for the app password when still unset, offers before-sign-in auto-start, and can start the app for you.
+- `Enable TermiWeb Auto Start.cmd` and `Disable TermiWeb Auto Start.cmd` manage the optional before-sign-in startup task for this copy of TermiWeb.
+- `Start TermiWeb.cmd`, `Restart TermiWeb.cmd`, and `Stop TermiWeb.cmd` are the Windows launchers intended for the packaged run surface and also work from a built repo checkout.
+- `Uninstall TermiWeb.cmd` is the packaged uninstall entry point and intentionally refuses to run from a source checkout.
 
 ## Documentation
 
@@ -66,10 +83,12 @@ TermiWeb is a workstation-first shared terminal for Windows. The browser UI is t
 - [Deployment philosophy](docs/DEPLOYMENT_PHILOSOPHY.md)
 - [Findings log](docs/FINDINGS.md)
 - [Disclaimer](DISCLAIMER.md)
+- [First-run guide](FIRST_RUN.md)
 - [Third-party notices](THIRD_PARTY_NOTICES.md)
 - [0.1 browser terminal spec](docs/specs/v0.1-browser-terminal.md)
 - [0.1 per-instance column width](docs/specs/v0.1-per-instance-column-width.md)
 - [0.1 persistent auth sessions](docs/specs/v0.1-persistent-auth-sessions.md)
+- [0.1 release package contract](docs/specs/v0.1-release-package-contract.md)
 - [0.2 browser session candidate](docs/specs/v0.2-browser-session-candidate.md)
 - [0.2 side-by-side instances candidate](docs/specs/v0.2-side-by-side-instances-candidate.md)
 - [Change log](docs/CHANGELOG.log)
