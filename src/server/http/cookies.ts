@@ -1,9 +1,11 @@
 import { parse, serialize } from "cookie";
 
-export const SESSION_COOKIE_NAME = "termiweb_session";
-
-export function createSessionCookie(token: string, maxAgeSeconds: number): string {
-  return serialize(SESSION_COOKIE_NAME, token, {
+export function createSessionCookie(
+  cookieName: string,
+  token: string,
+  maxAgeSeconds: number,
+): string {
+  return serialize(cookieName, token, {
     httpOnly: true,
     sameSite: "strict",
     path: "/",
@@ -11,8 +13,8 @@ export function createSessionCookie(token: string, maxAgeSeconds: number): strin
   });
 }
 
-export function clearSessionCookie(): string {
-  return serialize(SESSION_COOKIE_NAME, "", {
+export function clearSessionCookie(cookieName: string): string {
+  return serialize(cookieName, "", {
     httpOnly: true,
     sameSite: "strict",
     path: "/",
@@ -20,11 +22,14 @@ export function clearSessionCookie(): string {
   });
 }
 
-export function readSessionCookie(cookieHeader: string | undefined): string | undefined {
+export function readSessionCookie(
+  cookieName: string,
+  cookieHeader: string | undefined,
+): string | undefined {
   if (!cookieHeader) {
     return undefined;
   }
 
   const parsed = parse(cookieHeader);
-  return parsed[SESSION_COOKIE_NAME];
+  return parsed[cookieName];
 }

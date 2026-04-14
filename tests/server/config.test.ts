@@ -39,4 +39,31 @@ describe("resolveConfig", () => {
 
     expect(config.fixedCols).toBe(80);
   });
+
+  it("uses the stable default session cookie name on the default port", () => {
+    const config = resolveConfig({
+      TERMIWEB_PASSWORD: "let-me-in",
+    });
+
+    expect(config.sessionCookieName).toBe("termiweb_session");
+  });
+
+  it("derives a distinct session cookie name from a nondefault port", () => {
+    const config = resolveConfig({
+      TERMIWEB_PORT: "32443",
+      TERMIWEB_PASSWORD: "let-me-in",
+    });
+
+    expect(config.sessionCookieName).toBe("termiweb_session_32443");
+  });
+
+  it("allows an explicit session cookie override", () => {
+    const config = resolveConfig({
+      TERMIWEB_PORT: "32443",
+      TERMIWEB_SESSION_COOKIE_NAME: "repo_checkout_session",
+      TERMIWEB_PASSWORD: "let-me-in",
+    });
+
+    expect(config.sessionCookieName).toBe("repo_checkout_session");
+  });
 });

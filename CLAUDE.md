@@ -13,7 +13,7 @@
 3. Specs come first: align on the requirement in the docs, implement, then update docs to match what actually shipped.
 4. Docs are primarily internal engineering documents for future maintenance, not end-user documentation.
 5. Keep `AGENTS.md` and `CLAUDE.md` in sync — they are mirrors of each other for different agent runtimes (Codex reads `AGENTS.md`; Claude Code reads `CLAUDE.md`). Update both when rules change.
-6. When adding or editing `AGENTS.md` rules, avoid overly restrictive or micromanaging wording. Prefer the minimum rule needed to protect the repo's actual workflow and quality bar.
+6. When adding or editing rules, avoid overly restrictive or micromanaging wording. Prefer the minimum rule needed to protect the repo's actual workflow and quality bar.
 7. During dogfooding, log issues in `docs/FINDINGS.md` instead of treating every observation as an immediate implementation task.
 8. During release polish, keep `docs/PLAN.md`, `docs/FINDINGS.md`, and `docs/RELEASE_STANDARD.md` aligned on the actual blocker instead of letting milestone text drift behind reality.
 9. Run commands directly using available tools. Do not ask the user to open a terminal or run something the agent can run itself.

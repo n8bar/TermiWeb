@@ -43,7 +43,10 @@ export async function createHttpApp(options: CreateHttpAppOptions) {
   const authenticateRequest = (
     request: Request | IncomingMessage,
   ): boolean => {
-    const token = readSessionCookie(request.headers.cookie);
+    const token = readSessionCookie(
+      options.config.sessionCookieName,
+      request.headers.cookie,
+    );
     return options.authStore.validate(token);
   };
 
@@ -85,7 +88,14 @@ export async function createHttpApp(options: CreateHttpAppOptions) {
     }
 
     const token = options.authStore.issue();
-    response.setHeader("Set-Cookie", createSessionCookie(token, sessionTtlSeconds));
+    response.setHeader(
+      "Set-Cookie",
+      createSessionCookie(
+        options.config.sessionCookieName,
+        token,
+        sessionTtlSeconds,
+      ),
+    );
     response.json({
       authenticated: true,
       hostname,
@@ -94,9 +104,15 @@ export async function createHttpApp(options: CreateHttpAppOptions) {
   });
 
   app.post("/api/auth/logout", (request, response) => {
-    const token = readSessionCookie(request.headers.cookie);
+    const token = readSessionCookie(
+      options.config.sessionCookieName,
+      request.headers.cookie,
+    );
     options.authStore.revoke(token);
-    response.setHeader("Set-Cookie", clearSessionCookie());
+    response.setHeader(
+      "Set-Cookie",
+      clearSessionCookie(options.config.sessionCookieName),
+    );
     response.json({ authenticated: false });
   });
 

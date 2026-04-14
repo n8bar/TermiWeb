@@ -6,9 +6,21 @@ const optionalTrimmedString = z.string().optional().transform((value) => {
   return trimmed && trimmed.length > 0 ? trimmed : undefined;
 });
 
+const optionalCookieName = z.string().optional().transform((value) => {
+  const trimmed = value?.trim();
+  return trimmed && trimmed.length > 0 ? trimmed : undefined;
+}).refine((value) => {
+  return value === undefined || /^[A-Za-z0-9_-]+$/.test(value);
+}, {
+  message: "Session cookie names may contain only letters, digits, underscores, and hyphens.",
+});
+
+const DEFAULT_SESSION_COOKIE_NAME = "termiweb_session";
+
 const envSchema = z.object({
   TERMIWEB_HOST: optionalTrimmedString,
   TERMIWEB_PORT: z.coerce.number().int().min(1).max(65535).default(22443),
+  TERMIWEB_SESSION_COOKIE_NAME: optionalCookieName,
   TERMIWEB_PASSWORD: z.string().min(1).default("change-me"),
   TERMIWEB_ALLOW_LAN: z
     .string()
@@ -35,6 +47,7 @@ const envSchema = z.object({
 export interface TermiWebConfig {
   host: string;
   port: number;
+  sessionCookieName: string;
   password: string;
   allowLan: boolean;
   defaultShell?: string | undefined;
@@ -50,10 +63,16 @@ export function resolveConfig(
 ): TermiWebConfig {
   const parsed = envSchema.parse(env);
   const host = parsed.TERMIWEB_HOST ?? (parsed.TERMIWEB_ALLOW_LAN ? "0.0.0.0" : "127.0.0.1");
+  const sessionCookieName =
+    parsed.TERMIWEB_SESSION_COOKIE_NAME ??
+    (parsed.TERMIWEB_PORT === 22443
+      ? DEFAULT_SESSION_COOKIE_NAME
+      : `${DEFAULT_SESSION_COOKIE_NAME}_${parsed.TERMIWEB_PORT}`);
 
   return {
     host,
     port: parsed.TERMIWEB_PORT,
+    sessionCookieName,
     password: parsed.TERMIWEB_PASSWORD,
     allowLan: parsed.TERMIWEB_ALLOW_LAN,
     defaultShell: parsed.TERMIWEB_DEFAULT_SHELL,

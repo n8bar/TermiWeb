@@ -35,6 +35,20 @@ function Get-ConfiguredPort {
   return 22443
 }
 
+function Get-NodeExecutable {
+  $bundledNode = Join-Path $repoRoot "runtime\node\node.exe"
+  if (Test-Path -LiteralPath $bundledNode) {
+    return $bundledNode
+  }
+
+  $nodeCommand = Get-Command node -ErrorAction SilentlyContinue
+  if ($nodeCommand) {
+    return $nodeCommand.Source
+  }
+
+  throw "No Node runtime found. Install Node 22+ or use a packaged TermiWeb build that includes runtime\\node\\node.exe."
+}
+
 function Get-ListeningProcessId([int]$Port) {
   $listener = Get-NetTCPConnection -LocalPort $Port -State Listen -ErrorAction SilentlyContinue |
     Select-Object -First 1
@@ -107,7 +121,7 @@ if (Test-Path -LiteralPath $pidFile) {
   }
 }
 
-$nodeCommand = Get-Command node -ErrorAction Stop
+$nodeExecutable = Get-NodeExecutable
 $serverEntry = Join-Path $repoRoot "dist\server\server\index.js"
 
 if (-not (Test-Path -LiteralPath $serverEntry)) {
@@ -115,7 +129,7 @@ if (-not (Test-Path -LiteralPath $serverEntry)) {
 }
 
 $process = Start-Process `
-  -FilePath $nodeCommand.Source `
+  -FilePath $nodeExecutable `
   -ArgumentList $serverEntry `
   -WorkingDirectory $repoRoot `
   -RedirectStandardOutput $stdoutLog `
