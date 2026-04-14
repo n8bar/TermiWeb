@@ -91,11 +91,12 @@ The result should feel intentional, not like a source checkout with a few extra 
 
 ## 4. Verification Checklist
 1. [ ] A fresh Windows machine or Windows user profile can start the shipped release package without a development-oriented setup.
-   1. [ ] On a clean Windows machine or a Windows user account that has never touched this repo, copy `TermiWeb-0.1.0-windows-x64.zip` to a working folder and extract it.
-   2. [ ] Double-click `Set Up TermiWeb.cmd`. Confirm a PowerShell window opens and prompts for a TermiWeb app password with no prerequisite install steps required.
-   3. [ ] Enter a password and proceed through setup. Confirm the script does not fail due to a missing Node runtime, missing npm, or any other dev dependency.
-   4. [ ] When setup asks whether to start TermiWeb now, confirm yes. Confirm the browser opens automatically to `http://127.0.0.1:22443` and the TermiWeb login page appears.
-   5. [ ] Log in with the password entered during setup. Confirm the instance rail and `Instance 1` shell are visible.
+   1. [ ] On the dev machine, run `npm run package:release` from the repo to produce `artifacts/release/TermiWeb-0.1.0-windows-x64.zip`. Copy that zip to the test environment.
+   2. [ ] On a clean Windows machine or a Windows user account that has never touched this repo, extract the zip to a working folder.
+   3. [ ] Double-click `Set Up TermiWeb.cmd`. Confirm a PowerShell window opens and prompts for a TermiWeb app password with no prerequisite install steps required.
+   4. [ ] Enter a password and proceed through setup. Confirm the script does not fail due to a missing Node runtime, missing npm, or any other dev dependency.
+   5. [ ] When setup asks whether to start TermiWeb now, confirm yes. Confirm the browser opens automatically to `http://127.0.0.1:22443` and the TermiWeb login page appears.
+   6. [ ] Log in with the password entered during setup. Confirm the instance rail and `Instance 1` shell are visible.
 2. [x] The shipped release package includes a third-party notices file that matches the packaged production dependency set closely enough to be truthful and reviewable.
 3. [x] The shipped release package includes a plain-language disclaimer file alongside the license and third-party notices.
 4. [x] Optional boot auto-start works through a startup task for the current installing user without requiring an interactive logon.
