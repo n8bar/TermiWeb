@@ -95,8 +95,10 @@ The result should feel intentional, not like a source checkout with a few extra 
    2. [ ] On a clean Windows machine or a Windows user account that has never touched this repo, extract the zip to a working folder.
    3. [ ] Double-click `Set Up TermiWeb.cmd`. Confirm a PowerShell window opens and prompts for a TermiWeb app password with no prerequisite install steps required.
    4. [ ] Enter a password and proceed through setup. Confirm the script does not fail due to a missing Node runtime, missing npm, or any other dev dependency.
-   5. [ ] When setup asks whether to start TermiWeb now, confirm yes. Confirm the browser opens automatically to `http://127.0.0.1:22443` and the TermiWeb login page appears.
-   6. [ ] Log in with the password entered during setup. Confirm the instance rail and `Instance 1` shell are visible.
+   5. [ ] When setup asks about before-sign-in auto-start, say yes. Complete the UAC elevation and enter the Windows account password when prompted. Confirm setup continues rather than failing.
+   6. [ ] When setup asks whether to start TermiWeb now, confirm yes. Confirm the browser opens automatically to `http://127.0.0.1:22443` and the TermiWeb login page appears.
+   7. [ ] Log in with the password entered during setup. Confirm the instance rail and `Instance 1` shell are visible.
+   8. [ ] Reboot the machine. Without launching anything manually, confirm TermiWeb is reachable at `http://127.0.0.1:22443` after the machine comes back up.
 2. [x] The shipped release package includes a third-party notices file that matches the packaged production dependency set closely enough to be truthful and reviewable.
 3. [x] The shipped release package includes a plain-language disclaimer file alongside the license and third-party notices.
 4. [x] Optional boot auto-start works through a startup task for the current installing user without requiring an interactive logon.
