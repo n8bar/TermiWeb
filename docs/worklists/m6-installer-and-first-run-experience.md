@@ -90,7 +90,7 @@ The result should feel intentional, not like a source checkout with a few extra 
   - Uninstall: `Uninstall TermiWeb.cmd` stopped the running server, removed the startup task, and self-deleted the package directory.
 
 ## 4. Verification Checklist
-1. [ ] A fresh Windows machine or Windows user profile can start the shipped release package without a development-oriented setup.
+1. [x] A fresh Windows machine or Windows user profile can start the shipped release package without a development-oriented setup.
    1. [x] On the dev machine, run `npm run package:release` from the repo to produce `artifacts/release/TermiWeb-0.1.0-windows-x64.zip`. Copy that zip to the test environment.
    2. [x] On a clean Windows machine or a Windows user account that has never touched this repo, extract the zip to a working folder.
    3. [x] Double-click `Set Up TermiWeb.cmd`. Confirm a PowerShell window opens and prompts for a TermiWeb app password with no prerequisite install steps required.
@@ -98,7 +98,7 @@ The result should feel intentional, not like a source checkout with a few extra 
    5. [x] When setup asks about before-sign-in auto-start, say yes. Complete the UAC elevation and enter the Windows account password when prompted. Confirm setup continues rather than failing.
    6. [x] When setup asks whether to start TermiWeb now, confirm yes. Confirm the browser opens automatically to `http://127.0.0.1:22443` and the TermiWeb login page appears.
    7. [x] Log in with the password entered during setup. Confirm the instance rail and `Instance 1` shell are visible.
-   8. [ ] Reboot the machine. Without launching anything manually, confirm TermiWeb is reachable at `http://127.0.0.1:22443` after the machine comes back up.
+   8. [x] Reboot the machine. Without launching anything manually, confirm TermiWeb is reachable at `http://127.0.0.1:22443` after the machine comes back up.
 2. [x] The shipped release package includes a third-party notices file that matches the packaged production dependency set closely enough to be truthful and reviewable.
 3. [x] The shipped release package includes a plain-language disclaimer file alongside the license and third-party notices.
 4. [x] Optional boot auto-start works through a startup task for the current installing user without requiring an interactive logon.
