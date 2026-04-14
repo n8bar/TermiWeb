@@ -104,14 +104,14 @@ The result should feel intentional, not like a source checkout with a few extra 
 4. [x] Optional boot auto-start works through a startup task for the current installing user without requiring an interactive logon.
 5. [x] The uninstall path removes the packaged runtime artifacts and any startup task we created without leaving the machine in a confusing state.
 6. [x] The user can identify the local URL, LAN URL, and password expectations without guessing.
-7. [ ] The user can attach from a second device and see the same live shell.
-   1. [ ] With TermiWeb running on the workstation, find the workstation's LAN IP address (e.g. run `ipconfig` and look for the IPv4 address on the active adapter).
-   2. [ ] On a second device on the same network, open a browser and navigate to `http://<workstation-lan-ip>:22443`.
-   3. [ ] Confirm the TermiWeb login page loads on the second device.
-   4. [ ] Log in with the configured app password.
-   5. [ ] Confirm `Instance 1` is visible on the second device.
-   6. [ ] Type something in the terminal on the workstation. Confirm the same output appears in real time on the second device.
-   7. [ ] Type something on the second device. Confirm the same output appears on the workstation.
+7. [x] The user can attach from a second device and see the same live shell.
+   1. [x] With TermiWeb running on the workstation, find the workstation's LAN IP address (e.g. run `ipconfig` and look for the IPv4 address on the active adapter).
+   2. [x] On a second device on the same network, open a browser and navigate to `http://<workstation-lan-ip>:22443`.
+   3. [x] Confirm the TermiWeb login page loads on the second device.
+   4. [x] Log in with the configured app password.
+   5. [x] Confirm `Instance 1` is visible on the second device.
+   6. [x] Type something in the terminal on the workstation. Confirm the same output appears in real time on the second device.
+   7. [x] Type something on the second device. Confirm the same output appears on the workstation.
 8. [x] A dev checkout and an installed pre-release can run side by side on the same machine without port or auth-cookie collisions.
 9. [x] The documented steps match the shipped artifact exactly.
 10. [x] The first-run path does not depend on hidden tribal knowledge from the repo.
