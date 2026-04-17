@@ -17,6 +17,10 @@ import {
   type TerminalControlAction,
 } from "./ui/mobileControls.js";
 import { resolvePreferredSessionId } from "./ui/sessionSelection.js";
+import {
+  getExplicitSelectionText,
+  isClipboardCopyShortcut,
+} from "./ui/selectionCopy.js";
 import { captureVisibleTerminalText } from "./ui/terminalSnapshot.js";
 import {
   computeStageLayout,
@@ -34,6 +38,7 @@ import {
   computeCursorViewportScrollTop,
   computeCursorXtermScrollDelta,
 } from "./ui/cursorFollow.js";
+import { copyTextToClipboard, readTextFromClipboard } from "./ui/clipboard.js";
 import { getDisplaySessionTitle } from "./ui/sessionTitle.js";
 import { toDisplayVersion } from "./ui/version.js";
 
@@ -85,6 +90,11 @@ const workspaceStageViewport = mustQuery<HTMLElement>("#workspace-stage-viewport
 const workspaceStage = mustQuery<HTMLElement>("#workspace-stage");
 const selectionPanel = mustQuery<HTMLElement>("#selection-panel");
 const selectionText = mustQuery<HTMLTextAreaElement>("#selection-text");
+const pasteCapturePanel = mustQuery<HTMLElement>("#paste-capture-panel");
+const pasteCaptureInput = mustQuery<HTMLTextAreaElement>("#paste-capture-input");
+const pasteCaptureHelp = mustQuery<HTMLElement>("#paste-capture-help");
+const cancelPasteCaptureButton = mustQuery<HTMLButtonElement>("#cancel-paste-capture-button");
+const togglePasteHelpButton = mustQuery<HTMLButtonElement>("#toggle-paste-help-button");
 const closeSelectionButton = mustQuery<HTMLButtonElement>("#close-selection-button");
 const copySelectionButton = mustQuery<HTMLButtonElement>("#copy-selection-button");
 const controlTray = mustQuery<HTMLElement>("#control-tray");
@@ -93,6 +103,8 @@ const refreshButton = mustQuery<HTMLButtonElement>("#refresh-button");
 const logoutButton = mustQuery<HTMLButtonElement>("#logout-button");
 const newSessionButton = mustQuery<HTMLButtonElement>("#new-session-button");
 const focusTerminalButton = mustQuery<HTMLButtonElement>("#focus-terminal-button");
+const collapsedCopyButton = mustQuery<HTMLButtonElement>("#collapsed-copy-button");
+const collapsedPasteButton = mustQuery<HTMLButtonElement>("#collapsed-paste-button");
 const toggleControlsButton = mustQuery<HTMLButtonElement>("#toggle-controls-button");
 const toggleSidebarButton = mustQuery<HTMLButtonElement>("#toggle-sidebar-button");
 const toggleTopbarButton = mustQuery<HTMLButtonElement>("#toggle-topbar-button");
@@ -122,6 +134,7 @@ const terminal = new Terminal({
 const fitAddon = new FitAddon();
 terminal.loadAddon(fitAddon);
 terminal.open(terminalContainer);
+terminal.attachCustomKeyEventHandler((event) => !tryHandleCopyShortcut(event));
 if (terminal.textarea) {
   applyTerminalInputAttributes(terminal.textarea);
 }
@@ -193,6 +206,7 @@ let terminalFrameWidthPx: number | null = null;
 let suppressTerminalContainerResizeObserver = false;
 let suppressViewportFollowScrollEvent = false;
 let followCursor = true;
+let pasteCaptureTimeout: number | undefined;
 const sidebarStorageKey = "termiweb.sidebar-collapsed";
 const controlsStorageKey = "termiweb.controls-collapsed";
 const topbarStorageKey = "termiweb.topbar-collapsed";
@@ -648,7 +662,9 @@ function bindControlButtonActivation(
 
 function maybeRefocusTerminalAfterControl(): void {
   const shouldFocusTerminal =
-    !selectionMode && document.activeElement !== terminal.textarea;
+    !selectionMode &&
+    pasteCapturePanel.classList.contains("is-hidden") &&
+    document.activeElement !== terminal.textarea;
   if (shouldFocusTerminal) {
     window.requestAnimationFrame(() => {
       terminal.focus();
@@ -1207,6 +1223,172 @@ function syncSelectionText(): void {
   selectionText.value = captureVisibleTerminalText(terminal);
 }
 
+function clearPasteCaptureTimeout(): void {
+  window.clearTimeout(pasteCaptureTimeout);
+  pasteCaptureTimeout = undefined;
+}
+
+function isLoopbackHostname(hostname: string): boolean {
+  return (
+    hostname === "127.0.0.1" ||
+    hostname === "localhost" ||
+    hostname === "::1" ||
+    hostname === "[::1]" ||
+    hostname.endsWith(".localhost")
+  );
+}
+
+function pasteCaptureLoopbackAddress(): string {
+  return `127.0.0.1${window.location.port ? `:${window.location.port}` : ""}`;
+}
+
+function pasteCaptureHelpText(): string {
+  const onLoopback = isLoopbackHostname(window.location.hostname);
+  if (onLoopback) {
+    return "This browser still requires a real paste here.";
+  }
+
+  if (!window.isSecureContext) {
+    return `LAN paste can be browser-blocked. If you're on the host device, try ${pasteCaptureLoopbackAddress()}. HTTPS can also help.`;
+  }
+
+  return `This browser still requires a real paste here. If you're on the host device, try ${pasteCaptureLoopbackAddress()}.`;
+}
+
+function setPasteCaptureHelpOpen(isOpen: boolean): void {
+  pasteCaptureHelp.textContent = pasteCaptureHelpText();
+  pasteCaptureHelp.classList.toggle("is-hidden", !isOpen);
+  togglePasteHelpButton.setAttribute("aria-expanded", String(isOpen));
+}
+
+function closePasteCapture(options: {
+  restoreTerminalFocus?: boolean;
+} = {}): void {
+  clearPasteCaptureTimeout();
+  pasteCapturePanel.classList.add("is-hidden");
+  pasteCaptureInput.value = "";
+  setPasteCaptureHelpOpen(false);
+
+  if (options.restoreTerminalFocus !== false && !selectionMode) {
+    terminal.focus();
+  }
+}
+
+function applyPastedTerminalInput(text: string): void {
+  if (!activeSessionId || !text) {
+    return;
+  }
+
+  const transformed = applyModifiersToInput(text, modifierState);
+  sendEvent({
+    type: "terminal/input",
+    sessionId: activeSessionId,
+    data: transformed.data,
+  });
+  setFollowCursor(true);
+  ensureCursorVisible();
+  modifierState = transformed.nextState;
+  lastModifierTap = null;
+  renderModifierControls();
+}
+
+function openPasteCapture(): void {
+  clearPasteCaptureTimeout();
+  pasteCapturePanel.classList.remove("is-hidden");
+  pasteCaptureInput.value = "";
+  setPasteCaptureHelpOpen(false);
+  focusPasteCaptureInput();
+  pasteCaptureTimeout = window.setTimeout(() => {
+    closePasteCapture({
+      restoreTerminalFocus: true,
+    });
+  }, 15_000);
+}
+
+function focusPasteCaptureInput(): void {
+  window.requestAnimationFrame(() => {
+    pasteCaptureInput.focus();
+    pasteCaptureInput.select();
+  });
+}
+
+function currentExplicitSelection(): string {
+  return getExplicitSelectionText({
+    terminalSelection: terminal.getSelection(),
+    textareaValue: selectionText.value,
+    textareaSelectionStart: selectionText.selectionStart,
+    textareaSelectionEnd: selectionText.selectionEnd,
+    selectionMode,
+  });
+}
+
+async function logClientEvent(entry: {
+  type: "clipboard-write-failed" | "clipboard-read-failed";
+  name?: string;
+  message?: string;
+  context?: Record<string, string | boolean | number | null>;
+}): Promise<void> {
+  try {
+    await fetch("/api/client-events", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "same-origin",
+      keepalive: true,
+      body: JSON.stringify(entry),
+    });
+  } catch {
+    // Ignore logging failures and preserve the original clipboard error surface.
+  }
+}
+
+function toClientErrorDetails(error: unknown): {
+  name?: string;
+  message?: string;
+} {
+  if (error instanceof Error) {
+    return {
+      name: error.name,
+      message: error.message,
+    };
+  }
+
+  if (typeof error === "string") {
+    return {
+      message: error,
+    };
+  }
+
+  return {};
+}
+
+async function writeTextToClipboard(
+  text: string,
+  source: "keyboard-shortcut" | "copy-button" | "mobile-copy-control" | "collapsed-copy-button",
+): Promise<boolean> {
+  try {
+    await copyTextToClipboard({
+      text,
+      documentObject: document,
+      navigatorClipboard: navigator.clipboard,
+    });
+    return true;
+  } catch (error) {
+    void logClientEvent({
+      type: "clipboard-write-failed",
+      ...toClientErrorDetails(error),
+      context: {
+        source,
+        selectionMode,
+        hasExplicitSelection: currentExplicitSelection().length > 0,
+      },
+    });
+    setConnectionState("error", "Clipboard browser-blocked");
+    return false;
+  }
+}
+
 function setSelectionMode(isOpen: boolean): void {
   selectionMode = isOpen;
   terminalContainer.classList.toggle("is-hidden", isOpen);
@@ -1223,25 +1405,65 @@ function setSelectionMode(isOpen: boolean): void {
   renderModifierControls();
 }
 
-async function copyCurrentSelection(): Promise<void> {
-  const terminalSelection = terminal.getSelection();
-  const textareaSelection =
-    selectionText.selectionStart !== selectionText.selectionEnd
-      ? selectionText.value.slice(selectionText.selectionStart, selectionText.selectionEnd)
-      : "";
-  const textToCopy =
-    terminalSelection || textareaSelection || (selectionMode ? selectionText.value : "");
+async function copyCurrentSelection(
+  source: "copy-button" | "mobile-copy-control" | "collapsed-copy-button" = "copy-button",
+): Promise<void> {
+  const textToCopy = currentExplicitSelection() || (selectionMode ? selectionText.value : "");
 
   if (!textToCopy) {
     setSelectionMode(true);
     return;
   }
 
+  await writeTextToClipboard(textToCopy, source);
+}
+
+async function pasteFromClipboard(
+  source: "mobile-paste-control" | "collapsed-paste-button",
+): Promise<void> {
   try {
-    await navigator.clipboard.writeText(textToCopy);
-  } catch {
-    setConnectionState("error", "Clipboard blocked");
+    const { text: pasted } = await readTextFromClipboard({
+      documentObject: document,
+      navigatorClipboard: navigator.clipboard,
+    });
+    applyPastedTerminalInput(pasted);
+  } catch (error) {
+    void logClientEvent({
+      type: "clipboard-read-failed",
+      ...toClientErrorDetails(error),
+      context: {
+        source,
+        selectionMode,
+      },
+    });
+    openPasteCapture();
   }
+}
+
+function tryHandleCopyShortcut(event: KeyboardEvent): boolean {
+  if (
+    !isClipboardCopyShortcut({
+      key: event.key,
+      ctrlKey: event.ctrlKey,
+      metaKey: event.metaKey,
+      altKey: event.altKey,
+      shiftKey: event.shiftKey,
+    })
+  ) {
+    return false;
+  }
+
+  const textToCopy = currentExplicitSelection();
+  if (!textToCopy) {
+    return false;
+  }
+
+  if (event.cancelable) {
+    event.preventDefault();
+  }
+  event.stopPropagation();
+  void writeTextToClipboard(textToCopy, "keyboard-shortcut");
+  return true;
 }
 
 function renderModifierControls(): void {
@@ -1314,9 +1536,9 @@ function renderModifierControls(): void {
     } else if (button.id === "copy") {
       bindControlButtonActivation(element, async () => {
         try {
-          await copyCurrentSelection();
+          await copyCurrentSelection("mobile-copy-control");
         } catch {
-          setConnectionState("error", "Clipboard blocked");
+          setConnectionState("error", "Clipboard browser-blocked");
         } finally {
           if (!selectionMode) {
             maybeRefocusTerminalAfterControl();
@@ -1326,22 +1548,7 @@ function renderModifierControls(): void {
     } else if (button.id === "paste") {
       bindControlButtonActivation(element, async () => {
         try {
-          const pasted = await navigator.clipboard.readText();
-          if (activeSessionId && pasted) {
-            const transformed = applyModifiersToInput(pasted, modifierState);
-          sendEvent({
-            type: "terminal/input",
-            sessionId: activeSessionId,
-            data: transformed.data,
-          });
-          setFollowCursor(true);
-          ensureCursorVisible();
-          modifierState = transformed.nextState;
-          lastModifierTap = null;
-          renderModifierControls();
-        }
-        } catch {
-          setConnectionState("error", "Clipboard blocked");
+          await pasteFromClipboard("mobile-paste-control");
         } finally {
           maybeRefocusTerminalAfterControl();
         }
@@ -1784,9 +1991,75 @@ bindControlButtonActivation(toggleControlsButton, () => {
   syncViewportLayout();
   maybeRefocusTerminalAfterControl();
 });
+registerControlButtonFocusBehavior(collapsedCopyButton);
+bindControlButtonActivation(collapsedCopyButton, () => {
+  void copyCurrentSelection("collapsed-copy-button").finally(() => {
+    maybeRefocusTerminalAfterControl();
+  });
+});
+registerControlButtonFocusBehavior(collapsedPasteButton);
+bindControlButtonActivation(collapsedPasteButton, () => {
+  void pasteFromClipboard("collapsed-paste-button").finally(() => {
+    maybeRefocusTerminalAfterControl();
+  });
+});
 
 copySelectionButton.addEventListener("click", async () => {
-  await copyCurrentSelection();
+  await copyCurrentSelection("copy-button");
+});
+selectionPanel.addEventListener("keydown", (event) => {
+  if (!(event instanceof KeyboardEvent)) {
+    return;
+  }
+
+  tryHandleCopyShortcut(event);
+});
+pasteCaptureInput.addEventListener("paste", (event) => {
+  const pasted = event.clipboardData?.getData("text") ?? "";
+  if (!pasted) {
+    return;
+  }
+
+  event.preventDefault();
+  closePasteCapture({
+    restoreTerminalFocus: false,
+  });
+  applyPastedTerminalInput(pasted);
+  maybeRefocusTerminalAfterControl();
+});
+pasteCaptureInput.addEventListener("input", () => {
+  if (!pasteCaptureInput.value) {
+    return;
+  }
+
+  const pasted = pasteCaptureInput.value;
+  closePasteCapture({
+    restoreTerminalFocus: false,
+  });
+  applyPastedTerminalInput(pasted);
+  maybeRefocusTerminalAfterControl();
+});
+pasteCaptureInput.addEventListener("keydown", (event) => {
+  if (event.key !== "Escape") {
+    return;
+  }
+
+  if (event.cancelable) {
+    event.preventDefault();
+  }
+  closePasteCapture({
+    restoreTerminalFocus: true,
+  });
+});
+cancelPasteCaptureButton.addEventListener("click", () => {
+  closePasteCapture({
+    restoreTerminalFocus: true,
+  });
+});
+togglePasteHelpButton.addEventListener("click", () => {
+  const shouldOpen = pasteCaptureHelp.classList.contains("is-hidden");
+  setPasteCaptureHelpOpen(shouldOpen);
+  focusPasteCaptureInput();
 });
 
 closeSelectionButton.addEventListener("click", () => {

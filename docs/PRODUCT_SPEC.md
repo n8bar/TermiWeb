@@ -33,7 +33,8 @@ TermiWeb provides a workstation-first browser terminal workflow that can also be
 - Authentication uses a single configured app password suitable for trusted private deployments in `0.1`.
 - Authenticated browser sessions should survive a normal server restart until they expire or are revoked.
 - A server restart should come back with one fresh active `Instance 1` rather than restoring dead instances from the prior process.
-- The host platform is Windows-first.
+- TermiWeb `0.1` targets Windows hosts.
+- TermiWeb `0.1` is elevated-only. Every shell it spawns is elevated.
 - Runtime configuration is read from process environment and an optional repo-root `.env` file.
 - The runtime prefers PowerShell 7 from `PATH`, then the standard install path, and only then falls back to Windows PowerShell.
 

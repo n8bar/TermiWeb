@@ -289,6 +289,7 @@ button {
 }
 
 .workspace-shell.is-topbar-collapsed {
+  grid-template-rows: minmax(0, 1fr);
   gap: 0;
 }
 
@@ -302,11 +303,11 @@ button {
   align-items: center;
   min-height: 0;
   position: absolute;
-  top: 0;
-  right: 0;
+  top: 1rem;
+  right: 1.2rem;
   z-index: 14;
   pointer-events: none;
-  padding: 0.2rem 0.2rem 0 0;
+  padding: 0;
 }
 
 .topbar {
@@ -316,6 +317,7 @@ button {
   gap: 1.2rem;
   padding: 1rem 1.2rem;
   position: relative;
+  grid-row: 1;
   z-index: 12;
   overflow: visible;
 }
@@ -331,6 +333,13 @@ button {
   font-size: calc(0.84rem * var(--ui-font-scale));
 }
 
+#toggle-topbar-button {
+  position: absolute;
+  top: 1rem;
+  right: 1.2rem;
+  z-index: 1;
+}
+
 .topbar-toggle-button.is-reveal {
   pointer-events: auto;
   padding-top: 0;
@@ -340,7 +349,7 @@ button {
 .topbar-session {
   min-width: 0;
   display: grid;
-  gap: 0.2rem;
+  gap: 0.35rem;
   position: relative;
 }
 
@@ -356,6 +365,15 @@ button {
 .topbar-shell {
   color: var(--muted);
   font-size: calc(0.9rem * var(--ui-font-scale));
+}
+
+.topbar-status-group {
+  display: flex;
+  gap: 0.55rem;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start;
+  margin-top: 0.2rem;
 }
 
 .session-width-button {
@@ -466,12 +484,17 @@ button {
   display: grid;
   grid-template-columns: 16.5rem minmax(0, 1fr);
   gap: 1rem;
+  grid-row: 2;
   min-height: 0;
   height: 100%;
   min-width: 0;
   align-items: stretch;
   position: relative;
   z-index: 1;
+}
+
+.workspace-shell.is-topbar-collapsed .workspace-layout {
+  grid-row: 1;
 }
 
 .workspace-main {
@@ -523,10 +546,96 @@ button {
   display: none;
 }
 
-.tray-toggle-button {
+.controls-toggle-rail {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  align-items: center;
+  justify-content: center;
   justify-self: center;
-  align-self: center;
+  gap: 0.75rem;
   z-index: 2;
+}
+
+.paste-capture-panel {
+  grid-column: 1 / -1;
+  display: grid;
+  inline-size: min(29rem, calc(100vw - 2rem));
+  max-width: 100%;
+  grid-template-columns: minmax(0, auto) minmax(0, 1fr) auto;
+  align-items: center;
+  justify-self: center;
+  gap: 0.7rem;
+  padding: 0.8rem 0.9rem;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(122, 255, 178, 0.16);
+  background: rgba(9, 19, 29, 0.95);
+  box-shadow: 0 18px 36px rgba(0, 0, 0, 0.28);
+}
+
+.paste-capture-copy {
+  display: grid;
+  gap: 0.25rem;
+  min-width: 0;
+  justify-items: start;
+}
+
+.paste-capture-help-button {
+  justify-self: start;
+  min-height: 1.8rem;
+  padding-inline: 0.7rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.08);
+  color: var(--muted);
+  font-size: calc(0.74rem * var(--ui-font-scale));
+  letter-spacing: 0.04em;
+}
+
+.paste-capture-help-button:hover {
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.paste-capture-label {
+  margin: 0;
+  color: var(--text);
+  font-size: calc(0.66rem * var(--ui-font-scale));
+  white-space: nowrap;
+}
+
+.paste-capture-input {
+  width: 100%;
+  min-height: 3rem;
+  resize: none;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(4, 8, 12, 0.72);
+  color: var(--text);
+  padding: 0.65rem 0.8rem;
+  font-size: calc(0.75rem * var(--ui-font-scale));
+}
+
+.paste-capture-input:focus {
+  outline: none;
+  border-color: rgba(122, 255, 178, 0.55);
+  box-shadow: 0 0 0 4px rgba(122, 255, 178, 0.12);
+}
+
+.paste-capture-cancel {
+  align-self: stretch;
+}
+
+.paste-capture-help {
+  grid-column: 1 / -1;
+  margin: -0.1rem 0 0;
+  min-width: 0;
+  color: var(--muted);
+  font-size: calc(0.6rem * var(--ui-font-scale));
+  line-height: 1.35;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.tray-toggle-button {
   min-width: 3.6rem;
   min-height: 2.4rem;
   padding-inline: 0.8rem;
@@ -541,10 +650,37 @@ button {
   font-size: calc(0.92rem * var(--ui-font-scale));
 }
 
+.collapsed-tray-action-button {
+  display: none;
+  min-width: 2.6rem;
+  min-height: 2.35rem;
+  padding: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(255, 255, 255, 0.14);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.22);
+  font-size: calc(1rem * var(--ui-font-scale));
+}
+
+.collapsed-tray-action-button:hover {
+  background: rgba(122, 255, 178, 0.12);
+  border-color: rgba(122, 255, 178, 0.24);
+}
+
 .terminal-shell.is-controls-collapsed .tray-toggle-button {
-  align-self: end;
   padding-top: 12px;
   padding-bottom: 0;
+}
+
+.terminal-shell.is-controls-collapsed .controls-toggle-rail {
+  align-self: center;
+  transform: translateY(-6px);
+}
+
+.terminal-shell.is-controls-collapsed .collapsed-tray-action-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .panel-header {
@@ -742,6 +878,14 @@ button {
   white-space: nowrap;
 }
 
+.topbar-status-group .status-pill {
+  min-height: 1.85rem;
+  padding-inline: 0.75rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.06);
+  font-size: calc(0.9rem * var(--ui-font-scale));
+}
+
 .topbar-action-button {
   display: inline-flex;
   align-items: center;
@@ -801,14 +945,20 @@ button {
 }
 
 .terminal-shell.is-controls-collapsed {
-  grid-template-rows: minmax(0, 1fr) 0 0;
+  grid-template-rows: minmax(0, 1fr) auto 0;
 }
 
 .terminal-stage {
   display: grid;
+  grid-template-rows: minmax(0, 1fr);
   gap: 0.9rem;
   min-height: 0;
   height: 100%;
+}
+
+.terminal-stage > .terminal-container,
+.terminal-stage > .selection-panel {
+  grid-row: 1;
 }
 
 .terminal-container {
@@ -1082,13 +1232,11 @@ button {
 }
 
 .topbar-actions {
-  display: grid;
-  gap: 0.6rem;
-  justify-content: flex-end;
+  display: flex;
+  align-items: center;
   justify-self: end;
 }
 
-.topbar-status-group,
 .topbar-button-group {
   display: flex;
   gap: 0.65rem;

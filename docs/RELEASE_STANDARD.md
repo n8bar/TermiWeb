@@ -14,6 +14,7 @@ These flows should work repeatedly without surprises:
 
 - login and logout
 - create, select, and close instances
+- elevated startup and creation of a live elevated instance
 - shared typing into the same live terminal
 - copy and select mode
 - keyboard tray collapse and restore
@@ -42,6 +43,7 @@ Normal interactive terminal use must not look broken or dirty.
 The Windows run story should feel intentional:
 
 - the app can be started, restarted, and stopped predictably
+- the intended elevated-only launch path should be explicit and reliable
 - hidden/background launch should not spawn an extra empty console window
 - logs should exist and be usable
 - the documented LAN access path should work
@@ -52,6 +54,7 @@ The release should be clear about what it is and is not:
 
 - trusted-network-first default is explicit
 - advanced operator-managed WAN guidance is explicit
+- docs are explicit that every shell in `0.1` is elevated
 - docs do not imply built-in security or hosting features that do not exist
 
 ### 6. Findings Discipline
@@ -70,7 +73,7 @@ The app should survive real use before release:
 
 ## Current Assessment
 
-TermiWeb is close to a `0.1` release candidate, but not there yet.
+TermiWeb now appears to meet the known `M5` dogfood gates for a `0.1` release candidate. The remaining work is release execution and launch-surface work, not an open trust-breaking product finding.
 
 ### Current Strengths
 
@@ -82,8 +85,8 @@ TermiWeb is close to a `0.1` release candidate, but not there yet.
 
 ### Current Risks
 
-- `Finding 5` is the most serious known release risk right now:
-  - interactive CLI rendering can still place typed text and generated output in the wrong place, leave ghost text behind, and shift visible terminal content in ways that make primary CLI workflows feel untrustworthy
+- No open finding currently rises to the level of a release blocker.
+- The remaining `0.1` work is release execution: final artifact publication, release metadata, and the download-site surface in `M7`.
 
 ## Out Of Scope For 0.1
 

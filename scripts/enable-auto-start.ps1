@@ -113,7 +113,7 @@ try {
     -User $TargetUserName `
     -Password $plainPassword `
     -Description "Starts TermiWeb hidden at Windows startup on port $configuredPort for the installing user." `
-    -RunLevel Limited `
+    -RunLevel Highest `
     -Force | Out-Null
 } catch {
   Write-Output "Auto-start remains off because Windows could not register the startup task for $TargetUserName."

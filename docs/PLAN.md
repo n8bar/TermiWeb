@@ -2,7 +2,7 @@
 
 ## Current Focus
 
-Close `M5` — the remaining blocker for `0.1` is `Finding 5` in [FINDINGS.md](FINDINGS.md): interactive CLI rendering truth for tools such as Claude Code and Codex. `M6` is complete. `M7` is unblocked as soon as `M5` closes.
+`M5` and `M6` are complete. `M7` is now unblocked; expand the [M7 worklist stub](worklists/m7-release-and-download-website.md) before starting release and website work.
 
 ## Milestones
 
@@ -22,11 +22,11 @@ Close `M5` — the remaining blocker for `0.1` is `Finding 5` in [FINDINGS.md](F
   - Summary: Added the first serious verification loop, tightened restart/reconnect behavior, and cleaned up the initial launch/run path enough for real local use. This is also where the project stopped feeling like a dev-only prototype and started behaving like an intentional app.
   - Start: 2026-04-07
   - End: 2026-04-07
-- [ ] M5: 0.1 release polish and rendering integrity
-  - Summary: This milestone contains the major UI/layout refinements, per-instance width controls, mobile behavior fixes, local viewport scrolling, shared terminal geometry cleanup, and the current follow-cursor work. What remains open here is the rendering-truth problem in interactive CLI tools, which still needs dogfood validation before `0.1` can be called clean.
+- [x] M5: 0.1 release polish and rendering integrity
+  - Summary: This milestone contains the major UI/layout refinements, per-instance width controls, mobile behavior fixes, local viewport scrolling, shared terminal geometry cleanup, and the current follow-cursor work. It closed after interactive CLI rendering held up in dogfooding and the elevated-only run path passed live packaged verification.
   - Start: 2026-04-08
-  - Target End: 2026-04-18
-  - Notes: extended by one week; still open because dogfooding remains the bottleneck on interactive CLI rendering truth
+  - End: 2026-04-17
+  - Notes: extended by one week; closed after the packaged run surface and elevated-instance behavior both passed live verification
 - [x] M6: Installer and first-run experience
   - Summary: Added packaging, launch scripts, optional startup-task auto-start, uninstall, distribution layout, and first-run docs for a non-dev Windows install path. Verified fresh-machine setup, before-sign-in auto-start, uninstall cleanup, and two-device shared session on real hardware.
   - Start: 2026-04-12
@@ -35,7 +35,7 @@ Close `M5` — the remaining blocker for `0.1` is `Finding 5` in [FINDINGS.md](F
   - Summary: This milestone should produce the tagged `0.1` release artifacts plus the GitHub Pages download site that points to them. The code/doc work here is release packaging, distribution metadata, and the website content that turns the build into an actual downloadable release.
   - Start: 2026-04-19
   - Target End: 2026-04-25
-  - Blocked By: M5 and M6
+  - Worklist Stub: [M7 release and download website](worklists/m7-release-and-download-website.md) — expand this before work begins
 - [ ] M8: Marketing for an open-source, free-to-use product
   - Summary: This milestone is the full marketing phase around the product, not just a bundle of launch materials. It includes messaging, positioning, outreach, demos, screenshots, announcements, and the practical work of getting attention on a shipped open-source product.
   - Start: 2026-04-26
@@ -53,8 +53,8 @@ Close `M5` — the remaining blocker for `0.1` is `Finding 5` in [FINDINGS.md](F
 ## Release Gate
 
 - `0.1` should ship only when it meets [the release standard](RELEASE_STANDARD.md).
-- The most serious known gap against that standard right now is `Finding 5` in [FINDINGS.md](FINDINGS.md): interactive CLI rendering truth for tools such as Claude Code and Codex.
+- There are no open release-blocker findings in [FINDINGS.md](FINDINGS.md) right now.
 
 ## Next Action
 
-Close `M5`. Keep focus on `Finding 5` in [FINDINGS.md](FINDINGS.md): wrong-place input, ghost text, and viewport drift in interactive CLI tools such as Claude Code and Codex. Do not start `M7` until `M5` is genuinely closed.
+Expand the [M7 worklist stub](worklists/m7-release-and-download-website.md) into a real execution plan, then start the `0.1` release and download-site work.

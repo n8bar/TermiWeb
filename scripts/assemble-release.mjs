@@ -29,9 +29,10 @@ const runtimePackageJson = {
 
 const rootFiles = [
   ".env.example",
+  "1.Start-Here.md",
   "DISCLAIMER.md",
-  "FIRST_RUN.md",
   "LICENSE",
+  "ReadMe.txt",
   "THIRD_PARTY_NOTICES.md",
   "Set Up TermiWeb.cmd",
   "Enable TermiWeb Auto Start.cmd",

@@ -4,11 +4,53 @@ $envFile = Join-Path $repoRoot ".env"
 
 $ErrorActionPreference = "Stop"
 
-function Get-ConfiguredPort {
-  if ($env:TERMIWEB_PORT) {
-    return [int]$env:TERMIWEB_PORT
+function Get-PowerShellExecutable {
+  $pwsh = Get-Command pwsh -ErrorAction SilentlyContinue
+  if ($pwsh) {
+    return $pwsh.Source
   }
 
+  $windowsPowerShell = Get-Command powershell -ErrorAction SilentlyContinue
+  if ($windowsPowerShell) {
+    return $windowsPowerShell.Source
+  }
+
+  throw "No PowerShell host found for elevation."
+}
+
+function Test-IsAdministrator {
+  $identity = [System.Security.Principal.WindowsIdentity]::GetCurrent()
+  $principal = New-Object System.Security.Principal.WindowsPrincipal($identity)
+  return $principal.IsInRole([System.Security.Principal.WindowsBuiltInRole]::Administrator)
+}
+
+if (-not (Test-IsAdministrator)) {
+  $powerShellExecutable = Get-PowerShellExecutable
+  $scriptPath = $MyInvocation.MyCommand.Path
+
+  try {
+    $elevatedProcess = Start-Process `
+      -FilePath $powerShellExecutable `
+      -ArgumentList @(
+        "-NoLogo",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        $scriptPath
+      ) `
+      -WorkingDirectory $repoRoot `
+      -Verb RunAs `
+      -Wait `
+      -PassThru
+    exit $elevatedProcess.ExitCode
+  } catch {
+    Write-Output "TermiWeb stop was canceled because Windows elevation was not granted."
+    exit 2
+  }
+}
+
+function Get-ConfiguredPort {
   if (Test-Path -LiteralPath $envFile) {
     foreach ($line in Get-Content -LiteralPath $envFile) {
       $trimmed = $line.Trim()
@@ -20,6 +62,10 @@ function Get-ConfiguredPort {
         return [int](($trimmed -split "=", 2)[1].Trim())
       }
     }
+  }
+
+  if ($env:TERMIWEB_PORT) {
+    return [int]$env:TERMIWEB_PORT
   }
 
   return 22443

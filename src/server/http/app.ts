@@ -15,9 +15,22 @@ import type { SessionStore } from "../auth/session-store.js";
 import { verifySharedPassword } from "../auth/password.js";
 import { clearSessionCookie, createSessionCookie, readSessionCookie } from "./cookies.js";
 import type { TerminalManager } from "../terminal/terminal-manager.js";
+import { appendClientEventLog } from "../logging/client-event-log.js";
 
 const loginBodySchema = z.object({
   password: z.string().min(1),
+});
+
+const clientEventBodySchema = z.object({
+  type: z.enum(["clipboard-write-failed", "clipboard-read-failed"]),
+  name: z.string().trim().min(1).max(120).optional(),
+  message: z.string().trim().min(1).max(1_000).optional(),
+  context: z.record(z.string(), z.union([
+    z.string(),
+    z.boolean(),
+    z.number(),
+    z.null(),
+  ])).optional(),
 });
 
 interface CreateHttpAppOptions {
@@ -122,6 +135,31 @@ export async function createHttpApp(options: CreateHttpAppOptions) {
       sessions: options.terminalManager.listSessions(),
       activeSessionId: options.terminalManager.getActiveSessionId(),
     });
+  });
+
+  app.post("/api/client-events", requireAuth, async (request, response) => {
+    const parsed = clientEventBodySchema.safeParse(request.body);
+    if (!parsed.success) {
+      response.status(400).json({ error: "Invalid client event payload." });
+      return;
+    }
+
+    try {
+      await appendClientEventLog(options.config.dataDir, {
+        timestamp: new Date().toISOString(),
+        type: parsed.data.type,
+        name: parsed.data.name,
+        message: parsed.data.message,
+        context: parsed.data.context,
+        request: {
+          ip: request.ip ?? null,
+          userAgent: request.get("user-agent") ?? null,
+        },
+      });
+      response.status(204).end();
+    } catch {
+      response.status(500).json({ error: "Failed to write client event log." });
+    }
   });
 
   if (options.viteDevServer) {

@@ -39,6 +39,33 @@ describe("loadDotEnvFile", () => {
     expect(env.TERMIWEB_ALLOW_LAN).toBe("true");
   });
 
+  it("can override selected env prefixes from .env", () => {
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "termiweb-env-"));
+    tempDirs.push(tempDir);
+    fs.writeFileSync(
+      path.join(tempDir, ".env"),
+      "TERMIWEB_PORT=2443\nTERMIWEB_PASSWORD=from-file\nNODE_ENV=development\n",
+      "utf8",
+    );
+
+    const env: NodeJS.ProcessEnv = {
+      TERMIWEB_PORT: "22443",
+      TERMIWEB_PASSWORD: "from-process",
+      NODE_ENV: "production",
+    };
+
+    const loaded = loadDotEnvFile({
+      cwd: tempDir,
+      env,
+      overridePrefixes: ["TERMIWEB_"],
+    });
+
+    expect(loaded).toBe(path.join(tempDir, ".env"));
+    expect(env.TERMIWEB_PORT).toBe("2443");
+    expect(env.TERMIWEB_PASSWORD).toBe("from-file");
+    expect(env.NODE_ENV).toBe("production");
+  });
+
   it("does nothing when no .env file exists", () => {
     const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "termiweb-env-"));
     tempDirs.push(tempDir);

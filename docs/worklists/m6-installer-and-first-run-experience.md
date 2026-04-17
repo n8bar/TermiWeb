@@ -59,19 +59,19 @@ The result should feel intentional, not like a source checkout with a few extra 
 
 9. [x] Write the doc-first first-run guidance.
   For `0.1`, keep first-run guidance leaning docs-first and embedded UI guidance minimally. The UI should lean toward being self-explanatory rather than explanatory.
-  `FIRST_RUN.md` now carries the packaged first-run path as a release-facing doc instead of burying that guidance in the engineering docs tree.
+  `1.Start-Here.md` now carries the packaged first-run path as a release-facing doc instead of burying that guidance in the engineering docs tree.
 
 10. [x] Write the first shared-session walkthrough.
   The walkthrough should open TermiWeb on the workstation, log in, use the seeded `Instance 1`, open the LAN URL from a second device, and confirm both devices are attached to the same live shell.
-  `FIRST_RUN.md` now includes that two-device `Instance 1` walkthrough directly.
+  `1.Start-Here.md` now includes that two-device `Instance 1` walkthrough directly.
 
 11. [x] Add the tiny fallback note about `+ New Instance`.
   Mention briefly in the docs that a user can create a new instance if they closed the seeded one or want another session. Keep that note intentionally minimal.
-  `FIRST_RUN.md` now includes that short fallback note and keeps it deliberately minimal.
+  `1.Start-Here.md` now includes that short fallback note and keeps it deliberately minimal.
 
 12. [x] Publish the first-run guidance in the right places.
   Bias `0.1` toward release-package docs, adding only minimal in-app guidance where it is cheap and high-value. Decide whether the website download page also needs a condensed version.
-  `FIRST_RUN.md` now exists at the package root, is linked from the README, and the website-condensed-version question is deferred to M7 instead of blocking M6.
+  `1.Start-Here.md` now exists at the package root, is linked from the README, and the website-condensed-version question is deferred to M7 instead of blocking M6.
 
 13. [x] Add the repo-or-fork coexistence note once the behavior is real.
   Document changing `TERMIWEB_PORT` for users who want to maintain a repo or fork alongside an installed pre-release, but only once the coexistence story is actually complete enough to be truthful.

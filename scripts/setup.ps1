@@ -109,6 +109,12 @@ function Prompt-YesNo([string]$Prompt, [bool]$DefaultYes) {
   }
 }
 
+function Test-PortListening([int]$Port) {
+  $listener = Get-NetTCPConnection -LocalPort $Port -State Listen -ErrorAction SilentlyContinue |
+    Select-Object -First 1
+  return $null -ne $listener
+}
+
 if (-not (Test-Path -LiteralPath $envPath)) {
   $templatePath = Get-EnvTemplatePath
   if (-not (Test-Path -LiteralPath $templatePath)) {
@@ -172,13 +178,32 @@ if (-not (Test-Path -LiteralPath $startLauncher)) {
 }
 
 Write-Output "If Windows shows a firewall prompt on first launch, allow private-network access if you want other devices on your LAN to reach TermiWeb."
-cmd /c "`"$startLauncher`""
+Start-Process `
+  -FilePath "cmd.exe" `
+  -ArgumentList "/c", "`"$startLauncher`"" `
+  -WorkingDirectory $repoRoot | Out-Null
 
 $port = Get-EnvValue (Read-EnvLines) "TERMIWEB_PORT"
 if ([string]::IsNullOrWhiteSpace($port)) {
   $port = "22443"
 }
 
-Start-Sleep -Seconds 2
-Start-Process "http://127.0.0.1:$port"
+try {
+  $portNumber = [int]$port
+  $deadline = (Get-Date).AddSeconds(20)
+  while ((Get-Date) -lt $deadline) {
+    if (Test-PortListening -Port $portNumber) {
+      Start-Process "http://127.0.0.1:$port"
+      Write-Output "Setup complete."
+      exit 0
+    }
+
+    Start-Sleep -Milliseconds 500
+  }
+
+  Write-Output "TermiWeb launch was handed off, but port $portNumber is not listening yet. Finish any Windows prompts first, then open http://127.0.0.1:$port manually if needed."
+} catch {
+  Write-Output "TermiWeb launch was handed off, but the setup flow could not confirm the configured port automatically."
+}
+
 Write-Output "Setup complete."

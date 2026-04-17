@@ -82,26 +82,14 @@
             <p class="eyebrow">Active instance</p>
             <h3 id="active-session-title">Connecting…</h3>
             <p id="shell-label" class="topbar-shell">Shell: detecting…</p>
-          </div>
-
-          <div class="topbar-actions">
             <div class="topbar-status-group">
               <span id="active-session-status" class="status-pill">Idle</span>
               <span id="connection-status" class="status-pill is-connecting">Connecting</span>
             </div>
+          </div>
+
+          <div class="topbar-actions">
             <div class="topbar-button-group">
-              <button
-                id="toggle-topbar-button"
-                class="ghost-button compact topbar-toggle-button"
-                type="button"
-                aria-expanded="true"
-                aria-controls="topbar"
-                aria-label="Collapse top bar"
-                title="Collapse top bar"
-              >
-                ⌃
-                ⌃
-              </button>
               <button
                 id="logout-button"
                 class="ghost-button topbar-action-button topbar-action-button-danger"
@@ -111,6 +99,18 @@
               </button>
             </div>
           </div>
+          <button
+            id="toggle-topbar-button"
+            class="ghost-button compact topbar-toggle-button"
+            type="button"
+            aria-expanded="true"
+            aria-controls="topbar"
+            aria-label="Collapse top bar"
+            title="Collapse top bar"
+          >
+            ⌃
+            ⌃
+          </button>
         </header>
 
         <div id="workspace-layout" class="workspace-layout">
@@ -245,18 +245,76 @@
                   </div>
                 </div>
               </section>
-              <button
-                id="toggle-controls-button"
-                class="ghost-button compact tray-toggle-button"
-                type="button"
-                aria-expanded="true"
-                aria-controls="control-tray"
-                aria-label="Collapse keyboard controls"
-                title="Collapse keyboard controls"
-              >
-                ⌄
-                ⌄
-              </button>
+              <div id="controls-toggle-rail" class="controls-toggle-rail">
+                <button
+                  id="collapsed-copy-button"
+                  class="ghost-button compact icon-button collapsed-tray-action-button"
+                  type="button"
+                  aria-label="Copy selection"
+                  title="Copy selection"
+                >
+                  ⧉
+                </button>
+                <button
+                  id="toggle-controls-button"
+                  class="ghost-button compact tray-toggle-button"
+                  type="button"
+                  aria-expanded="true"
+                  aria-controls="control-tray"
+                  aria-label="Collapse keyboard controls"
+                  title="Collapse keyboard controls"
+                >
+                  ⌄
+                  ⌄
+                </button>
+                <button
+                  id="collapsed-paste-button"
+                  class="ghost-button compact icon-button collapsed-tray-action-button"
+                  type="button"
+                  aria-label="Paste"
+                  title="Paste"
+                >
+                  📋
+                </button>
+                <div
+                  id="paste-capture-panel"
+                  class="paste-capture-panel is-hidden"
+                  role="group"
+                  aria-label="Paste text"
+                >
+                  <div class="paste-capture-copy">
+                    <p class="paste-capture-label">Paste here</p>
+                    <button
+                      id="toggle-paste-help-button"
+                      class="ghost-button compact paste-capture-help-button"
+                      type="button"
+                      aria-expanded="false"
+                      aria-controls="paste-capture-help"
+                      aria-label="Why the paste popup?"
+                      title="Why the paste popup?"
+                    >
+                      Why?
+                    </button>
+                  </div>
+                  <textarea
+                    id="paste-capture-input"
+                    class="paste-capture-input"
+                    spellcheck="false"
+                    rows="2"
+                    placeholder="Paste text here"
+                  ></textarea>
+                  <button
+                    id="cancel-paste-capture-button"
+                    class="ghost-button compact icon-button paste-capture-cancel"
+                    type="button"
+                    aria-label="Cancel paste capture"
+                    title="Cancel paste capture"
+                  >
+                    ×
+                  </button>
+                  <p id="paste-capture-help" class="paste-capture-help is-hidden"></p>
+                </div>
+              </div>
               <section id="control-tray" class="control-tray" aria-label="Terminal controls">
                 <div
                   id="mobile-controls"

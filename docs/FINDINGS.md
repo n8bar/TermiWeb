@@ -20,14 +20,65 @@ This document tracks dogfood findings that are worth fixing later, without inter
 
 ## Open
 
+No open findings right now.
+
+## Closed
+
+### Finding 6: The elevated-only run path still needs live verification
+- Status: `Closed`
+- First seen: `2026-04-16`
+- Area: `other`
+- Summary: `0.1` now has an elevated-only launch path in code, but the real start, restart, stop, and before-sign-in auto-start flow still needs live dogfood verification before the release story can be called dependable.
+- Notes: Closed after the packaged uninstall, reinstall, setup, start, and live instance checks all passed in normal use, including verification that newly opened shells are actually elevated.
+
+### Finding 12: Packaged setup could look hung after a successful first launch
+- Status: `Closed`
+- First seen: `2026-04-17`
+- Area: `other`
+- Summary: Running `Set Up TermiWeb.cmd` from a packaged install could stop at the firewall warning line even after the server had already started, which made the first-run flow look hung.
+- Notes: Fixed during release dogfooding by making setup hand off to the packaged start launcher asynchronously and wait on the configured port instead of blocking on the nested launcher process chain.
+
+### Finding 11: The collapsed keyboard rail could force app-level vertical scroll
+- Status: `Closed`
+- First seen: `2026-04-17`
+- Area: `mobile`
+- Summary: The collapsed keyboard quick-action rail could overflow the terminal shell enough to create a whole-app vertical scrollbar instead of staying contained within the terminal area.
+- Notes: Fixed during M5 dogfooding by giving the collapsed rail a real grid row instead of rendering it from a zero-height row with a large downward translation, while keeping the desired slight upward visual nudge.
+
 ### Finding 5: Interactive CLI rendering truth breaks down under real use
-- Status: `Open`
+- Status: `Closed`
 - First seen: `2026-04-06`
 - Area: `terminal`
 - Summary: While using full-screen or highly interactive CLI tools such as Claude Code or Codex, typed text and generated text can appear in the wrong place, ghost text can linger, and visible text can shift upward or out of order.
-- Notes: This is now the main `0.1` release blocker because it undermines normal dogfooding of primary CLI workflows. The current mitigation forces local xterm repaint after parsed output and snapshot-driven rebuilds, but the finding stays open until dogfooding shows the drift is no longer common. Refresh is no longer a reliable cleanup path; column changes have sometimes cleaned up the viewport. Device-local cleanup must not mutate the shared PTY.
+- Notes: Closed after extended M5 dogfooding showed the current repaint and snapshot-rebuild mitigation is holding up in normal Claude Code and Codex use well enough that the drift no longer feels like a recurring `0.1` release blocker.
 
-## Closed
+### Finding 7: Collapsing the top bar left reclaimed space stranded
+- Status: `Closed`
+- First seen: `2026-04-16`
+- Area: `UI`
+- Summary: Collapsing the top bar could leave dead space at the bottom of the workspace and made the reveal control feel spatially detached from the original collapse point.
+- Notes: Fixed during M5 dogfooding by correcting the collapsed workspace grid and anchoring the reveal control to the same top-right corner language as the collapse control.
+
+### Finding 8: Nested repo launches inherited the parent TermiWeb runtime config
+- Status: `Closed`
+- First seen: `2026-04-16`
+- Area: `other`
+- Summary: Launching the repo copy from inside another TermiWeb session could inherit the parent `TERMIWEB_*` environment and come up on the wrong port or password, which broke the expected Vite dogfood loop.
+- Notes: Fixed during M5 dogfooding by making repo startup treat the repo `.env` as authoritative for `TERMIWEB_*` values and by making hidden start and stop prefer the repo port before inherited environment state.
+
+### Finding 9: Top-bar status telemetry looked like part of the logout controls
+- Status: `Closed`
+- First seen: `2026-04-16`
+- Area: `UI`
+- Summary: The status pills and logout button shared the same right-side action rail, so connection status read like part of the logout control cluster instead of session telemetry.
+- Notes: Fixed during M5 dogfooding by moving the status pills into the active-instance block and leaving logout as the lone action in the top-right action area.
+
+### Finding 10: `Ctrl+C` ignored explicit selection during copy attempts
+- Status: `Closed`
+- First seen: `2026-04-16`
+- Area: `terminal`
+- Summary: Highlighted terminal text and selection-panel text did not get a reliable `Ctrl+C` copy path, so copy attempts could still behave like terminal interrupts instead of client-side copy.
+- Notes: Fixed during M5 dogfooding by routing plain `Ctrl+C` or `Cmd+C` to the client clipboard only when there is an explicit text selection, while keeping unselected `Ctrl+C` as the real terminal interrupt path.
 
 ### Finding 1: Home and End require a double press
 - Status: `Closed`

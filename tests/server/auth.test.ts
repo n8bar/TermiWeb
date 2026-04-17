@@ -1,4 +1,4 @@
-import { mkdtempSync, rmSync } from "node:fs";
+import { mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { EventEmitter } from "node:events";
 import os from "node:os";
 import path from "node:path";
@@ -214,5 +214,63 @@ describe("auth routes", () => {
     });
 
     expect(secondLogin.headers["set-cookie"]?.[0]).toContain("termiweb_session_32443=");
+  });
+
+  it("writes authenticated client event logs to disk", async () => {
+    const dataDir = createTempDataDir();
+    const loggingConfig = {
+      ...config,
+      dataDir,
+    };
+    const { app } = await createHttpApp({
+      config: loggingConfig,
+      authStore: new SessionStore({
+        ttlHours: loggingConfig.sessionTtlHours,
+        dataDir,
+      }),
+      terminalManager: new TerminalManagerStub() as never,
+    });
+
+    const login = await request(app).post("/api/auth/login").send({
+      password: loggingConfig.password,
+    });
+    const cookies = login.headers["set-cookie"];
+    if (!cookies) {
+      throw new Error("Expected auth cookie");
+    }
+
+    const event = await request(app)
+      .post("/api/client-events")
+      .set("Cookie", cookies)
+      .set("User-Agent", "clipboard-test")
+      .send({
+        type: "clipboard-write-failed",
+        name: "NotAllowedError",
+        message: "Write permission denied.",
+        context: {
+          source: "keyboard-shortcut",
+          selectionMode: false,
+          hasExplicitSelection: true,
+        },
+      });
+
+    expect(event.status).toBe(204);
+
+    const logPath = path.join(dataDir, "logs", "client-events.log");
+    const [line] = readFileSync(logPath, "utf8").trim().split("\n");
+    if (!line) {
+      throw new Error("Expected a client event log entry");
+    }
+    const entry = JSON.parse(line);
+
+    expect(entry.type).toBe("clipboard-write-failed");
+    expect(entry.name).toBe("NotAllowedError");
+    expect(entry.message).toBe("Write permission denied.");
+    expect(entry.context).toEqual({
+      source: "keyboard-shortcut",
+      selectionMode: false,
+      hasExplicitSelection: true,
+    });
+    expect(entry.request.userAgent).toBe("clipboard-test");
   });
 });
