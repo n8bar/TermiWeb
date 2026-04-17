@@ -182,3 +182,4 @@
 2026-04-17 Collapsed the seeded-shell fallback in `1.Start-Here.md` into a short closing note instead of giving it a full standalone section.
 2026-04-17 Fixed the packaged setup flow so it no longer looks hung after a successful first launch: setup now hands off to the packaged start launcher asynchronously and waits on the configured port instead of blocking on the nested launcher process chain.
 2026-04-17 Closed `Finding 6` after packaged uninstall, reinstall, setup, and elevated-instance verification all passed, then marked `M5` complete and updated the plan and release standard to show that `M7` is now unblocked.
+2026-04-17 Added a direct `DISCLAIMER.md` pointer near the top of `1.Start-Here.md` so the package-root onboarding path does not bury the release disclaimer behind the rest of the setup steps.
