@@ -2,7 +2,7 @@
 
 ## Current Focus
 
-`M5` and `M6` are complete. `M7` is now unblocked; expand the [M7 worklist stub](worklists/m7-release-and-download-website.md) before starting release and website work.
+`M5` and `M6` are complete. `M7` is now the active milestone; start with the README and package-root docs overhaul in the [M7 worklist](worklists/m7-release-and-download-website.md), then build out the release and download surfaces from there.
 
 ## Milestones
 
@@ -35,7 +35,7 @@
   - Summary: This milestone should produce the tagged `0.1` release artifacts plus the GitHub Pages download site that points to them. The code/doc work here is release packaging, distribution metadata, and the website content that turns the build into an actual downloadable release.
   - Start: 2026-04-19
   - Target End: 2026-04-25
-  - Worklist Stub: [M7 release and download website](worklists/m7-release-and-download-website.md) — expand this before work begins
+  - Worklist: [M7 release and download website](worklists/m7-release-and-download-website.md)
 - [ ] M8: Marketing for an open-source, free-to-use product
   - Summary: This milestone is the full marketing phase around the product, not just a bundle of launch materials. It includes messaging, positioning, outreach, demos, screenshots, announcements, and the practical work of getting attention on a shipped open-source product.
   - Start: 2026-04-26
@@ -57,4 +57,4 @@
 
 ## Next Action
 
-Expand the [M7 worklist stub](worklists/m7-release-and-download-website.md) into a real execution plan, then start the `0.1` release and download-site work.
+Start items `1` through `3` in the [M7 worklist](worklists/m7-release-and-download-website.md): lock the public release contract, overhaul the README, and align the package-root docs before website implementation begins.
