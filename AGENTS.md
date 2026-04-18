@@ -55,6 +55,7 @@
    1. one whole milestone
    2. one clearly bounded portion of one milestone when that milestone is large enough to justify separate execution tracking
 12. A worklist must never span multiple milestones.
+13. In `docs/worklists/**`, purely descriptive headings may stay unnumbered; numbered headings should reflect only the actionable section sequence.
 
 ## 3. Testing Strategy
 1. Use TDD where it materially reduces ambiguity:

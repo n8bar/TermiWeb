@@ -198,3 +198,9 @@
 2026-04-17 Tightened the first README feature bullet to `Live shared terminals in the browser` so it stops implying a single-instance model.
 2026-04-17 Cut the README reference section down to the disclaimer, start-here guide, third-party notices, and the relabeled developer project plan.
 2026-04-17 Renamed the trimmed README reference section from `References` to `Additional Info`.
+2026-04-17 Removed the regeneration instruction from `THIRD_PARTY_NOTICES.md` so the generated notices file stays a pure artifact and the command guidance lives in the README instead.
+2026-04-17 Checked off the `M7` worklist item for locking the public `0.1` release contract now that the version, tag, release title, artifact name, and promoted package-root docs are all explicitly settled in the docs.
+2026-04-17 Reworded the `M7` README-overhaul subtask about doc links to match the smaller `Additional Info` section we actually chose, then checked off the whole README-overhaul item now that the pitch, quick-start path, download placeholder, link trim, and `0.1` constraint language are all in place.
+2026-04-17 Checked off the `M7` package-root-docs item after reviewing the shipped `1.Start-Here.md`, `DISCLAIMER.md`, `THIRD_PARTY_NOTICES.md`, and package-root launcher names against the current release surface and finding no further edits necessary for the minimum bar.
+2026-04-17 Added a worklist-heading exception to `AGENTS.md` and `CLAUDE.md` so descriptive worklist headings can stay unnumbered without renumbering actionable sections, then updated the `M6` and `M7` worklists to remove numbering from `Scope` and `Desired Outcome`.
+2026-04-17 Tightened the worklist-heading rule so numbered headings now reflect only the actionable section sequence, then renumbered the `M6` and `M7` worklists so `Work Breakdown` starts at `1` instead of inheriting numbering from descriptive headings.

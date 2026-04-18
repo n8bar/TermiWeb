@@ -1,13 +1,13 @@
 # M6 Installer And First-Run Experience Worklist
 
-## 1. Scope
+## Scope
 This worklist covers the detailed execution layer for milestone `M6`.
 
 `M6` includes both packaging/install/run/uninstall experience for a non-dev Windows user and first-run guidance that gets a newly installed user to one shared session visible from two devices at the same time, and also, optional boot auto-start.
 
 Read this worklist alongside [the plan](../PLAN.md) for milestone timing and sequencing, [the product spec](../PRODUCT_SPEC.md) for product-level constraints, and [the release standard](../RELEASE_STANDARD.md) for the `0.1` quality bar.
 
-## 2. Desired Outcome
+## Desired Outcome
 A Windows user should be able to install or unpack TermiWeb, launch it without a developer workflow, and understand how to reach it locally.
 
 That same user should be able to reach their first shared live shell from a second device without having to reverse-engineer the product.
@@ -16,7 +16,7 @@ The packaged experience should also support optional boot-time startup and a cle
 
 The result should feel intentional, not like a source checkout with a few extra scripts.
 
-## 3. Work Breakdown
+## 1. Work Breakdown
 1. [x] Define the `0.1` release package contract.
   Capture the minimum packaging decisions needed for later install, launch, uninstall, and first-run work: release form, required shipped files, excluded repo/dev material, and any runtime assumptions the package depends on.
   The approved contract now lives in [the focused `0.1` release package contract spec](../specs/v0.1-release-package-contract.md).
@@ -89,7 +89,7 @@ The result should feel intentional, not like a source checkout with a few extra 
   - Auto-start enable: registered task `TermiWeb Auto Start` with `LogonType=Password`, `UserId=n8Bar`, `MSFT_TaskBootTrigger`, action pointing at packaged `start-hidden.ps1`.
   - Uninstall: `Uninstall TermiWeb.cmd` stopped the running server, removed the startup task, and self-deleted the package directory.
 
-## 4. Verification Checklist
+## 2. Verification Checklist
 1. [x] A fresh Windows machine or Windows user profile can start the shipped release package without a development-oriented setup.
    1. [x] On the dev machine, run `npm run package:release` from the repo to produce `artifacts/release/TermiWeb-0.1.0-windows-x64.zip`. Copy that zip to the test environment.
    2. [x] On a clean Windows machine or a Windows user account that has never touched this repo, extract the zip to a working folder.

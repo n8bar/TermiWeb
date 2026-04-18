@@ -2,8 +2,6 @@
 
 This file records the current installed production dependency set that TermiWeb expects to ship in the `0.1` Windows release package.
 
-Regenerate it with `npm run notices:third-party` whenever the production dependency graph changes.
-
 ## Summary
 
 - Production packages listed: 49

@@ -1,6 +1,6 @@
 # M7 Release And Download Website Worklist
 
-## 1. Scope
+## Scope
 This worklist covers the detailed execution layer for milestone `M7`.
 
 `M7` includes the public launch surface for `0.1`: the final Windows release artifact, the GitHub release entry, the GitHub Pages download website, the README overhaul that turns the repo root into a clean entrypoint, and the supporting release-facing copy and visuals that make those surfaces feel coherent together.
@@ -9,15 +9,15 @@ Read this worklist alongside [the plan](../PLAN.md) for milestone timing and seq
 
 This worklist does not cover `M8` marketing rollout. `M7` should create a clean public release surface, not a full campaign.
 
-## 2. Desired Outcome
+## Desired Outcome
 Someone landing on the repo, the GitHub release, or the download website for the first time should be able to understand what TermiWeb is, what `0.1` supports, how to download it, how to start it, and what trust/deployment boundaries still apply.
 
 The public-facing materials should agree with the shipped package exactly. The release artifact, package-root docs, README, GitHub release notes, and download website should all tell the same story with the same filenames, versioning, and product constraints.
 
 The result should feel like an intentional launch surface rather than a source repo that happens to contain a downloadable zip.
 
-## 3. Work Breakdown
-1. [ ] Lock the `0.1` public release contract.
+## 1. Work Breakdown
+1. [x] Lock the `0.1` public release contract.
    Capture the release-facing decisions that every `M7` surface depends on: final version string, release artifact name, tag name, GitHub release title, and the exact package-root files that the README and website will reference before the live download URL exists.
    Locked decisions:
    - release version: `0.1.0`
@@ -27,13 +27,13 @@ The result should feel like an intentional launch surface rather than a source r
    - publicly referenced package-root docs: `1.Start-Here.md`, `DISCLAIMER.md`, `THIRD_PARTY_NOTICES.md`
    - `ReadMe.txt` ships only as an in-package pointer and is not part of the promoted public launch surface
 
-2. [ ] Overhaul the README before building the website.
+2. [x] Overhaul the README before building the website.
    Make the repo root a clean public entrypoint first.
-   1. [ ] Rewrite the top of `README.md` around a short product pitch, current status, the packaged quick-start path, and the final download-section shape without pretending the live release URL already exists.
-   2. [ ] Keep the engineering docs links, but demote them so the README does not open like an internal maintenance index.
-   3. [ ] Make sure the README language matches the actual `0.1` constraints: Windows host scope, elevated-only shells, trusted-network-first posture, and operator-managed WAN guidance.
+   1. [x] Rewrite the top of `README.md` around a short product pitch, the packaged quick-start path, and the final download-section shape without pretending the live release URL already exists.
+   2. [x] Trim the README's internal-doc links down to a small additional-info section so the README does not open like an internal maintenance index.
+   3. [x] Make sure the README language matches the actual `0.1` constraints: Windows host scope, elevated-only shells, trusted-network-first posture, and operator-managed WAN guidance.
 
-3. [ ] Align the package-root docs with the public launch surface.
+3. [x] Align the package-root docs with the public launch surface.
    `1.Start-Here.md`, `DISCLAIMER.md`, `THIRD_PARTY_NOTICES.md`, and the package-root launcher names should read like one release surface instead of separate documents that happen to ship together.
 
 4. [ ] Define the download website structure and copy.
@@ -63,7 +63,7 @@ The result should feel like an intentional launch surface rather than a source r
 11. [ ] Close `M7` cleanly.
    Update the plan, worklist, and changelog with the actual release result, then leave any remaining public-surface polish for `M8` or later findings instead of silently carrying unfinished launch work forward.
 
-## 4. Sequencing Notes
+## 2. Sequencing Notes
 1. [ ] Start with the README and package-root doc overhaul before site implementation.
    The website should launch from settled release-facing language rather than forcing the README and package docs to catch up afterward.
 
@@ -72,7 +72,7 @@ The result should feel like an intentional launch surface rather than a source r
 3. [ ] Keep `M7` release-focused.
    If a task turns into broad marketing, announcement strategy, outreach, or campaign copy, move it to `M8` rather than letting `M7` sprawl.
 
-## 5. Verification Checklist
+## 3. Verification Checklist
 1. [ ] The README works as a public repo landing page instead of an internal engineering index.
 2. [ ] The packaged release artifact name, version, and download URL match across the package, README, GitHub release, and website.
 3. [ ] The public docs and site describe `0.1` honestly: Windows host scope, elevated-only shells, trusted-network-first default, and operator-managed WAN posture.
