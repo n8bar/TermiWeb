@@ -59,27 +59,30 @@ The result should feel like an intentional launch surface rather than a source r
 5. [x] Produce the release visuals needed by the site and GitHub release.
    Captured the minimum useful visual set in `assets/screenshots/`: one workstation screenshot and one phone screenshot. No separate package-root or setup image was needed for the minimum comprehension bar.
 
-6. [ ] Implement the GitHub Pages site.
-   Build the actual website surface in-repo, including layout, styling, copy, screenshots, and final download-link targets.
+6. [x] Build a fresh local release artifact before site implementation.
+   Rebuilt the current `0.1` package locally and used that assembled artifact as the concrete release surface the site and release notes must describe. The packaged client includes the shipped favicon.
 
-7. [ ] Wire the site and README to the real release artifact.
-   Once the final artifact name and GitHub release URL are real, update every public-facing surface to point at the exact published asset rather than local artifact paths or temporary placeholders.
+7. [ ] Implement the GitHub Pages site.
+   Build the actual website surface in-repo against the current local release artifact, including layout, styling, copy, screenshots, and placeholder download-link targets that match the locked artifact name.
 
-8. [ ] Prepare the GitHub release notes and publication procedure.
+8. [ ] Wire the site and README to the real release artifact.
+   Once the final published asset URL is real, update every public-facing surface to point at the exact released file rather than local artifact paths or temporary placeholders.
+
+9. [ ] Prepare the GitHub release notes and publication procedure.
    The release notes should state what `0.1` is, what changed, what the known operational boundaries are, how to get started, and where to find the download website and source repository.
 
-9. [ ] Dry-run the full release surface before publishing.
+10. [ ] Dry-run the full release surface before publishing.
    Treat the package, README, GitHub release draft, and website as one integrated system and verify them together before the public push.
 
-10. [ ] Publish `0.1` and verify the public surface live.
+11. [ ] Publish `0.1` and verify the public surface live.
    Create the tag and GitHub release, upload the final artifact, deploy the site, and confirm that the live README, release, and website all point to the same real downloadable package.
 
-11. [ ] Close `M7` cleanly.
+12. [ ] Close `M7` cleanly.
    Update the plan, worklist, and changelog with the actual release result, then leave any remaining public-surface polish for `M8` or later findings instead of silently carrying unfinished launch work forward.
 
 ## 2. Sequencing Notes
-1. [ ] Start with the README and package-root doc overhaul before site implementation.
-   The website should launch from settled release-facing language rather than forcing the README and package docs to catch up afterward.
+1. [ ] Start with the README and package-root doc overhaul, then rebuild the local release artifact before site implementation.
+   The website should launch from settled release-facing language and a real current package surface rather than forcing the README and package docs to catch up afterward.
 
 2. [ ] Do not publish the GitHub release before the website and package-root docs agree on filenames and onboarding guidance.
 

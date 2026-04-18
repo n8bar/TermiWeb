@@ -2,7 +2,7 @@
 
 ## Current Focus
 
-`M5` and `M6` are complete. `M7` is now the active milestone; start with the README and package-root docs overhaul in the [M7 worklist](worklists/m7-release-and-download-website.md), then build out the release and download surfaces from there.
+`M5` and `M6` are complete. `M7` is now the active milestone; the README, package-root docs, site structure, screenshots, and fresh local release artifact are in place, so the next step is site implementation against that current package surface.
 
 ## Milestones
 
@@ -57,4 +57,4 @@
 
 ## Next Action
 
-Start items `1` through `3` in the [M7 worklist](worklists/m7-release-and-download-website.md): lock the public release contract, overhaul the README, and align the package-root docs before website implementation begins.
+Implement the site in the [M7 worklist](worklists/m7-release-and-download-website.md) against the current local release artifact, then wire the final published asset URL later.
