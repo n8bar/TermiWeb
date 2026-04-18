@@ -18,11 +18,18 @@ The result should feel like an intentional launch surface rather than a source r
 
 ## 3. Work Breakdown
 1. [ ] Lock the `0.1` public release contract.
-   Capture the release-facing decisions that every `M7` surface depends on: final version string, release artifact name, tag name, GitHub release title, canonical download URL, and the exact package-root files that the README and website will reference.
+   Capture the release-facing decisions that every `M7` surface depends on: final version string, release artifact name, tag name, GitHub release title, and the exact package-root files that the README and website will reference before the live download URL exists.
+   Locked decisions:
+   - release version: `0.1.0`
+   - git tag: `v0.1.0`
+   - GitHub release title: `TermiWeb 0.1.0`
+   - primary downloadable asset: `TermiWeb-0.1.0-windows-x64.zip`
+   - publicly referenced package-root docs: `1.Start-Here.md`, `DISCLAIMER.md`, `THIRD_PARTY_NOTICES.md`
+   - `ReadMe.txt` ships only as an in-package pointer and is not part of the promoted public launch surface
 
 2. [ ] Overhaul the README before building the website.
    Make the repo root a clean public entrypoint first.
-   1. [ ] Rewrite the top of `README.md` around a short product pitch, current status, download path, and quick-start guidance for the shipped package.
+   1. [ ] Rewrite the top of `README.md` around a short product pitch, current status, the packaged quick-start path, and the final download-section shape without pretending the live release URL already exists.
    2. [ ] Keep the engineering docs links, but demote them so the README does not open like an internal maintenance index.
    3. [ ] Make sure the README language matches the actual `0.1` constraints: Windows host scope, elevated-only shells, trusted-network-first posture, and operator-managed WAN guidance.
 

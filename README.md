@@ -1,31 +1,66 @@
 # TermiWeb
 
-TermiWeb is a workstation-first shared terminal for Windows. The browser UI is the live interface on your workstation and any other device you use to reach it, so one terminal session can be continued without remoting the whole desktop.
+TermiWeb is a browser-first shared terminal for a Windows host. It keeps the browser UI as the live interface on the host device and any other device you use to reach it, so one terminal session can continue without remoting the whole desktop.
 
-## Product direction
+It was created for power users, especially vibe-coders who want to continue "working" when they need to step away from the desk for a few moments. In other words, it was built for people who want to keep a live shell within reach while moving between their desk and the rest of real life.
 
-- The default TermiWeb story is still one trusted Windows machine on a private network.
-- Careful WAN exposure is also a legitimate advanced use case for people who want to reach their own workstation remotely.
-- In `0.1`, TermiWeb expects operators to supply the outer deployment controls around WAN access rather than trying to be the entire remote-access stack by itself.
-- TermiWeb does not currently ship multi-user auth, built-in TLS termination, or a turnkey public-exposure workflow.
+## Product Features At A Glance
 
-## What's Working
+- Live shared terminals in the browser
+- Cross-device attachment to the same live shell
+- A Windows packaged run surface with setup, start, restart, stop, uninstall, and optional before-sign-in auto-start
+- Mobile-oriented terminal controls plus selection/clipboard support
+- `0.1` targets Windows hosts only.
+- Every shell in `0.1` is elevated.
+- `0.1` assumes a trusted Windows machine on a private network.
+- WAN exposure is possible, but you are responsible for securing it.
 
-- Node + TypeScript backend with WebSocket-driven terminal sessions
-- `xterm.js` client with touch-oriented terminal controls
-- Shared instances backed by Windows shell processes
+## Download
+
+The final public `0.1` download link will land here once the GitHub release and download site are live.
+
+Until then, repo users can build the packaged release locally with:
+
+```bash
+npm run package:release
+```
+
+That command produces the Windows release folder and zip under `artifacts/release/`.
+
+## Packaged quick start
+
+Once you have the packaged release:
+
+1. Unpack it into a user-writable folder.
+2. Open `1.Start-Here.md`. It walks through the rest of the setup path.
+3. Run `Set Up TermiWeb.cmd` if you want the guided setup path.
+4. Approve the Windows elevation prompt when TermiWeb starts.
+5. Open `http://127.0.0.1:22443` if setup does not open it for you.
+
+## What `0.1` supports
+
+- Shared terminal instances through the browser UI
+- A Windows packaged run surface with setup, start, restart, stop, uninstall, and optional before-sign-in auto-start
 - Elevated-only shell launch path for `0.1`
-- Login with one configured app password for local/LAN use
+- One configured app password for local and LAN use
 - Authenticated browser sessions that survive normal server restarts until logout or expiry
-- Empty logins seed `Instance 1` automatically so a fresh browser session never lands on an empty instance rail
-- Device-local instance selection after initial attach
-- Rendered-text select mode for reliable copying after screen clears
-- Per-instance shared column width with `80` as the default for new instances
-- One shared layout across workstation and device browsers
-- Collapsible keyboard control tray that trades button space for more visible terminal rows
-- Local-only testing and verification workflow
+- Cross-device attachment to the same live shell
+- Mobile-oriented terminal controls plus selection/copy support
+- Per-instance shared width (as column counts) with `80` as the default for new instances
+- Clipboard controls, including a fallback paste field when direct browser paste is blocked
 
-## Quick start
+## Constraints
+
+- TermiWeb does not currently ship multi-user auth.
+- TermiWeb does not currently ship built-in TLS termination.
+- TermiWeb does not currently ship a turnkey public-exposure workflow.
+- `0.1` is a trusted-network-first product release, not a whole secure remote-access stack by itself.
+
+## Built with
+
+TermiWeb stands on strong existing work, especially `xterm.js`, `node-pty`, TypeScript, Vite, Express, and the Windows terminal stack they make usable from the browser.
+
+## Repo quick start
 
 1. Copy `.env.example` to `.env`.
 2. Set `TERMIWEB_PASSWORD` to the value you want before first run.
@@ -98,4 +133,4 @@ TermiWeb is a workstation-first shared terminal for Windows. The browser UI is t
 
 ## Shell behavior
 
-TermiWeb prefers PowerShell 7 from `PATH`, then falls back to the standard install path at `C:\Program Files\PowerShell\7\pwsh.exe`, and only then falls back to Windows PowerShell.
+`v0.1` prefers PowerShell 7 from `PATH`, then falls back to the standard install path at `C:\Program Files\PowerShell\7\pwsh.exe`, and only then falls back to Windows PowerShell.

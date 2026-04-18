@@ -184,3 +184,15 @@
 2026-04-17 Closed `Finding 6` after packaged uninstall, reinstall, setup, and elevated-instance verification all passed, then marked `M5` complete and updated the plan and release standard to show that `M7` is now unblocked.
 2026-04-17 Added a direct `DISCLAIMER.md` pointer near the top of `1.Start-Here.md` so the package-root onboarding path does not bury the release disclaimer behind the rest of the setup steps.
 2026-04-17 Expanded the `M7` release-and-download-website worklist from a stub into a real execution plan, updated the plan so `M7` is now the active milestone, and dropped the stale `stub` label from the README docs index.
+2026-04-17 Locked the core public `0.1` release identifiers for `M7` work: version `0.1.0`, tag `v0.1.0`, GitHub release title `TermiWeb 0.1.0`, downloadable asset `TermiWeb-0.1.0-windows-x64.zip`, and the promoted package-root docs `1.Start-Here.md`, `DISCLAIMER.md`, and `THIRD_PARTY_NOTICES.md`.
+2026-04-17 Logged two new open `0.2` mobile findings: collapsed-mode instance controls are too cramped to use cleanly on phones, and mobile keyboard text-assistance behavior can corrupt terminal input by replaying or duplicating typed text around punctuation.
+2026-04-17 Backdated the two new open `0.2` mobile findings to the earlier dates they actually surfaced in repo history instead of incorrectly stamping them with the day they were logged.
+2026-04-17 Logged the missing favicon as another open `0.2` finding so the app, bookmarks, and future public site do not keep shipping with an unfinished browser identity surface.
+2026-04-17 Tightened the new open findings wording by removing the stale `0.1` framing and trimming the notes down to the actual issue and likely direction.
+2026-04-17 Corrected the `M7` sequence so the README overhaul no longer assumes a live download URL too early, then rewrote the top of `README.md` around public-release status, packaged quick start, honest constraints, and a placeholder download section that can be wired later.
+2026-04-17 Settled the low-regret README cleanup: fixed typos, tightened the `Status` wording, kept the vibe-coder line with a broader follow-up sentence, clarified the packaged quick-start steps, added a `Built with` credit section, and removed the chatty warning phrasing from the launch-critical sections.
+2026-04-17 Removed the stray internal-status bullet from the README so the `Status` section sticks to externally true product facts instead of milestone-ish phrasing.
+2026-04-17 Reworded the README status bullet so it states the private-network assumption directly instead of using the more internal `story` phrasing.
+2026-04-17 Replaced the more abstract README WAN-status line with the shorter direct version: WAN exposure is possible, but you are responsible for securing it.
+2026-04-17 Renamed the README top summary block to `Product Features At A Glance` and added a few concrete capability bullets so the section title matches the information it carries.
+2026-04-17 Tightened the first README feature bullet to `Live shared terminals in the browser` so it stops implying a single-instance model.
