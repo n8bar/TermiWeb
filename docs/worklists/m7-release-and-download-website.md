@@ -3,6 +3,10 @@
 ## Scope
 This worklist covers the detailed execution layer for milestone `M7`.
 
+Milestone timing, mirrored from [the plan](../PLAN.md):
+- Start: `2026-04-19`
+- Target End: `2026-04-25`
+
 `M7` includes the public launch surface for `0.1`: the final Windows release artifact, the GitHub release entry, the GitHub Pages download website, the README overhaul that turns the repo root into a clean entrypoint, and the supporting release-facing copy and visuals that make those surfaces feel coherent together.
 
 Read this worklist alongside [the plan](../PLAN.md) for milestone timing and sequencing, [the product spec](../PRODUCT_SPEC.md) for product-level behavior, [the release standard](../RELEASE_STANDARD.md) for the `0.1` release bar, and [the `0.1` release package contract](../specs/v0.1-release-package-contract.md) for the packaged artifact expectations that the site and release notes need to describe honestly.
@@ -36,14 +40,24 @@ The result should feel like an intentional launch surface rather than a source r
 3. [x] Align the package-root docs with the public launch surface.
    `1.Start-Here.md`, `DISCLAIMER.md`, `THIRD_PARTY_NOTICES.md`, and the package-root launcher names should read like one release surface instead of separate documents that happen to ship together.
 
-4. [ ] Define the download website structure and copy.
+4. [x] Define the download website structure and copy.
    Set the information architecture before implementation so the site does not drift into generic launch-page filler.
-   1. [ ] Decide whether the site is a single page or a very small multi-page surface.
-   2. [ ] Define the required sections, likely including: product overview, what `0.1` supports, screenshots, download, first-run path, trust/deployment boundaries, and source/repo links.
-   3. [ ] Define the website copy boundaries so `M7` does not accidentally absorb `M8` marketing scope.
+   1. [x] Decide whether the site is a single page or a very small multi-page surface.
+      Use a single page for `0.1`, but keep the content structure clean enough that a later release could split sections out if expansion becomes worthwhile.
+   2. [x] Define the required sections for the single-page `0.1` site.
+      Required sections:
+      - Hero
+      - What `0.1` Supports
+      - Screenshots
+      - Download
+      - First Run
+      - Trust Boundaries
+      - Source
+   3. [x] Define the website copy boundaries so `M7` does not accidentally absorb `M8` marketing scope.
+      `M7` site copy should market the real `0.1` release: clear product framing, strong screenshots, confident positioning, and a clean download/start path. It should stop short of campaign-style claims, comparisons, testimonials, or future-version selling.
 
-5. [ ] Produce the release visuals needed by the site and GitHub release.
-   Capture the minimum useful visual set: at least one strong workstation screenshot, one phone or second-device screenshot, and any package-root or setup visual that materially improves comprehension.
+5. [x] Produce the release visuals needed by the site and GitHub release.
+   Captured the minimum useful visual set in `assets/screenshots/`: one workstation screenshot and one phone screenshot. No separate package-root or setup image was needed for the minimum comprehension bar.
 
 6. [ ] Implement the GitHub Pages site.
    Build the actual website surface in-repo, including layout, styling, copy, screenshots, and final download-link targets.

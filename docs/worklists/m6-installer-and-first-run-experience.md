@@ -3,6 +3,10 @@
 ## Scope
 This worklist covers the detailed execution layer for milestone `M6`.
 
+Milestone timing, mirrored from [the plan](../PLAN.md):
+- Start: `2026-04-12`
+- End: `2026-04-13`
+
 `M6` includes both packaging/install/run/uninstall experience for a non-dev Windows user and first-run guidance that gets a newly installed user to one shared session visible from two devices at the same time, and also, optional boot auto-start.
 
 Read this worklist alongside [the plan](../PLAN.md) for milestone timing and sequencing, [the product spec](../PRODUCT_SPEC.md) for product-level constraints, and [the release standard](../RELEASE_STANDARD.md) for the `0.1` quality bar.

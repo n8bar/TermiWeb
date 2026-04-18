@@ -35,11 +35,11 @@ This document tracks dogfood findings that are worth fixing later, without inter
 - Notes: This looks broader than autocorrect alone. Investigate every browser hint available for disabling mobile text assistance in terminal entry.
 
 ### Finding 15: The app still has no favicon
-- Status: `Open`
+- Status: `Closed`
 - First seen: `2026-04-17`
 - Area: `UI`
 - Summary: TermiWeb still ships without a favicon, which makes tabs, bookmarks, and the eventual public release surface feel unfinished.
-- Notes: Add one favicon that works across the app and the public site.
+- Notes: Closed by shipping a real app favicon and wiring it into the browser client so screenshots and normal tabs stop showing the generic browser icon.
 
 ## Closed
 
