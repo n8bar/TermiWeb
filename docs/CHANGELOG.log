@@ -196,3 +196,5 @@
 2026-04-17 Replaced the more abstract README WAN-status line with the shorter direct version: WAN exposure is possible, but you are responsible for securing it.
 2026-04-17 Renamed the README top summary block to `Product Features At A Glance` and added a few concrete capability bullets so the section title matches the information it carries.
 2026-04-17 Tightened the first README feature bullet to `Live shared terminals in the browser` so it stops implying a single-instance model.
+2026-04-17 Cut the README reference section down to the disclaimer, start-here guide, third-party notices, and the relabeled developer project plan.
+2026-04-17 Renamed the trimmed README reference section from `References` to `Additional Info`.

@@ -111,25 +111,12 @@ TermiWeb stands on strong existing work, especially `xterm.js`, `node-pty`, Type
 - `Start TermiWeb.cmd`, `Restart TermiWeb.cmd`, and `Stop TermiWeb.cmd` are the Windows launchers intended for the packaged run surface and also work from a built repo checkout. They request elevation because `0.1` runs elevated shells only.
 - `Uninstall TermiWeb.cmd` is the packaged uninstall entry point and intentionally refuses to run from a source checkout.
 
-## Documentation
+## Additional Info
 
-- [Project plan](docs/PLAN.md)
-- [M6 installer and first-run worklist](docs/worklists/m6-installer-and-first-run-experience.md)
-- [M7 release and download website worklist](docs/worklists/m7-release-and-download-website.md)
-- [Release standard](docs/RELEASE_STANDARD.md)
-- [Product spec](docs/PRODUCT_SPEC.md)
-- [Deployment philosophy](docs/DEPLOYMENT_PHILOSOPHY.md)
-- [Findings log](docs/FINDINGS.md)
+- [Developer project plan](docs/PLAN.md)
 - [Disclaimer](DISCLAIMER.md)
 - [Start-here guide](1.Start-Here.md)
 - [Third-party notices](THIRD_PARTY_NOTICES.md)
-- [0.1 browser terminal spec](docs/specs/v0.1-browser-terminal.md)
-- [0.1 per-instance column width](docs/specs/v0.1-per-instance-column-width.md)
-- [0.1 persistent auth sessions](docs/specs/v0.1-persistent-auth-sessions.md)
-- [0.1 release package contract](docs/specs/v0.1-release-package-contract.md)
-- [0.2 browser session candidate](docs/specs/v0.2-browser-session-candidate.md)
-- [0.2 side-by-side instances candidate](docs/specs/v0.2-side-by-side-instances-candidate.md)
-- [Change log](docs/CHANGELOG.log)
 
 ## Shell behavior
 
