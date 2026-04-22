@@ -29,6 +29,7 @@
 19. If a document uses numbered headings, the first numbered heading at any tier starts at `1`.
 20. Heading level choice should follow the document structure; numbering rules do not imply a required heading depth.
 21. Avoid vague placeholder words such as `shape` when a more concrete term would say what is actually meant. Prefer specific terms like `layout`, `structure`, `contents`, `plan`, `scope`, `behavior`, or another word that names the real thing directly.
+22. Keep substantial drafts such as release-note bodies, announcement copy, or long procedures in their own docs and have worklists reference them instead of embedding them inline.
 
 ## 2. Worklists
 1. Use `docs/worklists/` for worklists: execution docs and todo lists.
