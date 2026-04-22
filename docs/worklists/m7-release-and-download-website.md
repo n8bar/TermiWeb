@@ -95,6 +95,9 @@ The result should feel like an intentional launch surface rather than a source r
    3. [x] Follow a deliberate manual publication order instead of publishing ad hoc.
       Use the manual order in [v0.1 release publication draft](../v0.1-release-publication-draft.md).
 
+9. [x] Create the GitHub release draft and upload the release artifact.
+   Create the draft GitHub release for `v0.1.0`, use the approved release-body draft, and upload `TermiWeb-0.1.0-windows-x64.zip` so the real asset URL exists before the later README/site wiring step. Keep the release in draft state until the rest of the publication runbook is ready.
+
 ## 2. Verification Checklist
 1. [x] The README works as a public repo landing page instead of an internal engineering index.
 2. [x] The public docs and site describe `0.1` honestly: Windows host scope, elevated-only shells, trusted-network-first default, and operator-managed WAN posture.
@@ -103,7 +106,7 @@ The result should feel like an intentional launch surface rather than a source r
 5. [x] The screenshots and copy reflect the actual shipped UI rather than stale prerelease visuals.
 
 ## 3. Publication Runbook
-1. [ ] Publish a private milestone calendar feed at a stable public URL.
+1. [x] Publish a private milestone calendar feed at a stable public URL.
    Publish `milestones.ics` at its stable public URL and keep that URL out of the public site, README, and release copy. The file may live as a regular repo artifact or alongside the GitHub Pages site; the requirement is a dependable subscription URL, not a specific hosting surface. This is internal support plumbing for private calendar subscription, not part of the launch surface.
 
 2. [ ] Wire the site and README to the real release artifact.
@@ -119,8 +122,8 @@ The result should feel like an intentional launch surface rather than a source r
    Update the plan, worklist, and changelog with the actual release result, then leave any remaining public-surface polish for `M8` or later findings instead of silently carrying unfinished launch work forward.
 
 6. [ ] Publication Verification
-	1. [ ] The packaged release artifact name, version, and download URL match across the package, README, GitHub release, and website.
-	2. [ ] The GitHub release notes, release title, and download website all point to the same final release artifact.
-	3. [ ] No stale prerelease references remain, including outdated filenames such as `FIRST_RUN.md`, stale blocker language, or temporary placeholder copy.
-	4. [ ] The `milestones.ics` feed exists at its stable public URL, stays out of public navigation and copy, and is suitable for private subscription.
-	5. [ ] The root custom domain, its DNS records, any `www` redirect behavior, and the Pages HTTPS state are all working as intended at public launch.
+   1. [ ] The packaged release artifact name, version, and download URL match across the package, README, GitHub release, and website.
+   2. [ ] The GitHub release notes, release title, and download website all point to the same final release artifact.
+   3. [ ] No stale prerelease references remain, including outdated filenames such as `FIRST_RUN.md`, stale blocker language, or temporary placeholder copy.
+   4. [x] The `milestones.ics` feed exists at its stable public URL, stays out of public navigation and copy, and is suitable for private subscription.
+   5. [ ] The root custom domain, its DNS records, any `www` redirect behavior, and the Pages HTTPS state are all working as intended at public launch.
