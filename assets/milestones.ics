@@ -7,7 +7,7 @@ X-WR-CALNAME:TermiWeb Milestones
 X-WR-CALDESC:Milestone dates derived from docs/PLAN.md
 BEGIN:VEVENT
 UID:termiweb-m1@termiweb.local
-DTSTAMP:20260422T003008Z
+DTSTAMP:20260422T035830Z
 SUMMARY:M1: Repository bootstrap and docs baseline
 DTSTART;VALUE=DATE:20260406
 DTEND;VALUE=DATE:20260407
@@ -20,7 +20,7 @@ TRANSP:TRANSPARENT
 END:VEVENT
 BEGIN:VEVENT
 UID:termiweb-m2@termiweb.local
-DTSTAMP:20260422T003008Z
+DTSTAMP:20260422T035830Z
 SUMMARY:M2: Shared terminal backend and session model
 DTSTART;VALUE=DATE:20260406
 DTEND;VALUE=DATE:20260407
@@ -33,7 +33,7 @@ TRANSP:TRANSPARENT
 END:VEVENT
 BEGIN:VEVENT
 UID:termiweb-m3@termiweb.local
-DTSTAMP:20260422T003008Z
+DTSTAMP:20260422T035830Z
 SUMMARY:M3: Browser UI with instances\, auth\, and mobile controls
 DTSTART;VALUE=DATE:20260406
 DTEND;VALUE=DATE:20260407
@@ -46,7 +46,7 @@ TRANSP:TRANSPARENT
 END:VEVENT
 BEGIN:VEVENT
 UID:termiweb-m4@termiweb.local
-DTSTAMP:20260422T003008Z
+DTSTAMP:20260422T035830Z
 SUMMARY:M4: Local verification and launch polish
 DTSTART;VALUE=DATE:20260407
 DTEND;VALUE=DATE:20260408
@@ -60,7 +60,7 @@ TRANSP:TRANSPARENT
 END:VEVENT
 BEGIN:VEVENT
 UID:termiweb-m5@termiweb.local
-DTSTAMP:20260422T003008Z
+DTSTAMP:20260422T035830Z
 SUMMARY:M5: 0.1 release polish and rendering integrity
 DTSTART;VALUE=DATE:20260408
 DTEND;VALUE=DATE:20260418
@@ -75,7 +75,7 @@ TRANSP:TRANSPARENT
 END:VEVENT
 BEGIN:VEVENT
 UID:termiweb-m6@termiweb.local
-DTSTAMP:20260422T003008Z
+DTSTAMP:20260422T035830Z
 SUMMARY:M6: Installer and first-run experience
 DTSTART;VALUE=DATE:20260412
 DTEND;VALUE=DATE:20260414
@@ -89,22 +89,23 @@ TRANSP:TRANSPARENT
 END:VEVENT
 BEGIN:VEVENT
 UID:termiweb-m7@termiweb.local
-DTSTAMP:20260422T003008Z
+DTSTAMP:20260422T035830Z
 SUMMARY:M7: 0.1 release and GitHub Pages download website
 DTSTART;VALUE=DATE:20260419
 DTEND;VALUE=DATE:20260426
 DESCRIPTION:This milestone should produce the tagged `0.1` release artifact
  s plus the GitHub Pages download site that points to them. The code/doc wo
  rk here is release packaging\, distribution metadata\, the website content
-  that turns the build into an actual downloadable release\, and a small am
- ount of private release-support publishing that stays outside the public l
- aunch surface.\nStart: 2026-04-19\nTarget end: 2026-04-25
+  that turns the build into an actual downloadable release\, the public cus
+ tom-domain setup for that site\, and a small amount of private release-sup
+ port publishing that stays outside the public launch surface.\nStart: 2026
+ -04-19\nTarget end: 2026-04-25
 STATUS:CONFIRMED
 TRANSP:TRANSPARENT
 END:VEVENT
 BEGIN:VEVENT
 UID:termiweb-m8@termiweb.local
-DTSTAMP:20260422T003008Z
+DTSTAMP:20260422T035830Z
 SUMMARY:M8: Marketing for an open-source\, free-to-use product
 DTSTART;VALUE=DATE:20260426
 DTEND;VALUE=DATE:20260524

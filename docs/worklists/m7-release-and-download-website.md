@@ -65,22 +65,25 @@ The result should feel like an intentional launch surface rather than a source r
 7. [x] Implement the GitHub Pages site.
    Built the single-page site in `src/site` with `npm run dev:site` and `npm run build:site`, using the current local release artifact as the source of truth for the copy, screenshots, and placeholder download target.
 
-8. [ ] Publish a private milestone calendar feed at a stable public URL.
+8. [ ] Configure the custom domain and DNS for the GitHub Pages site.
+   Point the root domain at the GitHub Pages site with the correct apex-domain DNS records instead of reducing the task to `CNAME` shorthand, then decide how `www` should redirect. This step also includes the Pages custom-domain setting, domain verification, and the HTTPS/enforce-HTTPS check once GitHub finishes issuing the certificate.
+
+9. [ ] Publish a private milestone calendar feed at a stable public URL.
    Generate a `milestones.ics` feed from the milestone dates in `docs/PLAN.md`, publish it at a stable public URL, and keep that URL out of the public site, README, and release copy. The file may live as a regular repo artifact or alongside the GitHub Pages site; the requirement is a dependable subscription URL, not a specific hosting surface. This is internal support plumbing for private calendar subscription, not part of the launch surface.
 
-9. [ ] Wire the site and README to the real release artifact.
+10. [ ] Wire the site and README to the real release artifact.
    Once the final published asset URL is real, update every public-facing surface to point at the exact released file rather than local artifact paths or temporary placeholders.
 
-10. [ ] Prepare the GitHub release notes and publication procedure.
+11. [ ] Prepare the GitHub release notes and publication procedure.
    The release notes should state what `0.1` is, what changed, what the known operational boundaries are, how to get started, and where to find the download website and source repository.
 
-11. [ ] Dry-run the full release surface before publishing.
+12. [ ] Dry-run the full release surface before publishing.
    Treat the package, README, GitHub release draft, and website as one integrated system and verify them together before the public push.
 
-12. [ ] Publish `0.1` and verify the public surface live.
+13. [ ] Publish `0.1` and verify the public surface live.
    Create the tag and GitHub release, upload the final artifact, deploy the site, and confirm that the live README, release, and website all point to the same real downloadable package.
 
-13. [ ] Close `M7` cleanly.
+14. [ ] Close `M7` cleanly.
    Update the plan, worklist, and changelog with the actual release result, then leave any remaining public-surface polish for `M8` or later findings instead of silently carrying unfinished launch work forward.
 
 ## 2. Sequencing Notes
@@ -95,13 +98,17 @@ The result should feel like an intentional launch surface rather than a source r
 4. [ ] Treat the milestone calendar feed as private release-support plumbing.
    It should stay unlinked from the public launch surface and out of the release-facing copy whether it is published from the repo or alongside the GitHub Pages site.
 
+5. [ ] Treat the custom-domain setup as an apex-domain task first.
+   The root domain is the intended public URL, so the work should talk in terms of GitHub Pages custom-domain and apex DNS records, with `www` redirect behavior handled on top of that instead of reducing the whole step to a `CNAME`.
+
 ## 3. Verification Checklist
 1. [ ] The README works as a public repo landing page instead of an internal engineering index.
 2. [ ] The packaged release artifact name, version, and download URL match across the package, README, GitHub release, and website.
 3. [ ] The public docs and site describe `0.1` honestly: Windows host scope, elevated-only shells, trusted-network-first default, and operator-managed WAN posture.
 4. [ ] The package-root onboarding path is coherent: `ReadMe.txt`, `1.Start-Here.md`, `DISCLAIMER.md`, and the launcher names all agree and point to the right next step.
-5. [ ] The website renders cleanly on both workstation and phone browsers.
-6. [ ] The screenshots and copy reflect the actual shipped UI rather than stale prerelease visuals.
+5. [x] The website renders cleanly on both workstation and phone browsers.
+6. [x] The screenshots and copy reflect the actual shipped UI rather than stale prerelease visuals.
 7. [ ] The GitHub release notes, release title, and download website all point to the same final release artifact.
 8. [ ] No stale prerelease references remain, including outdated filenames such as `FIRST_RUN.md`, stale blocker language, or temporary placeholder copy.
 9. [ ] The `milestones.ics` feed exists at its stable public URL, stays out of public navigation and copy, and is suitable for private subscription.
+10. [ ] The root custom domain, its DNS records, any `www` redirect behavior, and the Pages HTTPS state are all working as intended before public launch.

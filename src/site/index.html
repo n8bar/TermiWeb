@@ -3,13 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <title>TermiWeb 0.1</title>
+    <title>TermiWeb</title>
     <meta
       name="description"
-      content="TermiWeb 0.1 is a browser-first shared Windows terminal with a packaged run surface, shared live instances, and phone-friendly controls."
+      content="TermiWeb is a browser-first shared Windows terminal with a packaged run surface, shared live instances, and phone-friendly controls."
     />
     <meta name="theme-color" content="#09131d" />
-    <link rel="icon" href="./screenshots/favicon.png" type="image/png" />
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="./style.css" />
   </head>
   <body>
@@ -19,7 +19,18 @@
           <span class="site-brand-mark">TW</span>
           <span class="site-brand-copy">TermiWeb</span>
         </a>
-        <nav class="site-nav" aria-label="Site sections">
+        <button
+          class="site-nav-toggle"
+          type="button"
+          aria-expanded="false"
+          aria-controls="site-nav"
+          aria-label="Toggle site navigation"
+        >
+          <span class="site-nav-toggle-bar"></span>
+          <span class="site-nav-toggle-bar"></span>
+          <span class="site-nav-toggle-bar"></span>
+        </button>
+        <nav id="site-nav" class="site-nav" aria-label="Site sections">
           <a href="#supports">Supports</a>
           <a href="#screenshots">Screenshots</a>
           <a href="#download">Download</a>
@@ -32,12 +43,13 @@
       <main id="top">
         <section class="hero section">
           <div class="hero-copy">
-            <p class="eyebrow">TermiWeb 0.1</p>
+            <p class="eyebrow">Overview</p>
             <h1>Browser-first shared terminal for a Windows host.</h1>
-            <p class="hero-lede">
-              Keep a live shell within reach on the host device and any other device
-              you use to reach it, without remoting the whole desktop.
-            </p>
+            <div class="hero-lede" aria-label="TermiWeb summary">
+              <p>Keep your terminal within reach when you step away.</p>
+              <p>Use it from the host or another device.</p>
+              <p>No desktop remoting.</p>
+            </div>
             <div class="hero-actions">
               <a class="button button-primary" href="#download">See download info</a>
               <a
@@ -51,7 +63,6 @@
             </div>
             <ul class="hero-facts" aria-label="Release facts">
               <li>Shared live instances</li>
-              <li>Windows hosts only</li>
               <li>Phone-friendly controls</li>
               <li>Elevated shell path</li>
             </ul>
@@ -75,8 +86,8 @@
 
         <section id="supports" class="section">
           <div class="section-heading">
-            <p class="eyebrow">What 0.1 Supports</p>
-            <h2>One release, one host, shared across browsers.</h2>
+            <p class="eyebrow">Support</p>
+            <h2>One host, multiple browsers, one shared terminal surface.</h2>
           </div>
           <div class="feature-grid">
             <article class="feature-card">
@@ -90,7 +101,7 @@
               <h3>Packaged Windows run surface</h3>
               <p>
                 Setup, start, restart, stop, uninstall, and optional before-sign-in
-                auto-start are part of the intended 0.1 path.
+                auto-start are part of the packaged run surface.
               </p>
             </article>
             <article class="feature-card">
@@ -104,14 +115,15 @@
               <h3>Phone-friendly controls</h3>
               <p>
                 Mobile controls, selection mode, copy handling, and the fallback paste
-                field are all part of the shipped UI.
+                field are all built into the browser UI.
               </p>
             </article>
             <article class="feature-card">
               <h3>Shared width per instance</h3>
               <p>
                 Each instance keeps one shared column width across attached devices, with
-                80 columns as the default starting point.
+                80 columns as the default starting point for consistent terminal sizing
+                when switching devices.
               </p>
             </article>
             <article class="feature-card">
@@ -127,7 +139,7 @@
         <section id="screenshots" class="section">
           <div class="section-heading">
             <p class="eyebrow">Screenshots</p>
-            <h2>The same shell, two very different browser surfaces.</h2>
+            <h2>The same shell, two different browser surfaces.</h2>
           </div>
           <div class="shot-grid">
             <figure class="shot-card">
@@ -158,7 +170,7 @@
         <section id="download" class="section">
           <div class="section-heading">
             <p class="eyebrow">Download</p>
-            <h2>0.1 ships as one Windows x64 package.</h2>
+            <h2>Ships as one Windows x64 package.</h2>
           </div>
           <div class="download-card">
             <div>
@@ -196,13 +208,13 @@
 
         <section id="trust" class="section">
           <div class="section-heading">
-            <p class="eyebrow">Trust Boundaries</p>
-            <h2>0.1 is honest about what it is and what it leaves to you.</h2>
+            <p class="eyebrow">Trust</p>
+            <h2>Built for a trusted private network.</h2>
           </div>
           <div class="boundary-grid">
             <article class="boundary-card">
               <h3>Windows hosts only</h3>
-              <p>0.1 targets Windows hosts and uses an elevated-only shell path.</p>
+              <p>Targets Windows hosts and uses an elevated-only shell path.</p>
             </article>
             <article class="boundary-card">
               <h3>Trusted-network-first</h3>
@@ -210,17 +222,11 @@
             </article>
             <article class="boundary-card">
               <h3>WAN is your responsibility</h3>
-              <p>
-                Internet or cross-site exposure is possible, but securing it is up to you.
-                0.1 does not claim to be a full remote-access stack.
-              </p>
+              <p>Internet or cross-site exposure is possible, but securing it is up to you.</p>
             </article>
             <article class="boundary-card">
-              <h3>No built-in multi-user stack</h3>
-              <p>
-                0.1 does not currently ship multi-user auth, built-in TLS termination, or
-                a turnkey public-exposure workflow.
-              </p>
+              <h3>Single-user auth</h3>
+              <p>Includes single-user auth without TLS to keep it simple.</p>
             </article>
           </div>
         </section>
@@ -228,7 +234,7 @@
         <section id="source" class="section">
           <div class="section-heading">
             <p class="eyebrow">Source</p>
-            <h2>Everything ships from the same repo.</h2>
+            <h2>Open source. Free as in freedom. Not here for your data.</h2>
           </div>
           <div class="source-grid">
             <a
@@ -237,8 +243,10 @@
               target="_blank"
               rel="noreferrer"
             >
-              <h3>GitHub repository</h3>
-              <p>Source, issue history, release tags, and the current 0.1 branch work.</p>
+              <div class="source-card-heading">
+                <h3>GitHub repository</h3>
+                <span class="source-card-arrow" aria-hidden="true">↗</span>
+              </div>
             </a>
             <a
               class="source-card"
@@ -246,8 +254,10 @@
               target="_blank"
               rel="noreferrer"
             >
-              <h3>README</h3>
-              <p>The repo landing page mirrors the same release story this site tells.</p>
+              <div class="source-card-heading">
+                <h3>README</h3>
+                <span class="source-card-arrow" aria-hidden="true">↗</span>
+              </div>
             </a>
             <a
               class="source-card"
@@ -255,8 +265,10 @@
               target="_blank"
               rel="noreferrer"
             >
-              <h3>Disclaimer</h3>
-              <p>The release disclaimer and trust posture are shipped in the package too.</p>
+              <div class="source-card-heading">
+                <h3>Disclaimer</h3>
+                <span class="source-card-arrow" aria-hidden="true">↗</span>
+              </div>
             </a>
             <a
               class="source-card"
@@ -264,12 +276,52 @@
               target="_blank"
               rel="noreferrer"
             >
-              <h3>Third-party notices</h3>
-              <p>The shipped production dependency notices live in the repo and the package.</p>
+              <div class="source-card-heading">
+                <h3>Third-party notices</h3>
+                <span class="source-card-arrow" aria-hidden="true">↗</span>
+              </div>
             </a>
           </div>
         </section>
       </main>
     </div>
+    <script>
+      const siteHeader = document.querySelector(".site-header");
+      const siteNav = document.querySelector(".site-nav");
+      const navToggle = document.querySelector(".site-nav-toggle");
+      const mobileNavBreakpoint = 760;
+
+      if (siteHeader && siteNav && navToggle) {
+        const closeSiteNav = () => {
+          siteHeader.classList.remove("is-nav-open");
+          navToggle.setAttribute("aria-expanded", "false");
+        };
+
+        navToggle.addEventListener("click", () => {
+          const isOpen = siteHeader.classList.toggle("is-nav-open");
+          navToggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
+        });
+
+        siteNav.querySelectorAll("a").forEach((link) => {
+          link.addEventListener("click", () => {
+            if (window.innerWidth <= mobileNavBreakpoint) {
+              closeSiteNav();
+            }
+          });
+        });
+
+        document.addEventListener("keydown", (event) => {
+          if (event.key === "Escape") {
+            closeSiteNav();
+          }
+        });
+
+        window.addEventListener("resize", () => {
+          if (window.innerWidth > mobileNavBreakpoint) {
+            closeSiteNav();
+          }
+        });
+      }
+    </script>
   </body>
 </html>
