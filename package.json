@@ -11,6 +11,9 @@
   "scripts": {
     "dev": "tsx watch src/server/dev-server.ts",
     "build": "node scripts/clean-dist.mjs && vite build && tsc -p tsconfig.server.json",
+    "dev:site": "vite --config vite.site.config.ts",
+    "calendar:milestones": "tsx scripts/generate-milestones-ics.ts",
+    "build:site": "npm run calendar:milestones && vite build --config vite.site.config.ts",
     "start": "node dist/server/server/index.js",
     "start:hidden": "powershell -ExecutionPolicy Bypass -File scripts/start-hidden.ps1",
     "restart:hidden": "powershell -ExecutionPolicy Bypass -File scripts/start-hidden.ps1 -Restart",

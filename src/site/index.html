@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>TermiWeb 0.1</title>
+    <meta
+      name="description"
+      content="TermiWeb 0.1 is a browser-first shared Windows terminal with a packaged run surface, shared live instances, and phone-friendly controls."
+    />
+    <meta name="theme-color" content="#09131d" />
+    <link rel="icon" href="./screenshots/favicon.png" type="image/png" />
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <div class="site-shell">
+      <header class="site-header">
+        <a class="site-brand" href="#top" aria-label="TermiWeb home">
+          <span class="site-brand-mark">TW</span>
+          <span class="site-brand-copy">TermiWeb</span>
+        </a>
+        <nav class="site-nav" aria-label="Site sections">
+          <a href="#supports">Supports</a>
+          <a href="#screenshots">Screenshots</a>
+          <a href="#download">Download</a>
+          <a href="#first-run">First Run</a>
+          <a href="#trust">Trust</a>
+          <a href="#source">Source</a>
+        </nav>
+      </header>
+
+      <main id="top">
+        <section class="hero section">
+          <div class="hero-copy">
+            <p class="eyebrow">TermiWeb 0.1</p>
+            <h1>Browser-first shared terminal for a Windows host.</h1>
+            <p class="hero-lede">
+              Keep a live shell within reach on the host device and any other device
+              you use to reach it, without remoting the whole desktop.
+            </p>
+            <div class="hero-actions">
+              <a class="button button-primary" href="#download">See download info</a>
+              <a
+                class="button button-secondary"
+                href="https://github.com/n8bar/TermiWeb"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Source on GitHub
+              </a>
+            </div>
+            <ul class="hero-facts" aria-label="Release facts">
+              <li>Shared live instances</li>
+              <li>Windows hosts only</li>
+              <li>Phone-friendly controls</li>
+              <li>Elevated shell path</li>
+            </ul>
+          </div>
+
+          <div class="hero-shot">
+            <div class="hero-shot-card hero-shot-desktop">
+              <img
+                src="./screenshots/TermiWeb0.1.png"
+                alt="TermiWeb workstation view with shared instances and terminal controls"
+              />
+            </div>
+            <div class="hero-shot-card hero-shot-mobile">
+              <img
+                src="./screenshots/TermiWeb0.1mobile.png"
+                alt="TermiWeb phone view attached to the same live terminal"
+              />
+            </div>
+          </div>
+        </section>
+
+        <section id="supports" class="section">
+          <div class="section-heading">
+            <p class="eyebrow">What 0.1 Supports</p>
+            <h2>One release, one host, shared across browsers.</h2>
+          </div>
+          <div class="feature-grid">
+            <article class="feature-card">
+              <h3>Shared browser instances</h3>
+              <p>
+                Open shared terminal instances through the browser UI and attach to the
+                same live shell from more than one device.
+              </p>
+            </article>
+            <article class="feature-card">
+              <h3>Packaged Windows run surface</h3>
+              <p>
+                Setup, start, restart, stop, uninstall, and optional before-sign-in
+                auto-start are part of the intended 0.1 path.
+              </p>
+            </article>
+            <article class="feature-card">
+              <h3>Authenticated browser sessions</h3>
+              <p>
+                Use one configured app password for local and LAN access, with browser
+                sessions that survive normal server restarts until logout or expiry.
+              </p>
+            </article>
+            <article class="feature-card">
+              <h3>Phone-friendly controls</h3>
+              <p>
+                Mobile controls, selection mode, copy handling, and the fallback paste
+                field are all part of the shipped UI.
+              </p>
+            </article>
+            <article class="feature-card">
+              <h3>Shared width per instance</h3>
+              <p>
+                Each instance keeps one shared column width across attached devices, with
+                80 columns as the default starting point.
+              </p>
+            </article>
+            <article class="feature-card">
+              <h3>PowerShell-first shell path</h3>
+              <p>
+                TermiWeb prefers PowerShell 7 when available and falls back to Windows
+                PowerShell when needed.
+              </p>
+            </article>
+          </div>
+        </section>
+
+        <section id="screenshots" class="section">
+          <div class="section-heading">
+            <p class="eyebrow">Screenshots</p>
+            <h2>The same shell, two very different browser surfaces.</h2>
+          </div>
+          <div class="shot-grid">
+            <figure class="shot-card">
+              <img
+                src="./screenshots/TermiWeb0.1.png"
+                alt="TermiWeb workstation screenshot"
+                loading="lazy"
+              />
+              <figcaption>
+                Workstation view with the instance rail, shared width control, and the
+                main terminal stage.
+              </figcaption>
+            </figure>
+            <figure class="shot-card">
+              <img
+                src="./screenshots/TermiWeb0.1mobile.png"
+                alt="TermiWeb phone screenshot"
+                loading="lazy"
+              />
+              <figcaption>
+                Phone view attached to the same live terminal, with the collapsed
+                control rail and mobile input affordances.
+              </figcaption>
+            </figure>
+          </div>
+        </section>
+
+        <section id="download" class="section">
+          <div class="section-heading">
+            <p class="eyebrow">Download</p>
+            <h2>0.1 ships as one Windows x64 package.</h2>
+          </div>
+          <div class="download-card">
+            <div>
+              <p class="download-label">Release artifact</p>
+              <h3>TermiWeb-0.1.0-windows-x64.zip</h3>
+              <p class="download-note">
+                The final public release link lands here at publication time. The site
+                and release notes are already locked to this exact artifact name.
+              </p>
+            </div>
+            <a
+              class="button button-primary is-disabled"
+              href="#download"
+              aria-disabled="true"
+            >
+              GitHub release link pending
+            </a>
+          </div>
+        </section>
+
+        <section id="first-run" class="section">
+          <div class="section-heading">
+            <p class="eyebrow">First Run</p>
+            <h2>Start from the package root and let the setup path do the heavy lifting.</h2>
+          </div>
+          <ol class="steps-list">
+            <li>Unpack the release into a user-writable folder.</li>
+            <li>Open <code>1.Start-Here.md</code> and read <code>DISCLAIMER.md</code>.</li>
+            <li>Run <code>Set Up TermiWeb.cmd</code> for the guided first-run path.</li>
+            <li>Approve the Windows elevation prompt when TermiWeb starts.</li>
+            <li>Open <code>http://127.0.0.1:22443</code> if setup does not open it for you.</li>
+            <li>From another device on the same LAN, browse to the host device’s LAN URL to attach to the same live shell.</li>
+          </ol>
+        </section>
+
+        <section id="trust" class="section">
+          <div class="section-heading">
+            <p class="eyebrow">Trust Boundaries</p>
+            <h2>0.1 is honest about what it is and what it leaves to you.</h2>
+          </div>
+          <div class="boundary-grid">
+            <article class="boundary-card">
+              <h3>Windows hosts only</h3>
+              <p>0.1 targets Windows hosts and uses an elevated-only shell path.</p>
+            </article>
+            <article class="boundary-card">
+              <h3>Trusted-network-first</h3>
+              <p>The intended default is a trusted Windows machine on a private network.</p>
+            </article>
+            <article class="boundary-card">
+              <h3>WAN is your responsibility</h3>
+              <p>
+                Internet or cross-site exposure is possible, but securing it is up to you.
+                0.1 does not claim to be a full remote-access stack.
+              </p>
+            </article>
+            <article class="boundary-card">
+              <h3>No built-in multi-user stack</h3>
+              <p>
+                0.1 does not currently ship multi-user auth, built-in TLS termination, or
+                a turnkey public-exposure workflow.
+              </p>
+            </article>
+          </div>
+        </section>
+
+        <section id="source" class="section">
+          <div class="section-heading">
+            <p class="eyebrow">Source</p>
+            <h2>Everything ships from the same repo.</h2>
+          </div>
+          <div class="source-grid">
+            <a
+              class="source-card"
+              href="https://github.com/n8bar/TermiWeb"
+              target="_blank"
+              rel="noreferrer"
+            >
+              <h3>GitHub repository</h3>
+              <p>Source, issue history, release tags, and the current 0.1 branch work.</p>
+            </a>
+            <a
+              class="source-card"
+              href="https://github.com/n8bar/TermiWeb/blob/main/README.md"
+              target="_blank"
+              rel="noreferrer"
+            >
+              <h3>README</h3>
+              <p>The repo landing page mirrors the same release story this site tells.</p>
+            </a>
+            <a
+              class="source-card"
+              href="https://github.com/n8bar/TermiWeb/blob/main/DISCLAIMER.md"
+              target="_blank"
+              rel="noreferrer"
+            >
+              <h3>Disclaimer</h3>
+              <p>The release disclaimer and trust posture are shipped in the package too.</p>
+            </a>
+            <a
+              class="source-card"
+              href="https://github.com/n8bar/TermiWeb/blob/main/THIRD_PARTY_NOTICES.md"
+              target="_blank"
+              rel="noreferrer"
+            >
+              <h3>Third-party notices</h3>
+              <p>The shipped production dependency notices live in the repo and the package.</p>
+            </a>
+          </div>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>

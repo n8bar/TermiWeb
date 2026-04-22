@@ -97,6 +97,8 @@ TermiWeb stands on strong existing work, especially `xterm.js`, `node-pty`, Type
 
 - `npm run dev` starts the integrated dev server and relaunches elevated on Windows when needed.
 - `npm run build` builds the client and server output into `dist/`.
+- `npm run dev:site` starts the single-page release-site dev server from `src/site`.
+- `npm run build:site` builds the GitHub Pages site output into `dist/site`.
 - `npm run start` runs the production server from `dist/` and relaunches elevated on Windows when needed.
 - `npm run start:hidden` starts the built Windows server in the background without spawning an extra console window and requests elevation when needed.
 - `npm run restart:hidden` restarts that hidden Windows background server and requests elevation when needed.

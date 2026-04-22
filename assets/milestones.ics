@@ -1,0 +1,119 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//TermiWeb//Milestones//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:TermiWeb Milestones
+X-WR-CALDESC:Milestone dates derived from docs/PLAN.md
+BEGIN:VEVENT
+UID:termiweb-m1@termiweb.local
+DTSTAMP:20260422T003008Z
+SUMMARY:M1: Repository bootstrap and docs baseline
+DTSTART;VALUE=DATE:20260406
+DTEND;VALUE=DATE:20260407
+DESCRIPTION:Added the initial repo structure\, TypeScript/Vite/server scaff
+ olding\, baseline docs\, and the first environment/runtime conventions. Th
+ is is the phase that created the project skeleton later milestones could a
+ ctually build on.\nStart: 2026-04-06\nEnd: 2026-04-06
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:termiweb-m2@termiweb.local
+DTSTAMP:20260422T003008Z
+SUMMARY:M2: Shared terminal backend and session model
+DTSTART;VALUE=DATE:20260406
+DTEND;VALUE=DATE:20260407
+DESCRIPTION:Added the server-side PTY/session manager\, protocol\, auth/ses
+ sion handling\, and lightweight workspace persistence. This is where insta
+ nce creation\, attach/select\, close\, and shared terminal I/O became real
+  code paths instead of placeholders.\nStart: 2026-04-06\nEnd: 2026-04-06
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:termiweb-m3@termiweb.local
+DTSTAMP:20260422T003008Z
+SUMMARY:M3: Browser UI with instances\, auth\, and mobile controls
+DTSTART;VALUE=DATE:20260406
+DTEND;VALUE=DATE:20260407
+DESCRIPTION:Added the browser client\, login flow\, instance rail\, xterm i
+ ntegration\, and the first usable mobile control surface. By the end of th
+ is phase\, desktop and phone clients could both attach to the same live in
+ stance through the browser UI.\nStart: 2026-04-06\nEnd: 2026-04-06
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:termiweb-m4@termiweb.local
+DTSTAMP:20260422T003008Z
+SUMMARY:M4: Local verification and launch polish
+DTSTART;VALUE=DATE:20260407
+DTEND;VALUE=DATE:20260408
+DESCRIPTION:Added the first serious verification loop\, tightened restart/r
+ econnect behavior\, and cleaned up the initial launch/run path enough for 
+ real local use. This is also where the project stopped feeling like a dev-
+ only prototype and started behaving like an intentional app.\nStart: 2026-
+ 04-07\nEnd: 2026-04-07
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:termiweb-m5@termiweb.local
+DTSTAMP:20260422T003008Z
+SUMMARY:M5: 0.1 release polish and rendering integrity
+DTSTART;VALUE=DATE:20260408
+DTEND;VALUE=DATE:20260418
+DESCRIPTION:This milestone contains the major UI/layout refinements\, per-i
+ nstance width controls\, mobile behavior fixes\, local viewport scrolling\
+ , shared terminal geometry cleanup\, and the current follow-cursor work. I
+ t closed after interactive CLI rendering held up in dogfooding and the ele
+ vated-only run path passed live packaged verification.\nStart: 2026-04-08\
+ nEnd: 2026-04-17
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:termiweb-m6@termiweb.local
+DTSTAMP:20260422T003008Z
+SUMMARY:M6: Installer and first-run experience
+DTSTART;VALUE=DATE:20260412
+DTEND;VALUE=DATE:20260414
+DESCRIPTION:Added packaging\, launch scripts\, optional startup-task auto-s
+ tart\, uninstall\, distribution layout\, and first-run docs for a non-dev 
+ Windows install path. Verified fresh-machine setup\, before-sign-in auto-s
+ tart\, uninstall cleanup\, and two-device shared session on real hardware.
+ \nStart: 2026-04-12\nEnd: 2026-04-13
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:termiweb-m7@termiweb.local
+DTSTAMP:20260422T003008Z
+SUMMARY:M7: 0.1 release and GitHub Pages download website
+DTSTART;VALUE=DATE:20260419
+DTEND;VALUE=DATE:20260426
+DESCRIPTION:This milestone should produce the tagged `0.1` release artifact
+ s plus the GitHub Pages download site that points to them. The code/doc wo
+ rk here is release packaging\, distribution metadata\, the website content
+  that turns the build into an actual downloadable release\, and a small am
+ ount of private release-support publishing that stays outside the public l
+ aunch surface.\nStart: 2026-04-19\nTarget end: 2026-04-25
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:termiweb-m8@termiweb.local
+DTSTAMP:20260422T003008Z
+SUMMARY:M8: Marketing for an open-source\, free-to-use product
+DTSTART;VALUE=DATE:20260426
+DTEND;VALUE=DATE:20260524
+DESCRIPTION:This milestone is the full marketing phase around the product\,
+  not just a bundle of launch materials. It includes messaging\, positionin
+ g\, outreach\, demos\, screenshots\, announcements\, and the practical wor
+ k of getting attention on a shipped open-source product.\nStart: 2026-04-2
+ 6\nTarget end: 2026-05-23
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+END:VEVENT
+END:VCALENDAR

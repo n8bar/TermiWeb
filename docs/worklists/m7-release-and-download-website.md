@@ -62,22 +62,25 @@ The result should feel like an intentional launch surface rather than a source r
 6. [x] Build a fresh local release artifact before site implementation.
    Rebuilt the current `0.1` package locally and used that assembled artifact as the concrete release surface the site and release notes must describe. The packaged client includes the shipped favicon.
 
-7. [ ] Implement the GitHub Pages site.
-   Build the actual website surface in-repo against the current local release artifact, including layout, styling, copy, screenshots, and placeholder download-link targets that match the locked artifact name.
+7. [x] Implement the GitHub Pages site.
+   Built the single-page site in `src/site` with `npm run dev:site` and `npm run build:site`, using the current local release artifact as the source of truth for the copy, screenshots, and placeholder download target.
 
-8. [ ] Wire the site and README to the real release artifact.
+8. [ ] Publish a private milestone calendar feed at a stable public URL.
+   Generate a `milestones.ics` feed from the milestone dates in `docs/PLAN.md`, publish it at a stable public URL, and keep that URL out of the public site, README, and release copy. The file may live as a regular repo artifact or alongside the GitHub Pages site; the requirement is a dependable subscription URL, not a specific hosting surface. This is internal support plumbing for private calendar subscription, not part of the launch surface.
+
+9. [ ] Wire the site and README to the real release artifact.
    Once the final published asset URL is real, update every public-facing surface to point at the exact released file rather than local artifact paths or temporary placeholders.
 
-9. [ ] Prepare the GitHub release notes and publication procedure.
+10. [ ] Prepare the GitHub release notes and publication procedure.
    The release notes should state what `0.1` is, what changed, what the known operational boundaries are, how to get started, and where to find the download website and source repository.
 
-10. [ ] Dry-run the full release surface before publishing.
+11. [ ] Dry-run the full release surface before publishing.
    Treat the package, README, GitHub release draft, and website as one integrated system and verify them together before the public push.
 
-11. [ ] Publish `0.1` and verify the public surface live.
+12. [ ] Publish `0.1` and verify the public surface live.
    Create the tag and GitHub release, upload the final artifact, deploy the site, and confirm that the live README, release, and website all point to the same real downloadable package.
 
-12. [ ] Close `M7` cleanly.
+13. [ ] Close `M7` cleanly.
    Update the plan, worklist, and changelog with the actual release result, then leave any remaining public-surface polish for `M8` or later findings instead of silently carrying unfinished launch work forward.
 
 ## 2. Sequencing Notes
@@ -89,6 +92,9 @@ The result should feel like an intentional launch surface rather than a source r
 3. [ ] Keep `M7` release-focused.
    If a task turns into broad marketing, announcement strategy, outreach, or campaign copy, move it to `M8` rather than letting `M7` sprawl.
 
+4. [ ] Treat the milestone calendar feed as private release-support plumbing.
+   It should stay unlinked from the public launch surface and out of the release-facing copy whether it is published from the repo or alongside the GitHub Pages site.
+
 ## 3. Verification Checklist
 1. [ ] The README works as a public repo landing page instead of an internal engineering index.
 2. [ ] The packaged release artifact name, version, and download URL match across the package, README, GitHub release, and website.
@@ -98,3 +104,4 @@ The result should feel like an intentional launch surface rather than a source r
 6. [ ] The screenshots and copy reflect the actual shipped UI rather than stale prerelease visuals.
 7. [ ] The GitHub release notes, release title, and download website all point to the same final release artifact.
 8. [ ] No stale prerelease references remain, including outdated filenames such as `FIRST_RUN.md`, stale blocker language, or temporary placeholder copy.
+9. [ ] The `milestones.ics` feed exists at its stable public URL, stays out of public navigation and copy, and is suitable for private subscription.

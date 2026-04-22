@@ -2,7 +2,7 @@
 
 ## Current Focus
 
-`M5` and `M6` are complete. `M7` is now the active milestone; the README, package-root docs, site structure, screenshots, and fresh local release artifact are in place, so the next step is site implementation against that current package surface.
+`M5` and `M6` are complete. `M7` is now the active milestone; the README, package-root docs, site structure, screenshots, fresh local release artifact, site implementation, and milestone-calendar generation are in place. The next step is release metadata and final download wiring around publication time.
 
 ## Milestones
 
@@ -32,7 +32,7 @@
   - Start: 2026-04-12
   - End: 2026-04-13
 - [ ] M7: 0.1 release and GitHub Pages download website
-  - Summary: This milestone should produce the tagged `0.1` release artifacts plus the GitHub Pages download site that points to them. The code/doc work here is release packaging, distribution metadata, and the website content that turns the build into an actual downloadable release.
+  - Summary: This milestone should produce the tagged `0.1` release artifacts plus the GitHub Pages download site that points to them. The code/doc work here is release packaging, distribution metadata, the website content that turns the build into an actual downloadable release, and a small amount of private release-support publishing that stays outside the public launch surface.
   - Start: 2026-04-19
   - Target End: 2026-04-25
   - Worklist: [M7 release and download website](worklists/m7-release-and-download-website.md)
@@ -57,4 +57,4 @@
 
 ## Next Action
 
-Implement the site in the [M7 worklist](worklists/m7-release-and-download-website.md) against the current local release artifact, then wire the final published asset URL later.
+Prepare the GitHub release notes and publication procedure in the [M7 worklist](worklists/m7-release-and-download-website.md), while leaving the final published asset URL wiring and the live `milestones.ics` URL for the actual release step.
