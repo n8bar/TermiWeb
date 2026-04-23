@@ -115,15 +115,15 @@ The result should feel like an intentional launch surface rather than a source r
 3. [x] Dry-run the full release surface before publishing.
    Treat the package, README, GitHub release draft, and website as one integrated system and verify them together before the public push.
 
-4. [ ] Publish `0.1` and verify the public surface live.
+4. [x] Publish `0.1` and verify the public surface live.
    Create the tag and GitHub release, upload the final artifact, configure the root custom domain and DNS for the GitHub Pages site, decide how `www` should redirect, deploy the site, and confirm that the live README, release, and website all point to the same real downloadable package. Treat the domain cutover as part of the public launch instead of an early setup step.
 
-5. [ ] Publication Verification
-   1. [ ] The packaged release artifact name, version, and canonical download path match across the package, README, GitHub release, and website.
-   2. [ ] The GitHub release notes, release title, and download website all point to the same canonical download path and final release artifact.
-   3. [ ] No stale prerelease references remain, including outdated filenames such as `FIRST_RUN.md`, stale blocker language, or temporary placeholder copy.
+5. [x] Publication Verification
+   1. [x] The packaged release artifact name, version, and canonical download path match across the package, README, GitHub release, and website.
+   2. [x] The GitHub release notes, release title, and download website all point to the same canonical download path and final release artifact.
+   3. [x] No stale prerelease references remain, including outdated filenames such as `FIRST_RUN.md`, stale blocker language, or temporary placeholder copy.
    4. [x] The `milestones.ics` feed exists at its stable public URL, stays out of public navigation and copy, and is suitable for private subscription.
-   5. [ ] The root custom domain, its DNS records, any `www` redirect behavior, and the Pages HTTPS state are all working as intended at public launch.
+   5. [x] The root custom domain, its DNS records, any `www` redirect behavior, and the Pages HTTPS state are all working as intended at public launch.
 
-6. [ ] Close `M7` cleanly.
+6. [x] Close `M7` cleanly.
    Update the plan, worklist, and changelog with the actual release result, then leave any remaining public-surface polish for `M8` or later findings instead of silently carrying unfinished launch work forward.

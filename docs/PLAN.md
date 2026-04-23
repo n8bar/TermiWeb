@@ -2,7 +2,7 @@
 
 ## Current Focus
 
-`M5` and `M6` are complete. `M7` is now the active milestone; the README, package-root docs, site structure, screenshots, fresh local release artifact, site implementation, and milestone-calendar generation are in place. The next step is release metadata and final download wiring, with custom-domain cutover held for publication time.
+`M1` through `M7` are complete. `0.1` is now publicly released, the download site is live at `https://termiweb.com`, and the next milestone is `M8` whenever marketing work begins.
 
 ## Milestones
 
@@ -31,10 +31,10 @@
   - Summary: Added packaging, launch scripts, optional startup-task auto-start, uninstall, distribution layout, and first-run docs for a non-dev Windows install path. Verified fresh-machine setup, before-sign-in auto-start, uninstall cleanup, and two-device shared session on real hardware.
   - Start: 2026-04-12
   - End: 2026-04-13
-- [ ] M7: 0.1 release and GitHub Pages download website
-  - Summary: This milestone should produce the tagged `0.1` release artifacts plus the GitHub Pages download site that points to them. The code/doc work here is release packaging, distribution metadata, the website content that turns the build into an actual downloadable release, the public custom-domain setup for that site at launch time, and a small amount of private release-support publishing that stays outside the public launch surface.
+- [x] M7: 0.1 release and GitHub Pages download website
+  - Summary: This milestone produced the tagged `0.1` release artifacts, the live `https://termiweb.com` download site, the public GitHub release entry, the canonical download path at `/download/`, the private milestone-calendar feed, and the launch-surface docs that now describe the shipped release honestly.
   - Start: 2026-04-19
-  - Target End: 2026-04-25
+  - End: 2026-04-23
   - Worklist: [M7 release and download website](worklists/m7-release-and-download-website.md)
 - [ ] M8: Marketing for an open-source, free-to-use product
   - Summary: This milestone is the full marketing phase around the product, not just a bundle of launch materials. It includes messaging, positioning, outreach, demos, screenshots, announcements, and the practical work of getting attention on a shipped open-source product.
@@ -57,4 +57,4 @@
 
 ## Next Action
 
-Prepare the GitHub release notes and publication procedure in the [M7 worklist](worklists/m7-release-and-download-website.md), while leaving the final published asset URL wiring, the live `milestones.ics` URL, and the root custom-domain cutover for the actual release step.
+Open or approve the first bounded `M8` worklist before starting the next phase of post-release marketing work.
