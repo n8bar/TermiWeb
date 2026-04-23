@@ -17,7 +17,9 @@ It was created for power users, especially vibe-coders who want to continue "wor
 
 ## Download
 
-The final public `0.1` download link will land here once the GitHub release and download site are live.
+The public download path for the packaged release is:
+
+`https://termiweb.com/download/`
 
 Until then, repo users can build the packaged release locally with:
 

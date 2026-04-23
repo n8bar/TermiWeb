@@ -59,6 +59,22 @@ code {
   padding: 1rem 0 4rem;
 }
 
+.download-redirect-main {
+  min-height: calc(100vh - 2rem);
+  display: grid;
+  place-items: center;
+}
+
+.download-redirect-card {
+  width: min(680px, 100%);
+}
+
+.download-redirect-copy {
+  max-width: 36rem;
+  margin: 0 0 1.75rem;
+  color: var(--muted);
+}
+
 .site-header {
   position: sticky;
   top: 1rem;

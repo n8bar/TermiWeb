@@ -109,21 +109,21 @@ The result should feel like an intentional launch surface rather than a source r
 1. [x] Publish a private milestone calendar feed at a stable public URL.
    Publish `milestones.ics` at its stable public URL and keep that URL out of the public site, README, and release copy. The file may live as a regular repo artifact or alongside the GitHub Pages site; the requirement is a dependable subscription URL, not a specific hosting surface. This is internal support plumbing for private calendar subscription, not part of the launch surface.
 
-2. [ ] Wire the site and README to the real release artifact.
-   Once the final published asset URL is real, update every public-facing surface to point at the exact released file rather than local artifact paths or temporary placeholders.
+2. [x] Wire the site and README to the canonical download path backed by the release artifact.
+   Point the public surfaces at the pretty download path instead of exposing GitHub's raw asset URL directly, and make that path resolve to the current release package behind the scenes.
 
-3. [ ] Dry-run the full release surface before publishing.
+3. [x] Dry-run the full release surface before publishing.
    Treat the package, README, GitHub release draft, and website as one integrated system and verify them together before the public push.
 
 4. [ ] Publish `0.1` and verify the public surface live.
    Create the tag and GitHub release, upload the final artifact, configure the root custom domain and DNS for the GitHub Pages site, decide how `www` should redirect, deploy the site, and confirm that the live README, release, and website all point to the same real downloadable package. Treat the domain cutover as part of the public launch instead of an early setup step.
 
-5. [ ] Close `M7` cleanly.
-   Update the plan, worklist, and changelog with the actual release result, then leave any remaining public-surface polish for `M8` or later findings instead of silently carrying unfinished launch work forward.
-
-6. [ ] Publication Verification
-   1. [ ] The packaged release artifact name, version, and download URL match across the package, README, GitHub release, and website.
-   2. [ ] The GitHub release notes, release title, and download website all point to the same final release artifact.
+5. [ ] Publication Verification
+   1. [ ] The packaged release artifact name, version, and canonical download path match across the package, README, GitHub release, and website.
+   2. [ ] The GitHub release notes, release title, and download website all point to the same canonical download path and final release artifact.
    3. [ ] No stale prerelease references remain, including outdated filenames such as `FIRST_RUN.md`, stale blocker language, or temporary placeholder copy.
    4. [x] The `milestones.ics` feed exists at its stable public URL, stays out of public navigation and copy, and is suitable for private subscription.
    5. [ ] The root custom domain, its DNS records, any `www` redirect behavior, and the Pages HTTPS state are all working as intended at public launch.
+
+6. [ ] Close `M7` cleanly.
+   Update the plan, worklist, and changelog with the actual release result, then leave any remaining public-surface polish for `M8` or later findings instead of silently carrying unfinished launch work forward.
