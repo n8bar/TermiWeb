@@ -253,3 +253,4 @@
 2026-04-24 Swapped the first two `M8.1.5` subitems so the worklist now identifies the viable outreach channels before trying to order the first public pushes across them.
 2026-04-24 Extended `M8.1.5.4` so the distribution-and-outreach handoff now explicitly updates `M8.3` too when the expanded execution plan brings new QA concerns along with it.
 2026-04-24 Approved the `M8` worklist as ready for execution, removed its draft warning line, and left `M9` explicitly in draft state for a later review.
+2026-04-24 Added tracked `marketing/assets/` and `marketing/research/` homes for shared `M8` materials, then updated the `M8` worklist so marketing storage now points there while leaving `.cybercreek/` as the untracked local-scratch lane.

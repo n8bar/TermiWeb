@@ -3,6 +3,7 @@
 Milestone Timing: Mirrors `M8` in [Project plan](../PLAN.md): start `2026-04-24`, target end `2026-05-23`.
 
 Note: Keep the execution layer inside this worklist or tightly linked docs instead of letting it spill into [Project plan](../PLAN.md).
+Note: Shared `M8` marketing materials should live under `marketing/assets/` and `marketing/research/`. Use `.cybercreek/` only for local scratch that should stay untracked.
 
 ## Desired Outcome
 
@@ -30,7 +31,7 @@ TermiWeb should leave `M8` with a stronger public website, better search and sha
 4. [ ] Plan the public content and asset set.
    1. [ ] Decide if any screenshots, demos, writeups, and supporting visuals are still missing beyond the current release site and what those are specifically.
    2. [ ] Define the minimum announcement-copy set: short post, medium post, longer launch writeup, and any reusable blurbs for repo or profile surfaces.
-   3. [ ] Organize the marketing materials as they are defined so later execution work has a clear home instead of scattered scratch files.
+   3. [ ] Organize the marketing materials as they are defined so later execution work has a clear tracked home under `marketing/assets/` and `marketing/research/` instead of scattered scratch files.
    4. [ ] Decide whether the current site needs any new visual assets before wider outreach starts.
 
 5. [ ] Plan the distribution and outreach sequence.
