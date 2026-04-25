@@ -12,8 +12,8 @@ TermiWeb should leave `M8` with a stronger public website, better search and sha
 ## 1. Work Breakdown
 
 1. [ ] Define and implement the live SEO/search-engine strategy.
-   1. [ ] Research what search intent the live homepage should target and which terms or phrases TermiWeb can realistically try to win first, then capture the decision that follows from that research.
-   2. [ ] Tweak the homepage copy, section hierarchy, and primary CTA so they better support the chosen search intent.
+   1. [x] Research what search intent the live homepage should target and which terms or phrases TermiWeb can realistically try to win first, then capture the decision that follows from that research.
+   2. [x] Tweak the homepage copy, section hierarchy, and primary CTA so they better support the chosen search intent.
    3. [ ] Add or correct the core metadata: page title, description, canonical URL, Open Graph fields, and any equivalent search or sharing tags the site is still missing.
    4. [ ] Add the crawl and discovery files the site should ship with, such as `robots.txt` and a sitemap, if they do not already exist.
    5. [ ] Add any structured data, indexing hints, or search-console setup work that the live site should have before wider outreach begins, and expand `M8.2` with the resulting execution tasks instead of leaving them implied.
