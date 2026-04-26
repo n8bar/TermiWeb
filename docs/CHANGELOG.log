@@ -270,3 +270,4 @@
 2026-04-26 Narrowed M8 to the search/discovery foundation, added M10 as the post-`0.1.1` public-outreach milestone, and moved the direct/public outreach sequence out of M8 so the known mobile fixes and CI baseline can ship before deliberate promotion.
 2026-04-26 Closed M8 after search/discovery setup, GitHub discovery polish, positioning, and reusable announcement collateral were complete, leaving M9 as the next active lane.
 2026-04-26 Rescheduled M9 to start immediately after the early M8 close and shifted M10 to follow the planned `0.1.1` stabilization window instead of preserving the old marketing-first calendar gap.
+2026-04-26 Removed hosted CI from the active M9 scope for the current one-maintainer workflow, renamed M9 around `0.1.1` mobile stabilization, renamed the M9 worklist file, and moved hosted CI to a future contributor-readiness candidate.

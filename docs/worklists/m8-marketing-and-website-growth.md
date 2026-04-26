@@ -7,7 +7,7 @@ Note: Shared `M8` marketing materials should live under `marketing/assets/` and 
 
 ## Desired Outcome
 
-TermiWeb should leave `M8` with a stronger public website, better search and sharing hygiene, a clearer product story, and reusable marketing materials ready for the later post-`0.1.1` outreach milestone. Broad deliberate outreach is intentionally deferred to `M10` so the `0.1.1` mobile fixes and CI baseline can ship first.
+TermiWeb should leave `M8` with a stronger public website, better search and sharing hygiene, a clearer product story, and reusable marketing materials ready for the later post-`0.1.1` outreach milestone. Broad deliberate outreach is intentionally deferred to `M10` so the `0.1.1` mobile fixes can ship first.
 
 ## 1. Work Breakdown
 

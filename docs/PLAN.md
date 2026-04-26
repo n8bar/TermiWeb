@@ -2,7 +2,7 @@
 
 ## Current Focus
 
-`M1` through `M8` are complete. `0.1` is publicly released, the download site is live at `https://termiweb.com`, and the search/discovery foundation is in place for later outreach. `M9` is now active as the `0.1.1` stabilization lane for the must-have mobile fixes plus the first CI baseline. `M10` is queued for deliberate public outreach after `0.1.1` is shipped.
+`M1` through `M8` are complete. `0.1` is publicly released, the download site is live at `https://termiweb.com`, and the search/discovery foundation is in place for later outreach. `M9` is now active as the `0.1.1` mobile stabilization lane for the must-have mobile fixes. `M10` is queued for deliberate public outreach after `0.1.1` is shipped.
 
 ## Milestones
 
@@ -41,11 +41,11 @@
   - Start: 2026-04-24
   - End: 2026-04-26
   - Worklist: [M8 marketing and website growth](worklists/m8-marketing-and-website-growth.md)
-- [ ] M9: `0.1.1` stabilization and CI baseline
-  - Summary: This milestone is the first post-release product lane. It should ship `0.1.1`, pull the must-have mobile fixes from Findings `13` and `14` into the release line, and add the first hosted CI flow so typecheck, tests, and build verification stop depending entirely on manual local discipline.
+- [ ] M9: `0.1.1` mobile stabilization
+  - Summary: This milestone is the first post-release product lane. It should ship `0.1.1` and pull the must-have mobile fixes from Findings `13` and `14` into the release line while keeping release verification local and explicit for the current one-maintainer workflow.
   - Start: 2026-04-27
   - Target End: 2026-05-10
-  - Worklist: [M9 0.1.1 stabilization and CI](worklists/m9-0.1.1-stabilization-and-ci.md)
+  - Worklist: [M9 0.1.1 mobile stabilization](worklists/m9-0.1.1-mobile-stabilization.md)
 - [ ] M10: Post-`0.1.1` public outreach
   - Summary: This milestone turns the M8 positioning and reusable copy into deliberate outreach only after the `0.1.1` stabilization release has shipped. It includes direct sharing, feedback capture, first public technical post preparation, community-rule review, and a later Product Hunt decision.
   - Start: 2026-05-11
@@ -59,6 +59,7 @@
 - `0.2` candidate: top-bar QR connect affordance when the current access address is not loopback
 - `0.2` candidate: Windows-service hosting mode for boot-start installs
 - `0.2` candidate: password-change UI for the configured app password
+- Contributor-readiness candidate: hosted CI for typecheck, tests, build, site build, and release-candidate checks before accepting outside PRs or when the project has multiple active contributors
 - `0.3+` candidate: Linux host support for TermiWeb, including Linux PTY/process integration, packaged install/run/auto-start path, and cross-platform doc/spec updates
 
 ## Release Gate
@@ -68,4 +69,4 @@
 
 ## Next Action
 
-Review [M9 0.1.1 stabilization and CI](worklists/m9-0.1.1-stabilization-and-ci.md), then start with the hosted CI baseline before implementing the mobile fixes for Findings `13` and `14`.
+Review [M9 0.1.1 mobile stabilization](worklists/m9-0.1.1-mobile-stabilization.md), then resolve the up-front release-discipline and mobile-behavior decisions before cutting the implementation branch.
