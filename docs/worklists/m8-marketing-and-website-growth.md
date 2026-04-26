@@ -48,7 +48,7 @@ TermiWeb should leave `M8` with a stronger public website, better search and sha
 ## 2. Execution Plan
 
 1. [ ] Finish the live site search-discovery setup.
-   1. [ ] Verify `https://termiweb.com/robots.txt` and `https://termiweb.com/sitemap.xml` after the next site deployment.
+   1. [x] Verify `https://termiweb.com/robots.txt` and `https://termiweb.com/sitemap.xml` after the next site deployment.
    2. [ ] Add `https://termiweb.com/` in Google Search Console with the user present for account/domain access.
    3. [ ] Submit `https://termiweb.com/sitemap.xml` in Google Search Console.
    4. [ ] Request indexing for the homepage once the updated metadata and structured data are live.
