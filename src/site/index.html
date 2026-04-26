@@ -3,14 +3,68 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <title>TermiWeb</title>
+    <title>TermiWeb | Browser Terminal for Windows and PowerShell</title>
     <meta
       name="description"
-      content="TermiWeb is a browser-first shared Windows terminal with a packaged run surface, shared live instances, and phone-friendly controls."
+      content="TermiWeb is an open-source browser terminal for a Windows host, with browser-based PowerShell, shared live instances, and phone-friendly controls."
     />
     <meta name="theme-color" content="#09131d" />
+    <link rel="canonical" href="https://termiweb.com/" />
     <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <meta property="og:site_name" content="TermiWeb" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://termiweb.com/" />
+    <meta property="og:title" content="TermiWeb | Browser Terminal for Windows and PowerShell" />
+    <meta
+      property="og:description"
+      content="Open-source browser terminal for a Windows host, with browser-based PowerShell, shared live instances, and phone-friendly controls."
+    />
+    <meta property="og:image" content="https://termiweb.com/screenshots/TermiWeb0.1.png" />
+    <meta property="og:image:width" content="1653" />
+    <meta property="og:image:height" content="1593" />
+    <meta property="og:image:alt" content="TermiWeb workstation view with shared Windows terminal instances" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="TermiWeb | Browser Terminal for Windows and PowerShell" />
+    <meta
+      name="twitter:description"
+      content="Open-source browser terminal for a Windows host, with browser-based PowerShell, shared live instances, and phone-friendly controls."
+    />
+    <meta name="twitter:image" content="https://termiweb.com/screenshots/TermiWeb0.1.png" />
+    <meta name="twitter:image:alt" content="TermiWeb workstation view with shared Windows terminal instances" />
     <link rel="stylesheet" href="./style.css" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "WebSite",
+            "@id": "https://termiweb.com/#website",
+            "name": "TermiWeb",
+            "url": "https://termiweb.com/",
+            "description": "Open-source browser terminal for a Windows host."
+          },
+          {
+            "@type": "SoftwareApplication",
+            "@id": "https://termiweb.com/#software",
+            "name": "TermiWeb",
+            "url": "https://termiweb.com/",
+            "description": "Open-source browser terminal for a Windows host, with browser-based PowerShell, shared live instances, and phone-friendly controls.",
+            "applicationCategory": "DeveloperApplication",
+            "operatingSystem": "Windows",
+            "softwareVersion": "0.1.0",
+            "license": "https://github.com/n8bar/TermiWeb/blob/main/LICENSE",
+            "codeRepository": "https://github.com/n8bar/TermiWeb",
+            "downloadUrl": "https://termiweb.com/download/",
+            "image": "https://termiweb.com/screenshots/TermiWeb0.1.png",
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "USD"
+            }
+          }
+        ]
+      }
+    </script>
   </head>
   <body>
     <div class="site-shell">
@@ -44,14 +98,14 @@
         <section class="hero section">
           <div class="hero-copy">
             <p class="eyebrow">Overview</p>
-            <h1>Browser-first shared terminal for a Windows host.</h1>
+            <h1>Browser terminal for a Windows host.</h1>
             <div class="hero-lede" aria-label="TermiWeb summary">
-              <p>Keep your terminal within reach when you step away.</p>
+              <p>Keep PowerShell and Windows CLI within reach when you step away.</p>
               <p>Use it from the host or another device.</p>
               <p>No desktop remoting.</p>
             </div>
             <div class="hero-actions">
-              <a class="button button-primary" href="#download">See download info</a>
+              <a class="button button-primary" href="#download">Download the Windows package</a>
               <a
                 class="button button-secondary"
                 href="https://github.com/n8bar/TermiWeb"
@@ -62,9 +116,9 @@
               </a>
             </div>
             <ul class="hero-facts" aria-label="Release facts">
+              <li>Browser-based PowerShell</li>
               <li>Shared live instances</li>
               <li>Phone-friendly controls</li>
-              <li>Elevated shell path</li>
             </ul>
           </div>
 
@@ -87,9 +141,17 @@
         <section id="supports" class="section">
           <div class="section-heading">
             <p class="eyebrow">Support</p>
-            <h2>One host, multiple browsers, one shared terminal surface.</h2>
+            <h2>Browser-based PowerShell and shared Windows terminals from one host.</h2>
           </div>
           <div class="feature-grid">
+            <article class="feature-card">
+              <h3>Browser-based PowerShell</h3>
+              <p>
+                TermiWeb prefers PowerShell 7 when available and falls back to Windows
+                PowerShell when needed, so the browser surface stays useful on real
+                Windows hosts.
+              </p>
+            </article>
             <article class="feature-card">
               <h3>Shared browser instances</h3>
               <p>
@@ -112,13 +174,6 @@
               </p>
             </article>
             <article class="feature-card">
-              <h3>Phone-friendly controls</h3>
-              <p>
-                Mobile controls, selection mode, copy handling, and the fallback paste
-                field are all built into the browser UI.
-              </p>
-            </article>
-            <article class="feature-card">
               <h3>Shared width per instance</h3>
               <p>
                 Each instance keeps one shared column width across attached devices, with
@@ -127,10 +182,10 @@
               </p>
             </article>
             <article class="feature-card">
-              <h3>PowerShell-first shell path</h3>
+              <h3>Phone-friendly controls</h3>
               <p>
-                TermiWeb prefers PowerShell 7 when available and falls back to Windows
-                PowerShell when needed.
+                Mobile controls, selection mode, copy handling, and the fallback paste
+                field are all built into the browser UI.
               </p>
             </article>
           </div>
@@ -139,7 +194,7 @@
         <section id="screenshots" class="section">
           <div class="section-heading">
             <p class="eyebrow">Screenshots</p>
-            <h2>The same shell, two different browser surfaces.</h2>
+            <h2>The same Windows shell, two different browser surfaces.</h2>
           </div>
           <div class="shot-grid">
             <figure class="shot-card">
