@@ -54,10 +54,10 @@ TermiWeb should leave `M8` with a stronger public website, better search and sha
    4. [x] Request indexing for the homepage once the updated metadata and structured data are live.
    5. [x] Record any Search Console verification notes or follow-up work in this worklist or a linked `marketing/research/` note.
 
-2. [ ] Polish the GitHub repository discovery surface.
+2. [x] Polish the GitHub repository discovery surface.
    1. [x] Add or verify a concise repository description aligned with the M8 pitch.
    2. [x] Add or verify GitHub topics that match the Windows browser-terminal search target without implying SSH or remote-desktop scope.
-   3. [ ] Add a GitHub social-preview image sized for reliable link previews.
+   3. [x] Add a GitHub social-preview image sized for reliable link previews.
       Candidate asset: `marketing/assets/github-social-preview.png`.
 
 3. [x] Prepare reusable announcement materials.

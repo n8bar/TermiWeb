@@ -63,4 +63,4 @@
 
 ## Next Action
 
-Add the GitHub social preview for [M8 marketing and website growth](worklists/m8-marketing-and-website-growth.md), then start the first direct outreach pass using the reusable announcement copy.
+Start the first direct outreach pass in [M8 marketing and website growth](worklists/m8-marketing-and-website-growth.md) using the reusable announcement copy, then capture feedback before deciding whether to post publicly.
