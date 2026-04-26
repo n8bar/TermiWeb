@@ -63,4 +63,4 @@
 
 ## Next Action
 
-Finish the live search-discovery setup in [M8 marketing and website growth](worklists/m8-marketing-and-website-growth.md): request homepage indexing in Google Search Console, record any Search Console notes, then add the GitHub social preview before starting direct outreach.
+Add the GitHub social preview for [M8 marketing and website growth](worklists/m8-marketing-and-website-growth.md), then start the first direct outreach pass using the reusable announcement copy.
