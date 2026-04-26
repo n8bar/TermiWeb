@@ -273,3 +273,4 @@
 2026-04-26 Removed hosted CI from the active M9 scope for the current one-maintainer workflow, renamed M9 around `0.1.1` mobile stabilization, renamed the M9 worklist file, and moved hosted CI to a future contributor-readiness candidate.
 2026-04-26 Added the `0.1.1` mobile stabilization spec, resolved the M9 define/decide items for local release verification, collapsed mobile instance controls, and mobile text-assistance mitigation, and linked Findings `13` and `14` to the new spec.
 2026-04-26 Inlined the settled M9 definitions and decisions under their worklist items so review does not require jumping to the spec for the decision summary.
+2026-04-26 Added password-style input behavior as an explicit fallback investigation path for Finding `14` if standard mobile text-assistance suppression hints are not strong enough.
