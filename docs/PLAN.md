@@ -63,4 +63,4 @@
 
 ## Next Action
 
-Review and approve the new [M8 marketing and website growth worklist](worklists/m8-marketing-and-website-growth.md), then start with the website spruce and SEO slice before widening into the rest of the marketing strategy.
+Finish the live search-discovery setup in [M8 marketing and website growth](worklists/m8-marketing-and-website-growth.md): deploy the metadata, structured data, `robots.txt`, and sitemap changes, verify and submit the site in Google Search Console, then add the GitHub social preview before starting direct outreach.
