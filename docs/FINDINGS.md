@@ -25,14 +25,14 @@ This document tracks dogfood findings that are worth fixing later, without inter
 - First seen: `2026-04-06`
 - Area: `mobile`
 - Summary: In collapsed mode on mobile, the active-instance row leaves the columns control too small to use reliably, and the same cramped layout makes the close affordance compete badly for space.
-- Notes: Promoted into the planned `0.1.1 / M9` scope. Likely direction: use a single active-instance button in collapsed mode and show columns and close only after expanding that row.
+- Notes: Promoted into the planned `0.1.1 / M9` scope. Required behavior is defined in [the `0.1.1` mobile stabilization spec](specs/v0.1.1-mobile-stabilization.md): collapsed mode should expose one large active-instance touch target and show columns/close only after expanding or opening active-instance controls.
 
 ### Finding 14: Mobile keyboard text assistance corrupts terminal input
 - Status: `Open`
 - First seen: `2026-04-08`
 - Area: `mobile`
 - Summary: Mobile keyboard text-assistance features tied to predictive text and autocorrect can interfere with terminal input, especially around punctuation, sometimes replaying or duplicating already typed text into PowerShell or other CLI prompts.
-- Notes: Promoted into the planned `0.1.1 / M9` scope. This looks broader than autocorrect alone. Investigate every browser hint available for disabling mobile text assistance in terminal entry.
+- Notes: Promoted into the planned `0.1.1 / M9` scope. Required behavior is defined in [the `0.1.1` mobile stabilization spec](specs/v0.1.1-mobile-stabilization.md): apply the strongest practical browser hints for suppressing autocorrect, autocapitalize, spellcheck, predictive text, grammar assistance, smart punctuation, and suggestion overlays without breaking normal terminal input.
 
 ### Finding 15: The app still has no favicon
 - Status: `Closed`

@@ -69,4 +69,4 @@
 
 ## Next Action
 
-Review [M9 0.1.1 mobile stabilization](worklists/m9-0.1.1-mobile-stabilization.md), then resolve the up-front release-discipline and mobile-behavior decisions before cutting the implementation branch.
+Review and approve [M9 0.1.1 mobile stabilization](worklists/m9-0.1.1-mobile-stabilization.md), then cut the implementation branch for the two mobile fixes.
