@@ -69,4 +69,4 @@
 
 ## Next Action
 
-Review and approve [M9 0.1.1 mobile stabilization](worklists/m9-0.1.1-mobile-stabilization.md), then cut the implementation branch for the two mobile fixes.
+Cut the `M9` implementation branch for [M9 0.1.1 mobile stabilization](worklists/m9-0.1.1-mobile-stabilization.md), then implement Finding `13` and Finding `14` against the approved spec.
