@@ -47,7 +47,7 @@ TermiWeb should leave `M8` with a stronger public website, better search and sha
 
 ## 2. Execution Plan
 
-1. [ ] Finish the live site search-discovery setup.
+1. [x] Finish the live site search-discovery setup.
    1. [x] Verify `https://termiweb.com/robots.txt` and `https://termiweb.com/sitemap.xml` after the next site deployment.
    2. [x] Add `https://termiweb.com/` in Google Search Console with the user present for account/domain access.
    3. [x] Submit `https://termiweb.com/sitemap.xml` in Google Search Console.
@@ -58,6 +58,7 @@ TermiWeb should leave `M8` with a stronger public website, better search and sha
    1. [x] Add or verify a concise repository description aligned with the M8 pitch.
    2. [x] Add or verify GitHub topics that match the Windows browser-terminal search target without implying SSH or remote-desktop scope.
    3. [ ] Add a GitHub social-preview image sized for reliable link previews.
+      Candidate asset: `marketing/assets/github-social-preview.png`.
 
 3. [x] Prepare reusable announcement materials.
    1. [x] Draft the short launch post.

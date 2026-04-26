@@ -265,3 +265,4 @@
 2026-04-26 Confirmed Google Search Console accepted the live `https://termiweb.com/sitemap.xml` submission, then updated the M8 worklist and plan so homepage indexing and Search Console notes are the remaining search-discovery tasks.
 2026-04-26 Recorded the Google Search Console homepage indexing request for `https://termiweb.com/`, added `marketing/research/m8-search-console-notes.md`, and moved the plan's next action to GitHub social-preview setup.
 2026-04-26 Marked the Google Search Console `https://termiweb.com/` property addition complete in the M8 worklist after user confirmation.
+2026-04-26 Generated the M8 GitHub social-preview candidate at `marketing/assets/github-social-preview.png` and closed the Search Console execution block now that property setup, sitemap submission, indexing request, and notes are all complete.

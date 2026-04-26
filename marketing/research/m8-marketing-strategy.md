@@ -71,7 +71,7 @@ Existing assets are enough for the minimum M8 push:
 - README and GitHub release surface.
 
 Assets to add before wider outreach:
-- A repository social-preview image so GitHub links do not depend on the owner avatar or accidental repository preview defaults.
+- A repository social-preview image so GitHub links do not depend on the owner avatar or accidental repository preview defaults. Candidate asset: `marketing/assets/github-social-preview.png`.
 - A short demo asset showing the same live terminal from workstation and phone if Product Hunt, a longer launch writeup, or visual-first social posts become part of the push.
 - Reusable announcement copy in `marketing/assets/` for short, medium, and long formats.
 
