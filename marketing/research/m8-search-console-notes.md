@@ -8,6 +8,7 @@ Date: 2026-04-26
 
 - Verified the live sitemap endpoint after deployment: `https://termiweb.com/sitemap.xml`.
 - Verified the live robots endpoint after deployment: `https://termiweb.com/robots.txt`.
+- Added the `https://termiweb.com/` property in Google Search Console.
 - Submitted `https://termiweb.com/sitemap.xml` in Google Search Console after the live endpoint returned `200`.
 - Requested indexing for `https://termiweb.com/` after the updated metadata, structured data, sitemap, and robots file were live.
 
