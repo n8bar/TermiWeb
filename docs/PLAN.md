@@ -2,7 +2,7 @@
 
 ## Current Focus
 
-`M1` through `M7` are complete. `0.1` is now publicly released, the download site is live at `https://termiweb.com`, and `M8` is now active for marketing and website growth work. `M9` is queued as the `0.1.1` stabilization lane for the must-have mobile fixes plus the first CI baseline.
+`M1` through `M8` are complete. `0.1` is publicly released, the download site is live at `https://termiweb.com`, and the search/discovery foundation is in place for later outreach. `M9` is now active as the `0.1.1` stabilization lane for the must-have mobile fixes plus the first CI baseline. `M10` is queued for deliberate public outreach after `0.1.1` is shipped.
 
 ## Milestones
 
@@ -36,16 +36,21 @@
   - Start: 2026-04-19
   - End: 2026-04-23
   - Worklist: [M7 release and download website](worklists/m7-release-and-download-website.md)
-- [ ] M8: Marketing for an open-source, free-to-use product
-  - Summary: This milestone is the full marketing phase around the product, not just a bundle of launch materials. It includes messaging, positioning, outreach, demos, screenshots, announcements, and the practical work of getting attention on a shipped open-source product.
+- [x] M8: Search and discovery foundation for an open-source, free-to-use product
+  - Summary: This milestone prepares the public surface without pushing broad attention yet. It includes website search hygiene, metadata, sitemap/Search Console setup, GitHub discovery polish, positioning decisions, and reusable announcement copy that can wait for the post-`0.1.1` outreach lane.
   - Start: 2026-04-24
-  - Target End: 2026-05-23
+  - End: 2026-04-26
   - Worklist: [M8 marketing and website growth](worklists/m8-marketing-and-website-growth.md)
 - [ ] M9: `0.1.1` stabilization and CI baseline
   - Summary: This milestone is the first post-release product lane. It should ship `0.1.1`, pull the must-have mobile fixes from Findings `13` and `14` into the release line, and add the first hosted CI flow so typecheck, tests, and build verification stop depending entirely on manual local discipline.
-  - Start: 2026-05-24
-  - Target End: 2026-06-06
+  - Start: 2026-04-27
+  - Target End: 2026-05-10
   - Worklist: [M9 0.1.1 stabilization and CI](worklists/m9-0.1.1-stabilization-and-ci.md)
+- [ ] M10: Post-`0.1.1` public outreach
+  - Summary: This milestone turns the M8 positioning and reusable copy into deliberate outreach only after the `0.1.1` stabilization release has shipped. It includes direct sharing, feedback capture, first public technical post preparation, community-rule review, and a later Product Hunt decision.
+  - Start: 2026-05-11
+  - Target End: 2026-05-24
+  - Worklist: [M10 post-0.1.1 public outreach](worklists/m10-post-0.1.1-public-outreach.md)
 
 ## Future Candidates
 
@@ -63,4 +68,4 @@
 
 ## Next Action
 
-Start the first direct outreach pass in [M8 marketing and website growth](worklists/m8-marketing-and-website-growth.md) using the reusable announcement copy, then capture feedback before deciding whether to post publicly.
+Review [M9 0.1.1 stabilization and CI](worklists/m9-0.1.1-stabilization-and-ci.md), then start with the hosted CI baseline before implementing the mobile fixes for Findings `13` and `14`.

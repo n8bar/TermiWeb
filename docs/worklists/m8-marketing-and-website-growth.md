@@ -1,13 +1,13 @@
 # M8 Marketing And Website Growth
 
-Milestone Timing: Mirrors `M8` in [Project plan](../PLAN.md): start `2026-04-24`, target end `2026-05-23`.
+Milestone Timing: Mirrors `M8` in [Project plan](../PLAN.md): start `2026-04-24`, end `2026-04-26`.
 
 Note: Keep the execution layer inside this worklist or tightly linked docs instead of letting it spill into [Project plan](../PLAN.md).
 Note: Shared `M8` marketing materials should live under `marketing/assets/` and `marketing/research/`. Use `.cybercreek/` only for local scratch that should stay untracked.
 
 ## Desired Outcome
 
-TermiWeb should leave `M8` with a stronger public website, better search and sharing hygiene, a clearer product story, and a concrete marketing plan for reaching the first real audience of the shipped `0.1` release.
+TermiWeb should leave `M8` with a stronger public website, better search and sharing hygiene, a clearer product story, and reusable marketing materials ready for the later post-`0.1.1` outreach milestone. Broad deliberate outreach is intentionally deferred to `M10` so the `0.1.1` mobile fixes and CI baseline can ship first.
 
 ## 1. Work Breakdown
 
@@ -66,11 +66,9 @@ TermiWeb should leave `M8` with a stronger public website, better search and sha
    3. [x] Draft the longer launch writeup.
    4. [x] Add reusable one-line and paragraph blurbs for repo, profile, and direct-share contexts.
 
-4. [ ] Execute the first outreach sequence.
-   1. [ ] Share directly with a small technical group and capture feedback.
-   2. [ ] Prepare and post the first public technical launch post if the direct feedback does not expose a blocker.
-   3. [ ] Review self-hosted or homelab community rules before posting there.
-   4. [ ] Reassess whether Product Hunt belongs in M8 after direct and first-public feedback.
+4. [x] Defer broad outreach to `M10`.
+   1. [x] Move direct sharing, public technical launch posting, self-hosted/homelab rule review, and Product Hunt reassessment into the post-`0.1.1` outreach lane.
+   2. [x] Keep the M8 announcement copy and strategy docs as reusable collateral for that later milestone.
 
 ## 3. Verification Checklist
 

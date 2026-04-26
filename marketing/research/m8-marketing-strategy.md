@@ -6,7 +6,7 @@ Date: 2026-04-26
 
 ## Scope
 
-This strategy covers the first public growth push for the shipped `0.1` release. It should keep TermiWeb positioned as an open-source, free-to-use Windows browser terminal, not as SaaS, SSH hosting, remote-desktop replacement, or enterprise remote-access software.
+This strategy prepares the first public growth push, but broad deliberate outreach is deferred to `M10` after the `0.1.1` stabilization release. It should keep TermiWeb positioned as an open-source, free-to-use Windows browser terminal, not as SaaS, SSH hosting, remote-desktop replacement, or enterprise remote-access software.
 
 ## Audience Decisions
 
@@ -91,10 +91,11 @@ Initial sequence:
 2. Complete Google Search Console verification, sitemap submission, and homepage indexing request.
 3. Polish the GitHub repository surface: description, topics, and social preview.
 4. Prepare short, medium, and long announcement copy in `marketing/assets/`.
-5. Share directly with a small technical group and collect first feedback.
-6. Run one public technical launch post, with `Show HN` as the first candidate if the post is ready.
-7. Consider one self-hosted/homelab post only after reviewing current community rules and making the post useful without requiring the link.
-8. Reassess Product Hunt after the first feedback cycle and demo assets exist.
+5. Ship the `0.1.1` stabilization release in `M9`.
+6. Share directly with a small technical group and collect first feedback in `M10`.
+7. Run one public technical launch post in `M10`, with `Show HN` as the first candidate if the post is ready.
+8. Consider one self-hosted/homelab post only after reviewing current community rules and making the post useful without requiring the link.
+9. Reassess Product Hunt after the first feedback cycle and demo assets exist.
 
 Cadence:
 - Avoid a one-day blast. Use one major public push per week at most during M8, with smaller direct shares and follow-up responses between pushes.

@@ -267,3 +267,6 @@
 2026-04-26 Marked the Google Search Console `https://termiweb.com/` property addition complete in the M8 worklist after user confirmation.
 2026-04-26 Generated the M8 GitHub social-preview candidate at `marketing/assets/github-social-preview.png` and closed the Search Console execution block now that property setup, sitemap submission, indexing request, and notes are all complete.
 2026-04-26 Marked the GitHub repository social-preview setup complete after user confirmation that `marketing/assets/github-social-preview.png` was uploaded through the repository settings UI.
+2026-04-26 Narrowed M8 to the search/discovery foundation, added M10 as the post-`0.1.1` public-outreach milestone, and moved the direct/public outreach sequence out of M8 so the known mobile fixes and CI baseline can ship before deliberate promotion.
+2026-04-26 Closed M8 after search/discovery setup, GitHub discovery polish, positioning, and reusable announcement collateral were complete, leaving M9 as the next active lane.
+2026-04-26 Rescheduled M9 to start immediately after the early M8 close and shifted M10 to follow the planned `0.1.1` stabilization window instead of preserving the old marketing-first calendar gap.
