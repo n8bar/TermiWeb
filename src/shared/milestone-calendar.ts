@@ -123,16 +123,22 @@ function escapeIcsText(value: string): string {
 }
 
 function foldIcsLine(line: string): string {
-  const chunks: string[] = [];
+  const lines: string[] = [];
   let remaining = line;
+  let isFirstLine = true;
 
-  while (remaining.length > 75) {
-    chunks.push(remaining.slice(0, 75));
-    remaining = ` ${remaining.slice(75)}`;
+  while (remaining.length > (isFirstLine ? 75 : 74)) {
+    const limit = isFirstLine ? 75 : 74;
+    const chunk = remaining.slice(0, limit);
+    const trimmedChunk = chunk.trimEnd();
+    const trailingWhitespace = chunk.slice(trimmedChunk.length);
+    lines.push(isFirstLine ? trimmedChunk : ` ${trimmedChunk}`);
+    remaining = `${trailingWhitespace}${remaining.slice(limit)}`;
+    isFirstLine = false;
   }
 
-  chunks.push(remaining);
-  return chunks.join("\r\n");
+  lines.push(isFirstLine ? remaining : ` ${remaining}`);
+  return lines.join("\r\n");
 }
 
 function formatTextProperty(name: string, value: string): string {

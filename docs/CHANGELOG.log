@@ -274,4 +274,5 @@
 2026-04-26 Added the `0.1.1` mobile stabilization spec, resolved the M9 define/decide items for local release verification, collapsed mobile instance controls, and mobile text-assistance mitigation, and linked Findings `13` and `14` to the new spec.
 2026-04-26 Inlined the settled M9 definitions and decisions under their worklist items so review does not require jumping to the spec for the decision summary.
 2026-04-26 Added password-style input behavior as an explicit fallback investigation path for Finding `14` if standard mobile text-assistance suppression hints are not strong enough.
+2026-04-27 Implemented the first M9 mobile stabilization pass: collapsed active-instance controls now open width and close actions behind a larger touch target, terminal-entry text-assistance suppression now covers the live terminal plus paste/select textareas, and the milestone calendar feed was regenerated from the current plan.
 2026-04-26 Approved the M9 `0.1.1` mobile stabilization worklist for execution and updated the plan so the next step is cutting the implementation branch for Findings `13` and `14`.

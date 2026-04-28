@@ -197,6 +197,7 @@ let sidebarPreferenceMode: "auto" | "manual" = "auto";
 let controlsCollapsed = false;
 let topbarCollapsed = false;
 let selectionMode = false;
+let collapsedSessionControlsOpenId: string | null = null;
 let fixedCols = 80;
 let sessionWidthAnchorButton: HTMLButtonElement | null = null;
 let pendingViewportScrollReset = false;
@@ -383,6 +384,9 @@ function setSidebarCollapsed(
 ): void {
   sidebarCollapsed = collapsed;
   workspaceLayout.classList.toggle("is-sidebar-collapsed", collapsed);
+  if (!collapsed) {
+    collapsedSessionControlsOpenId = null;
+  }
   setSessionWidthPopoverOpen(false);
   renderSessions();
   toggleSidebarButton.textContent = collapsed ? "»" : "«";
@@ -1587,21 +1591,50 @@ function renderSessions(): void {
   for (const session of sessions) {
     const row = document.createElement("div");
     row.className = `session-row${session.id === activeSessionId ? " is-active" : ""}`;
-    const showWidthButton = session.id === activeSessionId;
+    const isActiveSession = session.id === activeSessionId;
+    const showCollapsedControls =
+      sidebarCollapsed && isActiveSession && collapsedSessionControlsOpenId === session.id;
+    const showRailActions = !sidebarCollapsed || showCollapsedControls;
+    const showWidthButton = isActiveSession && showRailActions;
     if (showWidthButton) {
       row.classList.add("has-width-button");
+    }
+    if (showRailActions) {
+      row.classList.add("has-rail-actions");
+    }
+    if (showCollapsedControls) {
+      row.classList.add("is-collapsed-controls-open");
     }
 
     const card = document.createElement("div");
     card.className = `session-card${session.id === activeSessionId ? " is-active" : ""}`;
     card.tabIndex = 0;
     card.role = "button";
+    if (sidebarCollapsed && isActiveSession) {
+      card.setAttribute("aria-expanded", String(showCollapsedControls));
+      card.setAttribute(
+        "aria-label",
+        showCollapsedControls
+          ? `Hide controls for ${session.title}`
+          : `Show controls for ${session.title}`,
+      );
+    }
     card.addEventListener("click", () => {
+      if (sidebarCollapsed && isActiveSession) {
+        collapsedSessionControlsOpenId = showCollapsedControls ? null : session.id;
+        renderSessions();
+        return;
+      }
       attachToSession(session.id);
     });
     card.addEventListener("keydown", (event) => {
       if (event.key === "Enter" || event.key === " ") {
         event.preventDefault();
+        if (sidebarCollapsed && isActiveSession) {
+          collapsedSessionControlsOpenId = showCollapsedControls ? null : session.id;
+          renderSessions();
+          return;
+        }
         attachToSession(session.id);
       }
     });
@@ -1679,7 +1712,9 @@ function renderSessions(): void {
     });
 
     row.append(card);
-    row.append(close);
+    if (showRailActions) {
+      row.append(close);
+    }
     if (showWidthButton) {
       if (sidebarCollapsed) {
         row.insertBefore(widthButton, close);
@@ -1701,6 +1736,7 @@ function attachToSession(sessionId: string): void {
 
   setFollowCursor(true);
   activeSessionId = sessionId;
+  collapsedSessionControlsOpenId = null;
   setSessionWidthPopoverOpen(false);
   setSelectionMode(false);
   terminal.reset();
@@ -2112,6 +2148,8 @@ const stageViewportObserver = new ResizeObserver(() => {
 });
 
 stageViewportObserver.observe(workspaceStageViewport);
+applyTerminalInputAttributes(pasteCaptureInput);
+applyTerminalInputAttributes(selectionText);
 
 const handleViewportResize = () => {
   const coarsePointer = isCoarsePointerDevice();

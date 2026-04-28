@@ -98,4 +98,24 @@ describe("milestone calendar generation", () => {
     expect(fs.existsSync(outputPath)).toBe(true);
     expect(fs.readFileSync(outputPath, "utf8")).toContain("SUMMARY:M7: Release and website");
   });
+
+  it("folds long ICS lines without trailing whitespace", () => {
+    const ics = renderMilestonesIcs(
+      [
+        {
+          code: "M8",
+          title: "Search and discovery foundation for an open-source, free-to-use product",
+          summary:
+            "This milestone prepares the public surface without pushing broad attention yet.",
+          start: "2026-04-24",
+          end: "2026-04-26",
+          endLabel: "End",
+          completed: true,
+        },
+      ],
+      new Date("2026-04-21T12:34:56Z"),
+    );
+
+    expect(ics.split("\r\n").filter((line) => /\s$/u.test(line))).toEqual([]);
+  });
 });

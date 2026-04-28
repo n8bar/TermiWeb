@@ -22,4 +22,10 @@ describe("terminal input attributes", () => {
       Object.fromEntries(terminalInputAttributeEntries),
     );
   });
+
+  it("uses non-restrictive terminal typing hints", () => {
+    expect(terminalInputAttributeEntries).toContainEqual(["autocapitalize", "off"]);
+    expect(terminalInputAttributeEntries).toContainEqual(["enterkeyhint", "enter"]);
+    expect(terminalInputAttributeEntries).not.toContainEqual(["inputmode", "numeric"]);
+  });
 });

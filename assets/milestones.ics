@@ -7,7 +7,7 @@ X-WR-CALNAME:TermiWeb Milestones
 X-WR-CALDESC:Milestone dates derived from docs/PLAN.md
 BEGIN:VEVENT
 UID:termiweb-m1@termiweb.local
-DTSTAMP:20260426T041242Z
+DTSTAMP:20260428T041809Z
 SUMMARY:M1: Repository bootstrap and docs baseline
 DTSTART;VALUE=DATE:20260406
 DTEND;VALUE=DATE:20260407
@@ -20,7 +20,7 @@ TRANSP:TRANSPARENT
 END:VEVENT
 BEGIN:VEVENT
 UID:termiweb-m2@termiweb.local
-DTSTAMP:20260426T041242Z
+DTSTAMP:20260428T041809Z
 SUMMARY:M2: Shared terminal backend and session model
 DTSTART;VALUE=DATE:20260406
 DTEND;VALUE=DATE:20260407
@@ -33,7 +33,7 @@ TRANSP:TRANSPARENT
 END:VEVENT
 BEGIN:VEVENT
 UID:termiweb-m3@termiweb.local
-DTSTAMP:20260426T041242Z
+DTSTAMP:20260428T041809Z
 SUMMARY:M3: Browser UI with instances\, auth\, and mobile controls
 DTSTART;VALUE=DATE:20260406
 DTEND;VALUE=DATE:20260407
@@ -46,21 +46,21 @@ TRANSP:TRANSPARENT
 END:VEVENT
 BEGIN:VEVENT
 UID:termiweb-m4@termiweb.local
-DTSTAMP:20260426T041242Z
+DTSTAMP:20260428T041809Z
 SUMMARY:M4: Local verification and launch polish
 DTSTART;VALUE=DATE:20260407
 DTEND;VALUE=DATE:20260408
 DESCRIPTION:Added the first serious verification loop\, tightened restart/r
- econnect behavior\, and cleaned up the initial launch/run path enough for 
- real local use. This is also where the project stopped feeling like a dev-
- only prototype and started behaving like an intentional app.\nStart: 2026-
- 04-07\nEnd: 2026-04-07
+ econnect behavior\, and cleaned up the initial launch/run path enough for
+  real local use. This is also where the project stopped feeling like a dev
+ -only prototype and started behaving like an intentional app.\nStart: 2026
+ -04-07\nEnd: 2026-04-07
 STATUS:CONFIRMED
 TRANSP:TRANSPARENT
 END:VEVENT
 BEGIN:VEVENT
 UID:termiweb-m5@termiweb.local
-DTSTAMP:20260426T041242Z
+DTSTAMP:20260428T041809Z
 SUMMARY:M5: 0.1 release polish and rendering integrity
 DTSTART;VALUE=DATE:20260408
 DTEND;VALUE=DATE:20260418
@@ -75,57 +75,72 @@ TRANSP:TRANSPARENT
 END:VEVENT
 BEGIN:VEVENT
 UID:termiweb-m6@termiweb.local
-DTSTAMP:20260426T041242Z
+DTSTAMP:20260428T041809Z
 SUMMARY:M6: Installer and first-run experience
 DTSTART;VALUE=DATE:20260412
 DTEND;VALUE=DATE:20260414
 DESCRIPTION:Added packaging\, launch scripts\, optional startup-task auto-s
- tart\, uninstall\, distribution layout\, and first-run docs for a non-dev 
- Windows install path. Verified fresh-machine setup\, before-sign-in auto-s
- tart\, uninstall cleanup\, and two-device shared session on real hardware.
- \nStart: 2026-04-12\nEnd: 2026-04-13
+ tart\, uninstall\, distribution layout\, and first-run docs for a non-dev
+  Windows install path. Verified fresh-machine setup\, before-sign-in auto-
+ start\, uninstall cleanup\, and two-device shared session on real hardware
+ .\nStart: 2026-04-12\nEnd: 2026-04-13
 STATUS:CONFIRMED
 TRANSP:TRANSPARENT
 END:VEVENT
 BEGIN:VEVENT
 UID:termiweb-m7@termiweb.local
-DTSTAMP:20260426T041242Z
+DTSTAMP:20260428T041809Z
 SUMMARY:M7: 0.1 release and GitHub Pages download website
 DTSTART;VALUE=DATE:20260419
 DTEND;VALUE=DATE:20260424
 DESCRIPTION:This milestone produced the tagged `0.1` release artifacts\, th
  e live `https://termiweb.com` download site\, the public GitHub release en
  try\, the canonical download path at `/download/`\, the private milestone-
- calendar feed\, and the launch-surface docs that now describe the shipped 
- release honestly.\nStart: 2026-04-19\nEnd: 2026-04-23
+ calendar feed\, and the launch-surface docs that now describe the shipped
+  release honestly.\nStart: 2026-04-19\nEnd: 2026-04-23
 STATUS:CONFIRMED
 TRANSP:TRANSPARENT
 END:VEVENT
 BEGIN:VEVENT
 UID:termiweb-m8@termiweb.local
-DTSTAMP:20260426T041242Z
-SUMMARY:M8: Marketing for an open-source\, free-to-use product
+DTSTAMP:20260428T041809Z
+SUMMARY:M8: Search and discovery foundation for an open-source\, free-to-us
+ e product
 DTSTART;VALUE=DATE:20260424
-DTEND;VALUE=DATE:20260524
-DESCRIPTION:This milestone is the full marketing phase around the product\,
-  not just a bundle of launch materials. It includes messaging\, positionin
- g\, outreach\, demos\, screenshots\, announcements\, and the practical wor
- k of getting attention on a shipped open-source product.\nStart: 2026-04-2
- 4\nTarget end: 2026-05-23
+DTEND;VALUE=DATE:20260427
+DESCRIPTION:This milestone prepares the public surface without pushing broa
+ d attention yet. It includes website search hygiene\, metadata\, sitemap/S
+ earch Console setup\, GitHub discovery polish\, positioning decisions\, an
+ d reusable announcement copy that can wait for the post-`0.1.1` outreach l
+ ane.\nStart: 2026-04-24\nEnd: 2026-04-26
 STATUS:CONFIRMED
 TRANSP:TRANSPARENT
 END:VEVENT
 BEGIN:VEVENT
 UID:termiweb-m9@termiweb.local
-DTSTAMP:20260426T041242Z
-SUMMARY:M9: `0.1.1` stabilization and CI baseline
-DTSTART;VALUE=DATE:20260524
-DTEND;VALUE=DATE:20260607
+DTSTAMP:20260428T041809Z
+SUMMARY:M9: `0.1.1` mobile stabilization
+DTSTART;VALUE=DATE:20260427
+DTEND;VALUE=DATE:20260511
 DESCRIPTION:This milestone is the first post-release product lane. It shoul
- d ship `0.1.1`\, pull the must-have mobile fixes from Findings `13` and `1
- 4` into the release line\, and add the first hosted CI flow so typecheck\,
-  tests\, and build verification stop depending entirely on manual local di
- scipline.\nStart: 2026-05-24\nTarget end: 2026-06-06
+ d ship `0.1.1` and pull the must-have mobile fixes from Findings `13` and
+  `14` into the release line while keeping release verification local and e
+ xplicit for the current one-maintainer workflow.\nStart: 2026-04-27\nTarge
+ t end: 2026-05-10
+STATUS:CONFIRMED
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:termiweb-m10@termiweb.local
+DTSTAMP:20260428T041809Z
+SUMMARY:M10: Post-`0.1.1` public outreach
+DTSTART;VALUE=DATE:20260511
+DTEND;VALUE=DATE:20260525
+DESCRIPTION:This milestone turns the M8 positioning and reusable copy into
+  deliberate outreach only after the `0.1.1` stabilization release has ship
+ ped. It includes direct sharing\, feedback capture\, first public technica
+ l post preparation\, community-rule review\, and a later Product Hunt deci
+ sion.\nStart: 2026-05-11\nTarget end: 2026-05-24
 STATUS:CONFIRMED
 TRANSP:TRANSPARENT
 END:VEVENT

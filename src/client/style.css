@@ -1411,3 +1411,8 @@ button {
   border-bottom-right-radius: 0;
   border-bottom-width: 0;
 }
+
+.workspace-layout.is-sidebar-collapsed .session-row:not(.has-rail-actions) .session-card {
+  border-radius: var(--radius-md);
+  border-width: 1px;
+}
