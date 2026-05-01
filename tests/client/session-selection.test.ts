@@ -12,6 +12,7 @@ const sessions: SessionSummary[] = [
     shell: "pwsh.exe",
     lastExitCode: null,
     fixedCols: 80,
+    fixedRows: 30,
   },
   {
     id: "25f43048-9a8c-4b30-8150-6b75e437d9e8",
@@ -21,6 +22,7 @@ const sessions: SessionSummary[] = [
     shell: "pwsh.exe",
     lastExitCode: null,
     fixedCols: 80,
+    fixedRows: 30,
   },
 ];
 

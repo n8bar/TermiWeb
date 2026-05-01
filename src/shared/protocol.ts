@@ -9,6 +9,7 @@ export const terminalStatusSchema = z.enum([
 ]);
 
 const fixedColsSchema = z.number().int().min(20).max(240);
+const fixedRowsSchema = z.number().int().min(1).max(400);
 
 export const sessionSummarySchema = z.object({
   id: z.string().uuid(),
@@ -18,6 +19,7 @@ export const sessionSummarySchema = z.object({
   shell: z.string().nullable(),
   lastExitCode: z.number().int().nullable(),
   fixedCols: fixedColsSchema,
+  fixedRows: fixedRowsSchema,
 });
 
 export const sessionSnapshotSchema = z.object({

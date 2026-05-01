@@ -4,7 +4,6 @@ import { EventEmitter } from "node:events";
 import { spawn, type IPty } from "node-pty";
 
 import type { SessionSnapshot, SessionSummary, TerminalStatus } from "../../shared/protocol.js";
-import { resolveSessionRowsForCols } from "./row-policy.js";
 
 interface TerminalSessionOptions {
   id: string;
@@ -12,6 +11,7 @@ interface TerminalSessionOptions {
   shell: string;
   historyLimit: number;
   fixedCols: number;
+  fixedRows: number;
 }
 
 interface TerminalSessionEvents {
@@ -52,7 +52,7 @@ export class TerminalSession extends EventEmitter<TerminalSessionEvents> {
     this.#shell = options.shell;
     this.#historyLimit = options.historyLimit;
     this.#cols = options.fixedCols;
-    this.#rows = resolveSessionRowsForCols(options.fixedCols);
+    this.#rows = options.fixedRows;
   }
 
   get id(): string {
@@ -68,6 +68,7 @@ export class TerminalSession extends EventEmitter<TerminalSessionEvents> {
       shell: this.#shell,
       lastExitCode: this.#lastExitCode,
       fixedCols: this.#cols,
+      fixedRows: this.#rows,
     };
   }
 
@@ -78,10 +79,10 @@ export class TerminalSession extends EventEmitter<TerminalSessionEvents> {
     };
   }
 
-  async ensureStarted(size?: { cols: number }): Promise<void> {
+  async ensureStarted(size?: { cols: number; rows: number }): Promise<void> {
     if (size && !this.#pty && this.#status !== "starting") {
       this.#cols = size.cols;
-      this.#rows = resolveSessionRowsForCols(size.cols);
+      this.#rows = size.rows;
     }
 
     if (this.#pty || this.#status === "starting") {
@@ -142,19 +143,21 @@ export class TerminalSession extends EventEmitter<TerminalSessionEvents> {
 
   resize(cols: number, rows: number): void {
     this.#cols = cols;
-    if (!this.#pty) {
-      this.#rows = resolveSessionRowsForCols(cols);
-    }
+    this.#rows = rows;
   }
 
   setFixedCols(cols: number, rows = this.#rows): void {
     this.#cols = cols;
-    this.#rows = resolveSessionRowsForCols(cols);
+    this.#rows = rows;
     this.#pty?.resize(cols, this.#rows);
   }
 
   getFixedCols(): number {
     return this.#cols;
+  }
+
+  getFixedRows(): number {
+    return this.#rows;
   }
 
   setTitle(title: string): void {

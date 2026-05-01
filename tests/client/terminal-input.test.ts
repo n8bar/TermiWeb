@@ -2,7 +2,9 @@ import { describe, expect, it } from "vitest";
 
 import {
   applyTerminalInputAttributes,
+  applyTerminalMobileCaptureInputAttributes,
   terminalInputAttributeEntries,
+  terminalMobileCaptureInputAttributeEntries,
 } from "../../src/client/ui/terminalInput.js";
 
 describe("terminal input attributes", () => {
@@ -26,6 +28,26 @@ describe("terminal input attributes", () => {
   it("uses non-restrictive terminal typing hints", () => {
     expect(terminalInputAttributeEntries).toContainEqual(["autocapitalize", "off"]);
     expect(terminalInputAttributeEntries).toContainEqual(["enterkeyhint", "enter"]);
+    expect(terminalInputAttributeEntries).not.toContainEqual(["type", "password"]);
     expect(terminalInputAttributeEntries).not.toContainEqual(["inputmode", "numeric"]);
+  });
+
+  it("uses a non-credential mobile capture input when stronger autocorrect suppression is needed", () => {
+    const attributes = new Map<string, string>();
+    const input = {
+      spellcheck: true,
+      setAttribute(name: string, value: string) {
+        attributes.set(name, value);
+      },
+    };
+
+    applyTerminalMobileCaptureInputAttributes(input);
+
+    expect(input.spellcheck).toBe(false);
+    expect(Object.fromEntries(attributes)).toEqual(
+      Object.fromEntries(terminalMobileCaptureInputAttributeEntries),
+    );
+    expect(terminalMobileCaptureInputAttributeEntries).toContainEqual(["type", "url"]);
+    expect(terminalMobileCaptureInputAttributeEntries).not.toContainEqual(["type", "password"]);
   });
 });

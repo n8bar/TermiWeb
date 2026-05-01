@@ -1,16 +1,27 @@
 import { randomUUID } from "node:crypto";
 import { z } from "zod";
 
+import { resolveSharedTerminalRows } from "../../shared/terminal-geometry.js";
+
 export const DEFAULT_FIXED_COLS = 80;
+export const DEFAULT_FIXED_ROWS = resolveSharedTerminalRows(DEFAULT_FIXED_COLS);
 export const MIN_FIXED_COLS = 20;
 export const MAX_FIXED_COLS = 240;
+export const MIN_FIXED_ROWS = 1;
+export const MAX_FIXED_ROWS = 400;
 
-export const workspaceTabSchema = z.object({
-  id: z.string().uuid(),
-  title: z.string().min(1).max(64),
-  autoNamed: z.boolean().default(false),
-  fixedCols: z.number().int().min(MIN_FIXED_COLS).max(MAX_FIXED_COLS).default(DEFAULT_FIXED_COLS),
-});
+export const workspaceTabSchema = z
+  .object({
+    id: z.string().uuid(),
+    title: z.string().min(1).max(64),
+    autoNamed: z.boolean().default(false),
+    fixedCols: z.number().int().min(MIN_FIXED_COLS).max(MAX_FIXED_COLS).default(DEFAULT_FIXED_COLS),
+    fixedRows: z.number().int().min(MIN_FIXED_ROWS).max(MAX_FIXED_ROWS).optional(),
+  })
+  .transform((tab) => ({
+    ...tab,
+    fixedRows: tab.fixedRows ?? resolveSharedTerminalRows(tab.fixedCols),
+  }));
 
 export const workspaceStateSchema = z.object({
   tabs: z.array(workspaceTabSchema),
@@ -120,6 +131,7 @@ export function ensureWorkspaceHasTab(
     title: createDefaultTitle(state.nextDefaultTitleIndex),
     autoNamed: true,
     fixedCols: defaultFixedCols,
+    fixedRows: resolveSharedTerminalRows(defaultFixedCols),
   };
 
   return {
@@ -143,6 +155,7 @@ export function addWorkspaceTab(
     title: resolvedTitle,
     autoNamed: !normalizedTitle,
     fixedCols,
+    fixedRows: resolveSharedTerminalRows(fixedCols),
   };
   const tabs = normalizeWorkspaceTabs([...existingTabs, tab]);
   const resolvedTab = tabs.find((candidate) => candidate.id === tab.id) ?? tab;
@@ -194,14 +207,15 @@ export function removeWorkspaceTab(
   };
 }
 
-export function updateWorkspaceTabFixedCols(
+export function updateWorkspaceTabFixedSize(
   state: WorkspaceState,
   tabId: string,
   fixedCols: number,
+  fixedRows = resolveSharedTerminalRows(fixedCols),
 ): WorkspaceState {
   let changed = false;
   const nextTabs = state.tabs.map((tab) => {
-    if (tab.id !== tabId || tab.fixedCols === fixedCols) {
+    if (tab.id !== tabId || (tab.fixedCols === fixedCols && tab.fixedRows === fixedRows)) {
       return tab;
     }
 
@@ -209,6 +223,7 @@ export function updateWorkspaceTabFixedCols(
     return {
       ...tab,
       fixedCols,
+      fixedRows,
     };
   });
 
@@ -221,3 +236,5 @@ export function updateWorkspaceTabFixedCols(
     tabs: nextTabs,
   };
 }
+
+export const updateWorkspaceTabFixedCols = updateWorkspaceTabFixedSize;

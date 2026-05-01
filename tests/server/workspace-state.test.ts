@@ -4,10 +4,11 @@ import {
   addWorkspaceTab,
   createEmptyWorkspaceState,
   DEFAULT_FIXED_COLS,
+  DEFAULT_FIXED_ROWS,
   ensureWorkspaceHasTab,
   removeWorkspaceTab,
   selectWorkspaceTab,
-  updateWorkspaceTabFixedCols,
+  updateWorkspaceTabFixedSize,
   workspaceStateSchema,
 } from "../../src/server/workspace/workspace-state.js";
 
@@ -18,6 +19,7 @@ describe("workspace state", () => {
     expect(state.tabs).toHaveLength(1);
     expect(state.tabs[0]?.title).toBe("Instance 1");
     expect(state.tabs[0]?.fixedCols).toBe(DEFAULT_FIXED_COLS);
+    expect(state.tabs[0]?.fixedRows).toBe(DEFAULT_FIXED_ROWS);
     expect(state.lastActiveTabId).toBe(state.tabs[0]?.id ?? null);
   });
 
@@ -89,15 +91,17 @@ describe("workspace state", () => {
       "Instance 2",
     ]);
     expect(normalized.tabs.map((tab) => tab.fixedCols)).toEqual([80, 120, 100]);
+    expect(normalized.tabs.map((tab) => tab.fixedRows)).toEqual([30, 45, 38]);
     expect(normalized.nextDefaultTitleIndex).toBe(3);
   });
 
-  it("updates the fixed column width for a known tab", () => {
+  it("updates the fixed terminal size for a known tab", () => {
     const initial = ensureWorkspaceHasTab(createEmptyWorkspaceState());
-    const updated = updateWorkspaceTabFixedCols(initial, initial.tabs[0]!.id, 120);
+    const updated = updateWorkspaceTabFixedSize(initial, initial.tabs[0]!.id, 120, 45);
 
     expect(updated.tabs[0]?.fixedCols).toBe(120);
-    expect(updateWorkspaceTabFixedCols(updated, "a7c88eeb-e856-44d0-8d21-4ef32cdb35de", 132)).toBe(
+    expect(updated.tabs[0]?.fixedRows).toBe(45);
+    expect(updateWorkspaceTabFixedSize(updated, "a7c88eeb-e856-44d0-8d21-4ef32cdb35de", 132, 50)).toBe(
       updated,
     );
   });

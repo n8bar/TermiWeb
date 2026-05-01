@@ -10,6 +10,7 @@ import {
   removeWorkspaceTab,
   selectWorkspaceTab,
   updateWorkspaceTabFixedCols,
+  updateWorkspaceTabFixedSize,
   type WorkspaceState,
 } from "../../src/server/workspace/workspace-state.js";
 
@@ -46,6 +47,10 @@ class FakeWorkspaceStore {
 
   async setTabFixedCols(tabId: string, fixedCols: number) {
     this.#state = updateWorkspaceTabFixedCols(this.#state, tabId, fixedCols);
+  }
+
+  async setTabFixedSize(tabId: string, fixedCols: number, fixedRows: number) {
+    this.#state = updateWorkspaceTabFixedSize(this.#state, tabId, fixedCols, fixedRows);
   }
 }
 
@@ -102,11 +107,14 @@ describe("terminal manager", () => {
 
     const existing = manager.listSessions()[0];
     expect(existing?.fixedCols).toBe(80);
+    expect(existing?.fixedRows).toBe(30);
 
-    await manager.setSessionFixedCols(existing!.id, 120, 32);
+    await manager.setSessionFixedCols(existing!.id, 120, 45);
 
     expect(manager.listSessions()[0]?.fixedCols).toBe(120);
+    expect(manager.listSessions()[0]?.fixedRows).toBe(45);
     expect(store.listTabs()[0]?.fixedCols).toBe(120);
+    expect(store.listTabs()[0]?.fixedRows).toBe(45);
   });
 
   it("renumbers surviving auto-named sessions after a close", async () => {

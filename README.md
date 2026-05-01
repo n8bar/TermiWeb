@@ -10,6 +10,7 @@ It was created for power users, especially vibe-coders who want to continue "wor
 - Cross-device attachment to the same live shell
 - A Windows packaged run surface with setup, start, restart, stop, uninstall, and optional before-sign-in auto-start
 - Mobile-oriented terminal controls plus selection/clipboard support
+- `0.1.1` includes mobile stabilization fixes for collapsed instance controls and keyboard text-assistance interference.
 - `0.1` targets Windows hosts only.
 - Every shell in `0.1` is elevated.
 - `0.1` assumes a trusted Windows machine on a private network.
@@ -21,7 +22,7 @@ The public download path for the packaged release is:
 
 `https://termiweb.com/download/`
 
-Until then, repo users can build the packaged release locally with:
+Repo users can also build the packaged release locally with:
 
 ```bash
 npm run package:release

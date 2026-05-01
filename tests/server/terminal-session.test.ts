@@ -30,10 +30,12 @@ describe("terminal session row handling", () => {
       shell: "pwsh",
       historyLimit: 10_000,
       fixedCols: 80,
+      fixedRows: 30,
     });
 
     await session.ensureStarted({
       cols: 80,
+      rows: 30,
     });
     resizeMock.mockClear();
 
@@ -49,10 +51,12 @@ describe("terminal session row handling", () => {
       shell: "pwsh",
       historyLimit: 10_000,
       fixedCols: 80,
+      fixedRows: 30,
     });
 
     await session.ensureStarted({
       cols: 80,
+      rows: 30,
     });
     resizeMock.mockClear();
 
@@ -68,15 +72,17 @@ describe("terminal session row handling", () => {
       shell: "pwsh",
       historyLimit: 10_000,
       fixedCols: 80,
+      fixedRows: 30,
     });
 
     await session.ensureStarted({
       cols: 80,
+      rows: 30,
     });
     resizeMock.mockClear();
 
     session.setFixedCols(100, 60);
 
-    expect(resizeMock).toHaveBeenCalledWith(100, 38);
+    expect(resizeMock).toHaveBeenCalledWith(100, 60);
   });
 });

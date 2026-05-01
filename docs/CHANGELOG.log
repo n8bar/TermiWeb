@@ -276,3 +276,28 @@
 2026-04-26 Added password-style input behavior as an explicit fallback investigation path for Finding `14` if standard mobile text-assistance suppression hints are not strong enough.
 2026-04-27 Implemented the first M9 mobile stabilization pass: collapsed active-instance controls now open width and close actions behind a larger touch target, terminal-entry text-assistance suppression now covers the live terminal plus paste/select textareas, and the milestone calendar feed was regenerated from the current plan.
 2026-04-26 Approved the M9 `0.1.1` mobile stabilization worklist for execution and updated the plan so the next step is cutting the implementation branch for Findings `13` and `14`.
+2026-04-30 Corrected the M9 collapsed active-instance control implementation so opening the controls produces large flyout-style columns and close targets instead of revealing cramped rail-sized buttons.
+2026-04-30 Refined the M9 collapsed active-instance flyout so it aligns with the active card top, focuses the columns control when opened, and hides on blur unless focus moves to close or the column editor.
+2026-04-30 Updated collapsed-session touch activation so tapping a session on mobile selects it and opens the columns/close flyout in the same interaction instead of depending on desktop click synthesis.
+2026-04-30 Simplified collapsed-session activation so click/tap share one path that selects the session and opens the controls, avoiding duplicate touch and click handlers fighting each other on mobile.
+2026-04-30 Removed collapsed flyout focus/blur behavior after real phone testing showed programmatic focus was triggering mobile keyboard flicker and causing the flyout to blink closed.
+2026-04-30 Restored collapsed inactive-session taps to selection-only behavior so the flyout is only toggled from the already active session.
+2026-04-30 Darkened the collapsed active-session flyout controls so the columns and close buttons stay legible when rendered over terminal text.
+2026-04-30 Narrowed the collapsed active-session flyout controls while preserving the larger touch height.
+2026-04-30 Added `40` columns as a shared-width preset for narrow mobile terminal use.
+2026-04-30 Added a `60` column preset and changed the column-width preset picker to larger two-row buttons.
+2026-04-30 Closed Finding `13` after real mobile verification confirmed the collapsed active-session flyout now handles selection, columns, and close controls cleanly.
+2026-04-30 Changed named column presets to explicit stable geometry pairs, including `40x40` and `60x36`, while keeping custom column values on the existing `80x30` ratio-derived row policy.
+2026-04-30 Removed the width button's pointer/touch `preventDefault` handlers so mobile taps can activate the columns popover normally.
+2026-04-30 Stopped auto-focusing the custom column input on coarse-pointer devices so opening the columns popover no longer summons the mobile keyboard unless the user taps the input.
+2026-04-30 Changed columns popover outside-dismiss handling from `pointerdown` to `click` so mobile touch and keyboard focus transitions do not close the popover before the intended tap resolves.
+2026-04-30 Disabled session-list scroll dismissal for the columns popover on coarse-pointer devices because mobile viewport and keyboard changes can produce synthetic scroll movement that immediately closes the popover.
+2026-04-30 Closed both mobile column-control flyouts before measuring/refitting the terminal after a column preset change, preventing stale flyout state from corrupting the post-resize layout.
+2026-04-30 Reconfirmed Finding `13` as resolved after final real-device mobile testing of the active-session flyout, columns popover, preset geometry changes, and post-resize terminal rendering.
+2026-04-30 Added a mobile-only password-style live terminal input capture path so predictive text and autocorrect do not replay or duplicate long terminal input after the keyboard accepts a word.
+2026-04-30 Reduced password-manager interference with the mobile password-style terminal capture by keeping the capture field readonly until focus, using autocomplete-off semantics, and adding broader manager-ignore hints.
+2026-05-01 Removed the password-style live terminal capture path so PTY input no longer presents as credential entry; the actual TermiWeb login keeps normal password-manager semantics.
+2026-05-01 Switched the mobile live terminal capture fallback to a non-credential URL input to suppress predictive text without inviting password-manager overlays, and added a mobile Space control for URL keyboards that hide the spacebar.
+2026-05-01 Removed the unsupported mobile Space control and kept the URL capture fallback as the Finding `14` fix, preserving the existing Copy and Paste control layout.
+2026-05-01 Advanced M9 into the `0.1.1` release-surface pass, bumped package metadata to `0.1.1`, updated the site/download and README release wording, and added the `0.1.1` release publication draft.
+2026-05-01 Passed the `0.1.1` local release verification gate: typecheck, tests, app build, site build, and release package assembly produced `artifacts/release/TermiWeb-0.1.1-windows-x64.zip`.

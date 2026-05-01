@@ -41,6 +41,7 @@ describe("protocol parsing", () => {
           shell: "powershell.exe",
           lastExitCode: null,
           fixedCols: 80,
+          fixedRows: 30,
         },
       ],
     });
@@ -52,6 +53,7 @@ describe("protocol parsing", () => {
     expect(event.activeSessionId).toBe("54fd93ae-0f1d-4dc4-af4a-547e8b87d2af");
     expect(event.sessions[0]?.clientCount).toBe(2);
     expect(event.sessions[0]?.fixedCols).toBe(80);
+    expect(event.sessions[0]?.fixedRows).toBe(30);
   });
 
   it("accepts a session snapshot request event", () => {

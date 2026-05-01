@@ -32,7 +32,7 @@ export class TerminalManager extends EventEmitter<ManagerEvents> {
 
   async initialize(): Promise<void> {
     for (const tab of this.#workspaceStore.listTabs()) {
-      this.#registerSession(tab.id, tab.title, tab.fixedCols);
+      this.#registerSession(tab.id, tab.title, tab.fixedCols, tab.fixedRows);
     }
     this.#syncSessionDefinitions();
     this.#emitSessions();
@@ -67,7 +67,7 @@ export class TerminalManager extends EventEmitter<ManagerEvents> {
 
     const tab = await this.#workspaceStore.createTab(title);
     this.#syncSessionDefinitions();
-    const session = this.#registerSession(tab.id, tab.title, tab.fixedCols);
+    const session = this.#registerSession(tab.id, tab.title, tab.fixedCols, tab.fixedRows);
     this.#syncSessionDefinitions();
     this.#emitSessions();
     return session.getSummary();
@@ -113,6 +113,7 @@ export class TerminalManager extends EventEmitter<ManagerEvents> {
     session.attachClient(clientId);
     await session.ensureStarted({
       cols: session.getFixedCols(),
+      rows: session.getFixedRows(),
     });
     await this.#workspaceStore.selectTab(sessionId);
     this.#emitSessions();
@@ -180,7 +181,7 @@ export class TerminalManager extends EventEmitter<ManagerEvents> {
     }
 
     session.setFixedCols(cols, rows);
-    await this.#workspaceStore.setTabFixedCols(sessionId, cols);
+    await this.#workspaceStore.setTabFixedSize(sessionId, cols, rows);
     this.#emitSessions();
   }
 
@@ -188,13 +189,19 @@ export class TerminalManager extends EventEmitter<ManagerEvents> {
     return this.#shell;
   }
 
-  #registerSession(sessionId: string, title: string, fixedCols: number): TerminalSession {
+  #registerSession(
+    sessionId: string,
+    title: string,
+    fixedCols: number,
+    fixedRows: number,
+  ): TerminalSession {
     const session = new TerminalSession({
       id: sessionId,
       title,
       shell: this.#shell,
       historyLimit: this.#config.historyLimit,
       fixedCols,
+      fixedRows,
     });
 
     session.on("summary", () => {

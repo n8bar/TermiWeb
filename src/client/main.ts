@@ -32,7 +32,10 @@ import {
   computeRequiredTerminalWidth,
   fitFontSizeToCols,
 } from "./ui/terminalSizing.js";
-import { applyTerminalInputAttributes } from "./ui/terminalInput.js";
+import {
+  applyTerminalInputAttributes,
+  applyTerminalMobileCaptureInputAttributes,
+} from "./ui/terminalInput.js";
 import { attachTerminalTouchScroll } from "./ui/terminalScroll.js";
 import {
   computeCursorViewportScrollTop,
@@ -138,7 +141,18 @@ terminal.attachCustomKeyEventHandler((event) => !tryHandleCopyShortcut(event));
 if (terminal.textarea) {
   applyTerminalInputAttributes(terminal.textarea);
 }
+const terminalMobileCaptureInput = document.createElement("input");
+terminalMobileCaptureInput.className = "terminal-mobile-capture-input";
+terminalMobileCaptureInput.setAttribute("aria-hidden", "true");
+terminalMobileCaptureInput.tabIndex = -1;
+applyTerminalMobileCaptureInputAttributes(terminalMobileCaptureInput);
+terminalContainer.append(terminalMobileCaptureInput);
 if (terminal.element) {
+  terminal.element.addEventListener("click", () => {
+    if (isCoarsePointerDevice() && !selectionMode) {
+      focusLiveTerminalInput();
+    }
+  });
   attachTerminalTouchScroll({
     surface: terminal.element,
     viewport: terminalContainer,
@@ -199,6 +213,7 @@ let topbarCollapsed = false;
 let selectionMode = false;
 let collapsedSessionControlsOpenId: string | null = null;
 let fixedCols = 80;
+let fixedRows = resolveSharedTerminalRows(fixedCols);
 let sessionWidthAnchorButton: HTMLButtonElement | null = null;
 let pendingViewportScrollReset = false;
 let pendingViewportSnapshotResync = false;
@@ -269,9 +284,14 @@ function setVersionIdentity(): void {
   document.title = `TermiWeb ${versionLabel}`;
 }
 
-function setFixedCols(nextFixedCols?: number): void {
+function setFixedSize(nextFixedCols?: number, nextFixedRows?: number): void {
   if (typeof nextFixedCols === "number" && Number.isFinite(nextFixedCols)) {
     fixedCols = nextFixedCols;
+  }
+  if (typeof nextFixedRows === "number" && Number.isFinite(nextFixedRows)) {
+    fixedRows = nextFixedRows;
+  } else {
+    fixedRows = resolveSharedTerminalRows(fixedCols);
   }
 
   syncSessionWidthControl();
@@ -371,6 +391,10 @@ function setSessionWidthPopoverOpen(
   syncSessionWidthControl();
   window.requestAnimationFrame(() => {
     positionSessionWidthPopover();
+    if (isCoarsePointerDevice()) {
+      return;
+    }
+
     sessionWidthInput.focus();
     sessionWidthInput.select();
   });
@@ -581,6 +605,19 @@ function isCoarsePointerDevice(): boolean {
   );
 }
 
+function focusLiveTerminalInput(): void {
+  if (isCoarsePointerDevice() && !selectionMode) {
+    terminalMobileCaptureInput.value = "";
+    terminalMobileCaptureInput.readOnly = false;
+    terminalMobileCaptureInput.focus({
+      preventScroll: true,
+    });
+    return;
+  }
+
+  terminal.focus();
+}
+
 function registerControlButtonFocusBehavior(element: HTMLButtonElement): void {
   const preserveTerminalFocus = (event: Event) => {
     if (event.cancelable) {
@@ -611,7 +648,7 @@ function registerControlButtonFocusBehavior(element: HTMLButtonElement): void {
 
     window.requestAnimationFrame(() => {
       if (document.activeElement === element) {
-        terminal.focus();
+        focusLiveTerminalInput();
       }
     });
   });
@@ -671,20 +708,26 @@ function maybeRefocusTerminalAfterControl(): void {
     document.activeElement !== terminal.textarea;
   if (shouldFocusTerminal) {
     window.requestAnimationFrame(() => {
-      terminal.focus();
+      focusLiveTerminalInput();
     });
   }
 }
 
-function requestSessionWidthChange(nextCols: number): void {
+function requestSessionWidthChange(nextCols: number, nextRows?: number): void {
   const active = getActiveSession();
   if (!active) {
     return;
   }
 
   const clampedCols = Math.max(minSessionCols, Math.min(maxSessionCols, Math.round(nextCols)));
-  if (clampedCols === active.fixedCols) {
+  const resolvedRows =
+    typeof nextRows === "number" && Number.isFinite(nextRows)
+      ? Math.max(1, Math.min(400, Math.round(nextRows)))
+      : resolveSharedTerminalRows(clampedCols);
+  if (clampedCols === active.fixedCols && resolvedRows === active.fixedRows) {
+    collapsedSessionControlsOpenId = null;
     setSessionWidthPopoverOpen(false);
+    renderSessions();
     maybeRefocusTerminalAfterControl();
     return;
   }
@@ -703,21 +746,23 @@ function requestSessionWidthChange(nextCols: number): void {
       ? {
           ...session,
           fixedCols: clampedCols,
+          fixedRows: resolvedRows,
         }
       : session,
   );
   sessions = nextSessions;
-  setFixedCols(clampedCols);
-  const size = currentSize();
+  setFixedSize(clampedCols, resolvedRows);
   sendEvent({
     type: "session/cols",
     sessionId: active.id,
     cols: clampedCols,
-    rows: size.rows,
+    rows: resolvedRows,
   });
-  scheduleTerminalResync(140);
-  renderSessions();
   setSessionWidthPopoverOpen(false);
+  collapsedSessionControlsOpenId = null;
+  renderSessions();
+  syncViewportLayout();
+  scheduleTerminalResync(140);
   maybeRefocusTerminalAfterControl();
 }
 
@@ -1186,7 +1231,7 @@ function currentSize() {
     terminalContainer.parentElement?.clientWidth ?? terminalContainer.clientWidth;
   const targetHeight = terminalContainer.clientHeight;
   const nextCols = fixedCols;
-  const nextRows = resolveSharedTerminalRows(nextCols);
+  const nextRows = fixedRows;
 
   if (targetWidth <= 0 || targetHeight <= 0) {
     return {
@@ -1274,7 +1319,7 @@ function closePasteCapture(options: {
   setPasteCaptureHelpOpen(false);
 
   if (options.restoreTerminalFocus !== false && !selectionMode) {
-    terminal.focus();
+    focusLiveTerminalInput();
   }
 }
 
@@ -1403,7 +1448,7 @@ function setSelectionMode(isOpen: boolean): void {
     selectionText.focus();
   } else {
     selectionText.blur();
-    terminal.focus();
+    focusLiveTerminalInput();
   }
 
   renderModifierControls();
@@ -1572,6 +1617,20 @@ function updateActiveSessionMeta(): void {
   syncSessionWidthControl();
 }
 
+function setCollapsedSessionControlsOpen(sessionId: string | null): void {
+  collapsedSessionControlsOpenId = sessionId;
+  if (!sessionId) {
+    setSessionWidthPopoverOpen(false);
+  }
+  renderSessions();
+}
+
+function getOpenCollapsedSessionCloseButton(): HTMLButtonElement | null {
+  return document.querySelector<HTMLButtonElement>(
+    ".session-row.is-collapsed-controls-open .session-close",
+  );
+}
+
 function renderSessions(): void {
   if (!sessionWidthPopover.classList.contains("is-hidden")) {
     setSessionWidthPopoverOpen(false);
@@ -1619,23 +1678,27 @@ function renderSessions(): void {
           : `Show controls for ${session.title}`,
       );
     }
-    card.addEventListener("click", () => {
+    const activateSessionCard = () => {
       if (sidebarCollapsed && isActiveSession) {
-        collapsedSessionControlsOpenId = showCollapsedControls ? null : session.id;
-        renderSessions();
+        setCollapsedSessionControlsOpen(showCollapsedControls ? null : session.id);
         return;
       }
+
+      if (sidebarCollapsed) {
+        attachToSession(session.id);
+        return;
+      }
+
       attachToSession(session.id);
+    };
+
+    card.addEventListener("click", () => {
+      activateSessionCard();
     });
     card.addEventListener("keydown", (event) => {
       if (event.key === "Enter" || event.key === " ") {
         event.preventDefault();
-        if (sidebarCollapsed && isActiveSession) {
-          collapsedSessionControlsOpenId = showCollapsedControls ? null : session.id;
-          renderSessions();
-          return;
-        }
-        attachToSession(session.id);
+        activateSessionCard();
       }
     });
 
@@ -1661,32 +1724,6 @@ function renderSessions(): void {
     widthButton.setAttribute("aria-expanded", "false");
     widthButton.setAttribute("aria-haspopup", "dialog");
     widthButton.setAttribute("aria-controls", "session-width-popover");
-    const preservePointerInteraction = (event: Event) => {
-      if (event.cancelable) {
-        event.preventDefault();
-      }
-    };
-    widthButton.addEventListener(
-      "pointerdown",
-      (event) => {
-        preservePointerInteraction(event);
-      },
-      { passive: false },
-    );
-    widthButton.addEventListener(
-      "mousedown",
-      (event) => {
-        preservePointerInteraction(event);
-      },
-      { passive: false },
-    );
-    widthButton.addEventListener(
-      "touchstart",
-      (event) => {
-        preservePointerInteraction(event);
-      },
-      { passive: false },
-    );
     widthButton.addEventListener("click", (event) => {
       event.stopPropagation();
       const shouldOpen =
@@ -1731,7 +1768,7 @@ function renderSessions(): void {
 function attachToSession(sessionId: string): void {
   const targetSession = sessions.find((session) => session.id === sessionId);
   if (targetSession) {
-    setFixedCols(targetSession.fixedCols);
+    setFixedSize(targetSession.fixedCols, targetSession.fixedRows);
   }
 
   setFollowCursor(true);
@@ -1768,8 +1805,8 @@ function maybeAttachDefaultSession(): void {
 
   if (!preferredSessionId || preferredSessionId === activeSessionId) {
     const active = getActiveSession();
-    if (active && active.fixedCols !== fixedCols) {
-      setFixedCols(active.fixedCols);
+    if (active && (active.fixedCols !== fixedCols || active.fixedRows !== fixedRows)) {
+      setFixedSize(active.fixedCols, active.fixedRows);
       syncViewportLayout();
     }
     ensureCursorVisible();
@@ -1795,7 +1832,7 @@ function handleServerEvent(event: ServerEvent): void {
       return;
     case "session/created":
       setConnectionState("connected");
-      setFixedCols(event.session.fixedCols);
+      setFixedSize(event.session.fixedCols, event.session.fixedRows);
       attachToSession(event.session.id);
       return;
     case "session/snapshot":
@@ -1811,7 +1848,7 @@ function handleServerEvent(event: ServerEvent): void {
         });
         renderSessions();
         ensureCursorVisible();
-        terminal.focus();
+        focusLiveTerminalInput();
       });
       return;
     case "session/output":
@@ -1846,7 +1883,7 @@ function connectSocket(): void {
     clearRecoveryPollTimer();
     setConnectionState("connected");
     sendEvent({ type: "session/list.request" });
-    terminal.focus();
+    focusLiveTerminalInput();
   });
 
   socket.addEventListener("message", (message) => {
@@ -1885,7 +1922,7 @@ async function refreshAuthState(): Promise<void> {
     fixedCols?: number;
   };
   setHostIdentity(body.hostname);
-  setFixedCols(body.fixedCols);
+  setFixedSize(body.fixedCols);
   setView(body.authenticated);
   if (body.authenticated) {
     recoveryReloadRequested = false;
@@ -1925,7 +1962,7 @@ loginForm.addEventListener("submit", async (event) => {
   }
 
   setHostIdentity(body.hostname);
-  setFixedCols(body.fixedCols);
+  setFixedSize(body.fixedCols);
   passwordInput.value = "";
   setView(true);
   connectSocket();
@@ -1965,7 +2002,7 @@ focusTerminalButton.addEventListener("click", () => {
   setSessionWidthPopoverOpen(false);
   setFollowCursor(true);
   setSelectionMode(false);
-  terminal.focus();
+  focusLiveTerminalInput();
   ensureCursorVisible();
 });
 
@@ -2007,7 +2044,8 @@ for (const button of sessionWidthPresetButtons) {
       return;
     }
 
-    requestSessionWidthChange(nextCols);
+    const nextRows = Number(button.dataset.rows);
+    requestSessionWidthChange(nextCols, Number.isFinite(nextRows) ? nextRows : undefined);
   });
 }
 
@@ -2104,8 +2142,47 @@ closeSelectionButton.addEventListener("click", () => {
   ensureCursorVisible();
 });
 
-terminal.onData((data) => {
+terminalMobileCaptureInput.addEventListener("blur", () => {
+  terminalMobileCaptureInput.value = "";
+  terminalMobileCaptureInput.readOnly = true;
+});
+
+terminalMobileCaptureInput.addEventListener("input", () => {
+  const data = terminalMobileCaptureInput.value;
+  terminalMobileCaptureInput.value = "";
+  sendTerminalInputData(data);
+});
+
+terminalMobileCaptureInput.addEventListener("keydown", (event) => {
+  switch (event.key) {
+    case "Backspace":
+      event.preventDefault();
+      sendTerminalInputData("\x7f");
+      return;
+    case "Delete":
+      event.preventDefault();
+      sendTerminalInputData("\x1b[3~");
+      return;
+    case "Enter":
+      event.preventDefault();
+      sendTerminalInputData("\r");
+      return;
+    case "Tab":
+      event.preventDefault();
+      sendTerminalInputData("\t");
+      return;
+    case "Escape":
+      event.preventDefault();
+      sendTerminalInputData("\x1b");
+      return;
+  }
+});
+
+function sendTerminalInputData(data: string): void {
   if (!activeSessionId) {
+    return;
+  }
+  if (data.length === 0) {
     return;
   }
 
@@ -2121,6 +2198,14 @@ terminal.onData((data) => {
     data: transformed.data,
   });
   ensureCursorVisible();
+}
+
+terminal.onData((data) => {
+  if (isCoarsePointerDevice() && document.activeElement === terminalMobileCaptureInput) {
+    return;
+  }
+
+  sendTerminalInputData(data);
 });
 
 terminal.onWriteParsed(() => {
@@ -2163,21 +2248,26 @@ const handleViewportResize = () => {
 };
 
 window.addEventListener("resize", handleViewportResize);
-window.addEventListener("pointerdown", (event) => {
+window.addEventListener("click", (event) => {
   const target = event.target;
   if (!(target instanceof Node)) {
     return;
   }
 
+  const closeButton = getOpenCollapsedSessionCloseButton();
   if (
     sessionWidthPopover.classList.contains("is-hidden") ||
     sessionWidthPopover.contains(target) ||
-    sessionWidthAnchorButton?.contains(target)
+    sessionWidthAnchorButton?.contains(target) ||
+    closeButton?.contains(target)
   ) {
     return;
   }
 
   setSessionWidthPopoverOpen(false);
+  if (collapsedSessionControlsOpenId) {
+    setCollapsedSessionControlsOpen(null);
+  }
 });
 terminalContainer.addEventListener("scroll", () => {
   if (suppressViewportFollowScrollEvent) {
@@ -2187,7 +2277,7 @@ terminalContainer.addEventListener("scroll", () => {
   setFollowCursor(false);
 });
 sessionListScroller.addEventListener("scroll", () => {
-  if (sessionWidthPopover.classList.contains("is-hidden")) {
+  if (sessionWidthPopover.classList.contains("is-hidden") || isCoarsePointerDevice()) {
     return;
   }
 

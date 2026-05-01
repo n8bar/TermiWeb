@@ -42,7 +42,8 @@ TermiWeb provides a workstation-first browser terminal workflow that can also be
 
 - New instances start at 80 columns by default.
 - Terminal width is an instance property shared across all attached devices for that instance.
-- Terminal rows are also shared per instance and should be derived from the shared column count using a stable `80x30` baseline shape rather than from live device viewport churn.
+- Terminal rows are also shared per instance and must not be derived from live device viewport churn.
+- Custom column widths should derive rows from a stable `80x30` baseline shape, while named width presets may apply explicit stable `cols x rows` pairs to preserve useful vertical context on mobile.
 - The UI exposes a shared width control on the active instance so users can change columns deliberately without turning width into a per-device preference.
 - The configured column count must always fit inside the visible `xterm` viewport width on each device.
 - Font sizing should make the shared column count fit inside the visible viewport width.
@@ -91,6 +92,8 @@ Detailed browser-terminal interaction behavior lives in [the focused `0.1` brows
 - Touch use of the control tray should not blur the terminal or toggle the OS keyboard unexpectedly.
 - The control tray should activate reliably from direct touch interaction on coarse-pointer browsers instead of depending on synthetic mobile click behavior.
 - The live terminal input should disable autocorrect, autocapitalize, spellcheck, and similar word-level text assistance so command entry is not altered by the browser or OS keyboard.
+- The live terminal input should not use password-style or credential-shaped capture fields; browser password-manager behavior belongs on the actual app login only.
+- Mobile terminal entry may use a non-credential capture input type that browsers treat as non-autocorrecting when normal text capture is not strong enough, provided common shell entry remains available.
 - The app should not expose a dead outer terminal scrollbar when the real scrollback lives inside the xterm viewport.
 - The touch-oriented terminal scrollbar should favor a larger draggable thumb over strict visual density.
 - The keyboard control tray should stay anchored inside the outer terminal shell, below the scaled stage, rather than floating against the screen edge.

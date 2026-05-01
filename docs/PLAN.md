@@ -2,7 +2,7 @@
 
 ## Current Focus
 
-`M1` through `M8` are complete. `0.1` is publicly released, the download site is live at `https://termiweb.com`, and the search/discovery foundation is in place for later outreach. `M9` is now active as the `0.1.1` mobile stabilization lane for the must-have mobile fixes. `M10` is queued for deliberate public outreach after `0.1.1` is shipped.
+`M1` through `M8` are complete. `0.1` is publicly released, the download site is live at `https://termiweb.com`, and the search/discovery foundation is in place for later outreach. `M9` is now in the `0.1.1` release-surface and shipping pass after completing the must-have mobile fixes. `M10` is queued for deliberate public outreach after `0.1.1` is shipped.
 
 ## Milestones
 
@@ -64,9 +64,9 @@
 
 ## Release Gate
 
-- `0.1` should ship only when it meets [the release standard](RELEASE_STANDARD.md).
+- `0.1.1` should ship only after the local release checks in the [M9 worklist](worklists/m9-0.1.1-mobile-stabilization.md) pass.
 - There are no open release-blocker findings in [FINDINGS.md](FINDINGS.md) right now.
 
 ## Next Action
 
-Cut the `M9` implementation branch for [M9 0.1.1 mobile stabilization](worklists/m9-0.1.1-mobile-stabilization.md), then implement Finding `13` and Finding `14` against the approved spec.
+Refresh the `0.1.1` release surface, run the final local release checks from the [M9 worklist](worklists/m9-0.1.1-mobile-stabilization.md), then publish `0.1.1` and close M9 cleanly.

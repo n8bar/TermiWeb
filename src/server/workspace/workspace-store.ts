@@ -7,6 +7,7 @@ import {
   removeWorkspaceTab,
   selectWorkspaceTab,
   updateWorkspaceTabFixedCols,
+  updateWorkspaceTabFixedSize,
   type WorkspaceState,
   type WorkspaceTab,
 } from "./workspace-state.js";
@@ -49,6 +50,10 @@ export class WorkspaceStore {
 
   async setTabFixedCols(tabId: string, fixedCols: number): Promise<void> {
     this.#state = updateWorkspaceTabFixedCols(this.#state, tabId, fixedCols);
+  }
+
+  async setTabFixedSize(tabId: string, fixedCols: number, fixedRows: number): Promise<void> {
+    this.#state = updateWorkspaceTabFixedSize(this.#state, tabId, fixedCols, fixedRows);
   }
 
   #configFixedCols(): number {
