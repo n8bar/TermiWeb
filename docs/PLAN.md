@@ -2,7 +2,7 @@
 
 ## Current Focus
 
-`M1` through `M8` are complete. `0.1` is publicly released, the download site is live at `https://termiweb.com`, and the search/discovery foundation is in place for later outreach. `M9` is now in the `0.1.1` release-surface and shipping pass after completing the must-have mobile fixes. `M10` is queued for deliberate public outreach after `0.1.1` is shipped.
+`M1` through `M9` are complete. `0.1.1` is publicly released, the download site is live at `https://termiweb.com`, and the search/discovery foundation is in place for later outreach. `M10` is queued for deliberate public outreach after the `0.1.1` stabilization release.
 
 ## Milestones
 
@@ -41,10 +41,10 @@
   - Start: 2026-04-24
   - End: 2026-04-26
   - Worklist: [M8 marketing and website growth](worklists/m8-marketing-and-website-growth.md)
-- [ ] M9: `0.1.1` mobile stabilization
-  - Summary: This milestone is the first post-release product lane. It should ship `0.1.1` and pull the must-have mobile fixes from Findings `13` and `14` into the release line while keeping release verification local and explicit for the current one-maintainer workflow.
+- [x] M9: `0.1.1` mobile stabilization
+  - Summary: This milestone shipped `0.1.1`, pulling the must-have mobile fixes from Findings `13` and `14` into the release line while keeping release verification local and explicit for the current one-maintainer workflow.
   - Start: 2026-04-27
-  - Target End: 2026-05-10
+  - End: 2026-05-01
   - Worklist: [M9 0.1.1 mobile stabilization](worklists/m9-0.1.1-mobile-stabilization.md)
 - [ ] M10: Post-`0.1.1` public outreach
   - Summary: This milestone turns the M8 positioning and reusable copy into deliberate outreach only after the `0.1.1` stabilization release has shipped. It includes direct sharing, feedback capture, first public technical post preparation, community-rule review, and a later Product Hunt decision.
@@ -64,9 +64,9 @@
 
 ## Release Gate
 
-- `0.1.1` should ship only after the local release checks in the [M9 worklist](worklists/m9-0.1.1-mobile-stabilization.md) pass.
+- Future releases should ship only after their documented local release checks pass.
 - There are no open release-blocker findings in [FINDINGS.md](FINDINGS.md) right now.
 
 ## Next Action
 
-Refresh the `0.1.1` release surface, run the final local release checks from the [M9 worklist](worklists/m9-0.1.1-mobile-stabilization.md), then publish `0.1.1` and close M9 cleanly.
+Start [M10 post-0.1.1 public outreach](worklists/m10-post-0.1.1-public-outreach.md) on the scheduled outreach lane, beginning with confirmation that the `0.1.1` release artifacts, README, site, and release notes are live.

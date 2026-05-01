@@ -301,3 +301,4 @@
 2026-05-01 Removed the unsupported mobile Space control and kept the URL capture fallback as the Finding `14` fix, preserving the existing Copy and Paste control layout.
 2026-05-01 Advanced M9 into the `0.1.1` release-surface pass, bumped package metadata to `0.1.1`, updated the site/download and README release wording, and added the `0.1.1` release publication draft.
 2026-05-01 Passed the `0.1.1` local release verification gate: typecheck, tests, app build, site build, and release package assembly produced `artifacts/release/TermiWeb-0.1.1-windows-x64.zip`.
+2026-05-01 Published TermiWeb `0.1.1`, uploaded `TermiWeb-0.1.1-windows-x64.zip` to the GitHub release, verified the GitHub Pages deploy, and closed M9.
