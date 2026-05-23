@@ -57,36 +57,23 @@ The release should be clear about what it is and is not:
 - docs are explicit that every shell in `0.1` is elevated
 - docs do not imply built-in security or hosting features that do not exist
 
-### 6. Findings Discipline
+### 6. Issues Discipline
 
-Open findings should be under control:
+Open issues should be under control:
 
-- no open trust-breaking or high-severity findings
-- remaining open findings should be polish-level, not core correctness failures
+- no open trust-breaking or high-severity issues
+- remaining open issues should be polish-level, not core correctness failures
 
 ### 7. Dogfood Duration
 
 The app should survive real use before release:
 
 - enough real usage to expose recurring friction
-- findings should trend toward polish rather than architecture or correctness problems
+- issues should trend toward polish rather than architecture or correctness problems
 
 ## Current Assessment
 
-TermiWeb now appears to meet the known `M5` dogfood gates for a `0.1` release candidate. The remaining work is release execution and launch-surface work, not an open trust-breaking product finding.
-
-### Current Strengths
-
-- core shared-session workflow exists and is usable
-- cross-device use is materially better than the first working build
-- Windows background launch is now cleaner
-- `0.1` release polish has materially improved the dogfoodability of the product rather than just adding cosmetic churn
-- docs are much more honest and directionally aligned than they were at bootstrap
-
-### Current Risks
-
-- No open finding currently rises to the level of a release blocker.
-- The remaining `0.1` work is release execution: final artifact publication, release metadata, and the download-site surface in `M7`.
+TermiWeb shipped both `0.1` and the `0.1.1` mobile stabilization release against the `0.1` release bar above. Current release-blocker state lives in `docs/PLAN.md` and on GitHub Issues; future release standards (`0.2` and beyond) will need their own categories of release-blocker added to this doc when their scope is defined.
 
 ## Out Of Scope For 0.1
 
