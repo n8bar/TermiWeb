@@ -1,24 +1,13 @@
 # Findings
 
-This document tracks dogfood findings that are worth fixing later, without interrupting active use of the app.
+This document is the historical archive of dogfood findings tracked before the project moved to GitHub Issues. New findings should be filed as issues on the GitHub repository (`https://github.com/n8bar/TermiWeb/issues`) rather than appended here.
 
 ## How To Use This Doc
 
-- Add new findings to the `Open` section.
-- Keep entries short and concrete.
-- Prefer observable behavior over proposed fixes.
-- Move items to `Closed` once the fix is shipped.
+- Do not add new findings here. File new product issues as GitHub Issues instead.
+- Existing entries are preserved as a closed historical record of the `0.1` and `0.1.1` dogfood cycle.
 
-## Entry Template
-
-### Finding N: Short title
-- Status: `Open`
-- First seen: `YYYY-MM-DD`
-- Area: `UI` | `terminal` | `instances` | `mobile` | `docs` | `other`
-- Summary: One or two sentences describing the behavior.
-- Notes: Optional reproduction details, screenshots, or constraints.
-
-## Open
+## Closed
 
 ### Finding 15: The app still has no favicon
 - Status: `Closed`
@@ -26,8 +15,6 @@ This document tracks dogfood findings that are worth fixing later, without inter
 - Area: `UI`
 - Summary: TermiWeb still ships without a favicon, which makes tabs, bookmarks, and the eventual public release surface feel unfinished.
 - Notes: Closed by shipping a real app favicon and wiring it into the browser client so screenshots and normal tabs stop showing the generic browser icon.
-
-## Closed
 
 ### Finding 14: Mobile keyboard text assistance corrupts terminal input
 - Status: `Closed`

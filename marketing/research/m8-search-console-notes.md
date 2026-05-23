@@ -16,4 +16,4 @@ Date: 2026-04-26
 
 - Watch Search Console for discovery, indexing, query impressions, and any coverage or enhancement warnings.
 - Record search issues here if they are marketing/search-surface problems.
-- Move product usability or release-quality issues discovered from search traffic into `docs/FINDINGS.md`.
+- File product usability or release-quality issues discovered from search traffic as GitHub Issues.

@@ -16,7 +16,7 @@ TermiWeb should leave `M10` with the first deliberate public outreach sequence c
 2. [ ] Execute the first direct outreach pass.
    1. [ ] Share directly with a small technical group.
    2. [ ] Capture setup, positioning, trust-boundary, and mobile-use feedback.
-   3. [ ] Move product bugs or dogfood issues into `docs/FINDINGS.md`.
+   3. [ ] File product bugs or dogfood issues as GitHub Issues.
    4. [ ] Keep marketing/channel notes under `marketing/research/`.
 
 3. [ ] Prepare and run the first public technical launch post.
@@ -34,5 +34,5 @@ TermiWeb should leave `M10` with the first deliberate public outreach sequence c
 
 1. [ ] Outreach happens after `0.1.1`, not before the known must-have mobile fixes.
 2. [ ] Public copy still describes the real shipped product instead of future scope.
-3. [ ] Feedback is captured in the right place: product issues in `docs/FINDINGS.md`, marketing/channel notes in `marketing/research/`.
+3. [ ] Feedback is captured in the right place: product issues as GitHub Issues, marketing/channel notes in `marketing/research/`.
 4. [ ] The launch cadence avoids a one-day blast and leaves room to respond to early feedback.

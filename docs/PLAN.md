@@ -65,7 +65,7 @@
 ## Release Gate
 
 - Future releases should ship only after their documented local release checks pass.
-- There are no open release-blocker findings in [FINDINGS.md](FINDINGS.md) right now.
+- There are no open release-blocker issues on GitHub right now. ([FINDINGS.md](FINDINGS.md) is the closed historical archive of pre-`0.1.1` findings.)
 
 ## Next Action
 

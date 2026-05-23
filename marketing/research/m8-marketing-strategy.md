@@ -112,11 +112,11 @@ Meaningful M8 traction:
 Collection methods:
 - Google Search Console for search discovery, indexing, query impressions, and click-through.
 - GitHub repository traffic, stars, issues, discussions if enabled later, and release download counts.
-- Manual notes in `docs/FINDINGS.md` for product issues discovered through dogfooding or public feedback.
+- GitHub Issues for product issues discovered through dogfooding or public feedback.
 - `marketing/research/` notes for marketing/channel feedback that does not belong in product findings.
 
 Feedback loop:
-- Product bugs or usability problems go to `docs/FINDINGS.md`.
+- Product bugs or usability problems go to GitHub Issues.
 - Positioning, channel, or asset feedback stays in `marketing/research/` unless it changes product scope.
 - Public-copy changes that materially alter product claims must be reflected in the site, README, and relevant docs together.
 
