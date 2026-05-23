@@ -1,6 +1,6 @@
 # M10 Post-0.1.1 Public Outreach
 
-Milestone Timing: Mirrors `M10` in [Project plan](../PLAN.md): start `2026-05-11`, target end `2026-05-24`.
+Milestone Timing: Mirrors `M10` in [Project plan](../PLAN.md): start `2026-05-11`, target end `2026-07-24` (extended from `2026-05-24` on `2026-05-23`).
 
 ## Desired Outcome
 

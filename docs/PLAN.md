@@ -2,7 +2,7 @@
 
 ## Current Focus
 
-`M1` through `M9` are complete. `0.1.1` is publicly released, the download site is live at `https://termiweb.com`, and the search/discovery foundation is in place for later outreach. `M10` is queued for deliberate public outreach after the `0.1.1` stabilization release.
+`M1` through `M9` are complete. `0.1.1` is publicly released, the download site is live at `https://termiweb.com`, and the search/discovery foundation is in place for later outreach. `M10` is queued for deliberate public outreach after the `0.1.1` stabilization release. `M11` is drafted to ship `0.1.2` covering a mobile Select-mode blocker, the instance-titles spec, terminal bell behavior, and verification closure of the lingering `0.1.1` mobile stabilization issues.
 
 ## Milestones
 
@@ -49,8 +49,15 @@
 - [ ] M10: Post-`0.1.1` public outreach
   - Summary: This milestone turns the M8 positioning and reusable copy into deliberate outreach only after the `0.1.1` stabilization release has shipped. It includes direct sharing, feedback capture, first public technical post preparation, community-rule review, and a later Product Hunt decision.
   - Start: 2026-05-11
-  - Target End: 2026-05-24
+  - Target End: 2026-07-24
+  - Notes: target end extended from the original 2026-05-24 by two months on 2026-05-23 so other projects can take priority before M11 begins
   - Worklist: [M10 post-0.1.1 public outreach](worklists/m10-post-0.1.1-public-outreach.md)
+- [ ] M11: `0.1.2` Select fix, instance titles, and bell
+  - Summary: This milestone ships `0.1.2` covering the mobile Select-mode release-blocker first, then verification closure of the lingering `0.1.1` mobile stabilization issues, implementation of the instance-titles spec, and a new bell-behavior spec plus implementation. Blocked by [#5 mobile Select](https://github.com/n8bar/TermiWeb/issues/5) until that fix lands; the rest of scope follows behind it.
+  - Start: 2026-07-24
+  - Target End: 2026-09-04
+  - Notes: six-week window chosen on 2026-05-23 because the maintainer expects scope to expand beyond the initial drafted breakdown
+  - Worklist: [M11 0.1.2 Select fix and titles](worklists/m11-0.1.2-select-fix-and-titles.md)
 
 ## Future Candidates
 
@@ -65,7 +72,7 @@
 ## Release Gate
 
 - Future releases should ship only after their documented local release checks pass.
-- There are no open release-blocker issues on GitHub right now. ([FINDINGS.md](FINDINGS.md) is the closed historical archive of pre-`0.1.1` findings.)
+- Open release-blocker issues for the next release (`0.1.2` via `M11`): [#5 mobile Select button exits selection mode immediately on tap](https://github.com/n8bar/TermiWeb/issues/5). ([FINDINGS.md](FINDINGS.md) is the closed historical archive of pre-`0.1.1` findings.)
 
 ## Next Action
 
