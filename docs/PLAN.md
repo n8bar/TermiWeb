@@ -10,27 +10,33 @@
   - Summary: Added the initial repo structure, TypeScript/Vite/server scaffolding, baseline docs (including the initial `AGENTS.md`/`CLAUDE.md` working agreement), and the first environment/runtime conventions. This is the phase that created the project skeleton later milestones could actually build on.
   - Start: 2026-04-06
   - End: 2026-04-06
+  - Worklist: [M1 repository bootstrap and docs baseline](worklists/m1-repository-bootstrap-and-docs-baseline.md) (retroactive reconstruction)
 - [x] M2: Shared terminal backend and session model
   - Summary: Added the server-side PTY/session manager, protocol, auth/session handling, and lightweight workspace persistence. This is where instance creation, attach/select, close, and shared terminal I/O became real code paths instead of placeholders.
   - Start: 2026-04-06
   - End: 2026-04-06
+  - Worklist: [M2 shared terminal backend and session model](worklists/m2-shared-terminal-backend-and-session-model.md) (retroactive reconstruction)
 - [x] M3: Browser UI with instances, auth, and mobile controls
   - Summary: Added the browser client, login flow, instance rail, xterm integration, and the first usable mobile control surface. By the end of this phase, desktop and phone clients could both attach to the same live instance through the browser UI.
   - Start: 2026-04-06
   - End: 2026-04-06
+  - Worklist: [M3 browser UI with instances, auth, and mobile controls](worklists/m3-browser-ui-instances-auth-and-mobile-controls.md) (retroactive reconstruction)
 - [x] M4: Local verification and launch polish
   - Summary: Added the first serious verification loop, tightened restart/reconnect behavior, and cleaned up the initial launch/run path enough for real local use. This is also where the project stopped feeling like a dev-only prototype and started behaving like an intentional app.
   - Start: 2026-04-07
   - End: 2026-04-07
+  - Worklist: [M4 local verification and launch polish](worklists/m4-local-verification-and-launch-polish.md) (retroactive reconstruction)
 - [x] M5: 0.1 release polish and rendering integrity
   - Summary: This milestone contains the major UI/layout refinements, per-instance width controls, mobile behavior fixes, local viewport scrolling, shared terminal geometry cleanup, and the current follow-cursor work. It closed after interactive CLI rendering held up in dogfooding and the elevated-only run path passed live packaged verification.
   - Start: 2026-04-08
   - End: 2026-04-17
   - Notes: extended by one week; closed after the packaged run surface and elevated-instance behavior both passed live verification
+  - Worklist: [M5 0.1 release polish and rendering integrity](worklists/m5-0.1-release-polish-and-rendering-integrity.md) (retroactive reconstruction)
 - [x] M6: Installer and first-run experience
   - Summary: Added packaging, launch scripts, optional startup-task auto-start, uninstall, distribution layout, and first-run docs for a non-dev Windows install path. Verified fresh-machine setup, before-sign-in auto-start, uninstall cleanup, and two-device shared session on real hardware.
   - Start: 2026-04-12
   - End: 2026-04-13
+  - Worklist: [M6 installer and first-run experience](worklists/m6-installer-and-first-run-experience.md)
 - [x] M7: 0.1 release and GitHub Pages download website
   - Summary: This milestone produced the tagged `0.1` release artifacts, the live `https://termiweb.com` download site, the public GitHub release entry, the canonical download path at `/download/`, the private milestone-calendar feed, and the launch-surface docs that now describe the shipped release honestly.
   - Start: 2026-04-19
