@@ -6,7 +6,7 @@ Date: 2026-04-26
 
 ## Scope
 
-This strategy prepares the first public growth push, but broad deliberate outreach is deferred to `M10` after the `0.1.1` stabilization release. It should keep TermiWeb positioned as an open-source, free-to-use Windows browser terminal, not as SaaS, SSH hosting, remote-desktop replacement, or enterprise remote-access software.
+This strategy prepares the first public growth push, but broad deliberate outreach is deferred to `M11` (the post-`0.1.1` outreach milestone, renumbered from `M10` on 2026-08-06) after the `0.1.1` stabilization release. It should keep TermiWeb positioned as an open-source, free-to-use Windows browser terminal, not as SaaS, SSH hosting, remote-desktop replacement, or enterprise remote-access software.
 
 ## Audience Decisions
 
@@ -92,8 +92,8 @@ Initial sequence:
 3. Polish the GitHub repository surface: description, topics, and social preview.
 4. Prepare short, medium, and long announcement copy in `marketing/assets/`.
 5. Ship the `0.1.1` stabilization release in `M9`.
-6. Share directly with a small technical group and collect first feedback in `M10`.
-7. Run one public technical launch post in `M10`, with `Show HN` as the first candidate if the post is ready.
+6. Share directly with a small technical group and collect first feedback in `M11` (the outreach milestone, renumbered from `M10` on 2026-08-06).
+7. Run one public technical launch post in `M11`, with `Show HN` as the first candidate if the post is ready.
 8. Consider one self-hosted/homelab post only after reviewing current community rules and making the post useful without requiring the link.
 9. Reassess Product Hunt after the first feedback cycle and demo assets exist.
 

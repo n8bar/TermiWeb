@@ -1,15 +1,15 @@
-# M10 Post-0.1.1 Public Outreach
+# M11 Post-0.1.1 Public Outreach
 
-Milestone Timing: Mirrors `M10` in [Project plan](../PLAN.md): start `2026-05-11`, target end `2026-07-24` (extended from `2026-05-24` on `2026-05-23`).
+Milestone Timing: Mirrors `M11` in [Project plan](../PLAN.md): start `2026-09-25` (begins when `M10` ends), target end `2026-10-09` (two-week window; renumbered from `M10` to `M11` and resequenced after the `0.1.2` release on `2026-08-06`).
 
 ## Desired Outcome
 
-TermiWeb should leave `M10` with the first deliberate public outreach sequence completed after the `0.1.1` stabilization release has shipped, using the positioning and reusable copy prepared during `M8`.
+TermiWeb should leave `M11` with the first deliberate public outreach sequence completed after the `0.1.1` stabilization release has shipped, using the positioning and reusable copy prepared during `M8`.
 
 ## 1. Work Breakdown
 
 1. [ ] Confirm the `0.1.1` release is ready to show more deliberately.
-   1. [ ] Confirm `M9` is closed and the `0.1.1` release artifacts, README, site, and release notes are live.
+   1. [x] Confirm `M9` is closed and the `0.1.1` release artifacts, README, site, and release notes are live.
    2. [ ] Refresh `marketing/assets/m8-announcement-copy.md` so it references `0.1.1` honestly instead of stale `0.1` wording where needed.
    3. [ ] Confirm known mobile issues from Findings `13` and `14` no longer undermine first impressions.
 

@@ -7,7 +7,7 @@ Note: Shared `M8` marketing materials should live under `marketing/assets/` and 
 
 ## Desired Outcome
 
-TermiWeb should leave `M8` with a stronger public website, better search and sharing hygiene, a clearer product story, and reusable marketing materials ready for the later post-`0.1.1` outreach milestone. Broad deliberate outreach is intentionally deferred to `M10` so the `0.1.1` mobile fixes can ship first.
+TermiWeb should leave `M8` with a stronger public website, better search and sharing hygiene, a clearer product story, and reusable marketing materials ready for the later post-`0.1.1` outreach milestone. Broad deliberate outreach is intentionally deferred to the post-`0.1.1` outreach milestone (`M10` at the time; renumbered to `M11` on 2026-08-06) so the `0.1.1` mobile fixes can ship first.
 
 ## 1. Work Breakdown
 
@@ -66,7 +66,7 @@ TermiWeb should leave `M8` with a stronger public website, better search and sha
    3. [x] Draft the longer launch writeup.
    4. [x] Add reusable one-line and paragraph blurbs for repo, profile, and direct-share contexts.
 
-4. [x] Defer broad outreach to `M10`.
+4. [x] Defer broad outreach to the post-`0.1.1` outreach milestone (`M10` at the time; now `M11`).
    1. [x] Move direct sharing, public technical launch posting, self-hosted/homelab rule review, and Product Hunt reassessment into the post-`0.1.1` outreach lane.
    2. [x] Keep the M8 announcement copy and strategy docs as reusable collateral for that later milestone.
 
