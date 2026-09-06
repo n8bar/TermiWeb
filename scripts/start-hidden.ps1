@@ -1,18 +1,29 @@
 param(
-  [switch]$Restart
+  [switch]$Restart,
+  [switch]$WaitForPort
 )
 
 $ErrorActionPreference = "Stop"
 
-$repoRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
-$runDir = Join-Path $repoRoot ".termiweb\run"
-$logDir = Join-Path $repoRoot ".termiweb\logs"
+$layoutScript = Join-Path $PSScriptRoot "layout-common.ps1"
+if (-not (Test-Path -LiteralPath $layoutScript)) {
+  throw "Missing helper script at $layoutScript."
+}
+
+. $layoutScript
+
+# The app root holds the binaries; the config root holds .env and the data
+# directory. They are the same folder for the portable layout and differ for
+# the installed layout, where the server runs with the config root as its
+# working directory so config and state resolve there.
+$repoRoot = Get-TermiWebAppRoot -ScriptRoot $PSScriptRoot
+$configRoot = Get-TermiWebConfigRoot -AppRoot $repoRoot
+$runDir = Join-Path $configRoot ".termiweb\run"
+$logDir = Join-Path $configRoot ".termiweb\logs"
 $pidFile = Join-Path $runDir "server.pid"
 $stdoutLog = Join-Path $logDir "server.out.log"
 $stderrLog = Join-Path $logDir "server.err.log"
-$envFile = Join-Path $repoRoot ".env"
-
-New-Item -ItemType Directory -Force -Path $runDir, $logDir | Out-Null
+$envFile = Join-Path $configRoot ".env"
 
 function Get-PowerShellExecutable {
   $pwsh = Get-Command pwsh -ErrorAction SilentlyContinue
@@ -48,6 +59,9 @@ if (-not (Test-IsAdministrator)) {
   if ($Restart) {
     $argumentList += "-Restart"
   }
+  if ($WaitForPort) {
+    $argumentList += "-WaitForPort"
+  }
 
   try {
     $elevatedProcess = Start-Process `
@@ -63,6 +77,8 @@ if (-not (Test-IsAdministrator)) {
     exit 2
   }
 }
+
+New-Item -ItemType Directory -Force -Path $runDir, $logDir | Out-Null
 
 function Get-ConfiguredPort {
   if (Test-Path -LiteralPath $envFile) {
@@ -181,7 +197,7 @@ if (-not (Test-Path -LiteralPath $serverEntry)) {
 $process = Start-Process `
   -FilePath $nodeExecutable `
   -ArgumentList $serverEntry `
-  -WorkingDirectory $repoRoot `
+  -WorkingDirectory $configRoot `
   -RedirectStandardOutput $stdoutLog `
   -RedirectStandardError $stderrLog `
   -WindowStyle Hidden `
@@ -189,3 +205,23 @@ $process = Start-Process `
 
 Set-Content -LiteralPath $pidFile -Value $process.Id -NoNewline
 Write-Output "TermiWeb started hidden on PID $($process.Id)."
+
+if ($WaitForPort) {
+  $deadline = (Get-Date).AddSeconds(20)
+  while ((Get-Date) -lt $deadline) {
+    if (Get-ListeningProcessId -Port $configuredPort) {
+      Write-Output "TermiWeb is listening on port $configuredPort."
+      exit 0
+    }
+
+    if ($process.HasExited) {
+      Write-Output "TermiWeb exited before it started listening. See $stderrLog."
+      exit 1
+    }
+
+    Start-Sleep -Milliseconds 500
+  }
+
+  Write-Output "TermiWeb has not started listening on port $configuredPort yet. See $stderrLog if it never does."
+  exit 1
+}

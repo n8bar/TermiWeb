@@ -1,8 +1,16 @@
-$repoRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
-$pidFile = Join-Path $repoRoot ".termiweb\run\server.pid"
-$envFile = Join-Path $repoRoot ".env"
-
 $ErrorActionPreference = "Stop"
+
+$layoutScript = Join-Path $PSScriptRoot "layout-common.ps1"
+if (-not (Test-Path -LiteralPath $layoutScript)) {
+  throw "Missing helper script at $layoutScript."
+}
+
+. $layoutScript
+
+$repoRoot = Get-TermiWebAppRoot -ScriptRoot $PSScriptRoot
+$configRoot = Get-TermiWebConfigRoot -AppRoot $repoRoot
+$pidFile = Join-Path $configRoot ".termiweb\run\server.pid"
+$envFile = Join-Path $configRoot ".env"
 
 function Get-PowerShellExecutable {
   $pwsh = Get-Command pwsh -ErrorAction SilentlyContinue

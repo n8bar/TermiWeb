@@ -1,20 +1,26 @@
 param(
-  [switch]$Elevated
+  [switch]$Elevated,
+  [switch]$RefreshExisting
 )
 
 $ErrorActionPreference = "Stop"
 
-$repoRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
+$layoutScript = Join-Path $PSScriptRoot "layout-common.ps1"
 $commonScript = Join-Path $PSScriptRoot "auto-start-common.ps1"
-$startScript = Join-Path $repoRoot "scripts\start-hidden.ps1"
 
-if (-not (Test-Path -LiteralPath $commonScript)) {
-  throw "Missing auto-start helper script at $commonScript."
+foreach ($helper in @($layoutScript, $commonScript)) {
+  if (-not (Test-Path -LiteralPath $helper)) {
+    throw "Missing helper script at $helper."
+  }
 }
 
+. $layoutScript
 . $commonScript
 
-$configuredPort = Get-TermiWebConfiguredPort -RepoRoot $repoRoot
+$repoRoot = Get-TermiWebAppRoot -ScriptRoot $PSScriptRoot
+$configRoot = Get-TermiWebConfigRoot -AppRoot $repoRoot
+$startScript = Join-Path $repoRoot "scripts\start-hidden.ps1"
+$configuredPort = Get-TermiWebConfiguredPort -ConfigRoot $configRoot
 $taskName = Get-TermiWebAutoStartTaskName -ConfiguredPort $configuredPort
 
 function Get-PowerShellExecutable {
@@ -41,6 +47,14 @@ if (-not (Test-Path -LiteralPath $startScript)) {
   throw "Missing startup script at $startScript."
 }
 
+# -RefreshExisting re-registers an auto-start task this copy already has (so an
+# upgrade replaces an older password-based task with the SYSTEM task) and does
+# nothing when auto-start was never enabled.
+if ($RefreshExisting -and -not (Get-ScheduledTask -TaskName $taskName -ErrorAction SilentlyContinue)) {
+  Write-Output "No TermiWeb auto-start task '$taskName' to refresh."
+  exit 0
+}
+
 $powerShellExecutable = Get-PowerShellExecutable
 $scriptPath = $MyInvocation.MyCommand.Path
 
@@ -49,10 +63,15 @@ if (-not (Test-IsAdministrator)) {
     throw "Administrator privileges are required to create the TermiWeb startup task on this machine."
   }
 
+  $arguments = "-NoLogo -NoProfile -ExecutionPolicy Bypass -File `"$scriptPath`" -Elevated"
+  if ($RefreshExisting) {
+    $arguments += " -RefreshExisting"
+  }
+
   try {
     $elevatedProcess = Start-Process `
       -FilePath $powerShellExecutable `
-      -ArgumentList "-NoLogo -NoProfile -ExecutionPolicy Bypass -File `"$scriptPath`" -Elevated" `
+      -ArgumentList $arguments `
       -WorkingDirectory $repoRoot `
       -Verb RunAs `
       -Wait `

@@ -4,17 +4,21 @@ param(
 
 $ErrorActionPreference = "Stop"
 
-$repoRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
+$layoutScript = Join-Path $PSScriptRoot "layout-common.ps1"
 $commonScript = Join-Path $PSScriptRoot "auto-start-common.ps1"
-$taskName = "TermiWeb Auto Start"
 
-if (-not (Test-Path -LiteralPath $commonScript)) {
-  throw "Missing auto-start helper script at $commonScript."
+foreach ($helper in @($layoutScript, $commonScript)) {
+  if (-not (Test-Path -LiteralPath $helper)) {
+    throw "Missing helper script at $helper."
+  }
 }
 
+. $layoutScript
 . $commonScript
 
-$configuredPort = Get-TermiWebConfiguredPort -RepoRoot $repoRoot
+$repoRoot = Get-TermiWebAppRoot -ScriptRoot $PSScriptRoot
+$configRoot = Get-TermiWebConfigRoot -AppRoot $repoRoot
+$configuredPort = Get-TermiWebConfiguredPort -ConfigRoot $configRoot
 $taskName = Get-TermiWebAutoStartTaskName -ConfiguredPort $configuredPort
 
 function Get-PowerShellExecutable {
@@ -64,13 +68,6 @@ if (-not (Test-IsAdministrator)) {
     Write-Output "Auto-start removal was canceled at the Windows elevation step."
     exit 2
   }
-}
-
-$existingTask = Get-ScheduledTask -TaskName $taskName -ErrorAction SilentlyContinue
-
-if (-not $existingTask) {
-  Write-Output "No TermiWeb auto-start task found for this copy."
-  exit 0
 }
 
 try {

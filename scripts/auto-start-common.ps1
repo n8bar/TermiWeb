@@ -2,15 +2,15 @@ $script:TermiWebDefaultPort = "22443"
 
 function Read-TermiWebEnvLines {
   param(
-    [string]$RepoRoot
+    [string]$ConfigRoot
   )
 
-  $envPath = Join-Path $RepoRoot ".env"
+  $envPath = Join-Path $ConfigRoot ".env"
   if (Test-Path -LiteralPath $envPath) {
     return @(Get-Content -LiteralPath $envPath)
   }
 
-  $templatePath = Join-Path $RepoRoot ".env.example"
+  $templatePath = Join-Path $ConfigRoot ".env.example"
   if (Test-Path -LiteralPath $templatePath) {
     return @(Get-Content -LiteralPath $templatePath)
   }
@@ -40,11 +40,11 @@ function Get-TermiWebEnvValue {
 
 function Get-TermiWebConfiguredPort {
   param(
-    [string]$RepoRoot
+    [string]$ConfigRoot
   )
 
   $port = Get-TermiWebEnvValue `
-    -Lines (Read-TermiWebEnvLines -RepoRoot $RepoRoot) `
+    -Lines (Read-TermiWebEnvLines -ConfigRoot $ConfigRoot) `
     -Key "TERMIWEB_PORT"
   if ([string]::IsNullOrWhiteSpace($port)) {
     return $script:TermiWebDefaultPort
@@ -55,16 +55,16 @@ function Get-TermiWebConfiguredPort {
 
 function Get-TermiWebAutoStartTaskName {
   param(
-    [string]$RepoRoot,
+    [string]$ConfigRoot,
     [string]$ConfiguredPort
   )
 
   $port = $ConfiguredPort
   if ([string]::IsNullOrWhiteSpace($port)) {
-    if ([string]::IsNullOrWhiteSpace($RepoRoot)) {
+    if ([string]::IsNullOrWhiteSpace($ConfigRoot)) {
       $port = $script:TermiWebDefaultPort
     } else {
-      $port = Get-TermiWebConfiguredPort -RepoRoot $RepoRoot
+      $port = Get-TermiWebConfiguredPort -ConfigRoot $ConfigRoot
     }
   }
 
@@ -74,4 +74,22 @@ function Get-TermiWebAutoStartTaskName {
   }
 
   return "TermiWeb Auto Start ($normalizedPort)"
+}
+
+function Get-TermiWebFirewallRuleName {
+  param(
+    [string]$ConfiguredPort
+  )
+
+  $normalizedPort = if ([string]::IsNullOrWhiteSpace($ConfiguredPort)) {
+    $script:TermiWebDefaultPort
+  } else {
+    $ConfiguredPort.Trim()
+  }
+
+  if ($normalizedPort -eq $script:TermiWebDefaultPort) {
+    return "TermiWeb"
+  }
+
+  return "TermiWeb (port $normalizedPort)"
 }

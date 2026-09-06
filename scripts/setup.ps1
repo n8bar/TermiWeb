@@ -1,7 +1,15 @@
 $ErrorActionPreference = "Stop"
 
-$repoRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
-$envPath = Join-Path $repoRoot ".env"
+$layoutScript = Join-Path $PSScriptRoot "layout-common.ps1"
+if (-not (Test-Path -LiteralPath $layoutScript)) {
+  throw "Missing helper script at $layoutScript."
+}
+
+. $layoutScript
+
+$repoRoot = Get-TermiWebAppRoot -ScriptRoot $PSScriptRoot
+$configRoot = Get-TermiWebConfigRoot -AppRoot $repoRoot
+$envPath = Join-Path $configRoot ".env"
 $packageTemplatePath = Join-Path $repoRoot ".env.example"
 $repoTemplatePath = Join-Path $repoRoot ".env.dev.example"
 $startLauncher = Join-Path $repoRoot "Start TermiWeb.cmd"
