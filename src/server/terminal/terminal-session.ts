@@ -4,6 +4,9 @@ import { EventEmitter } from "node:events";
 import { spawn, type IPty } from "node-pty";
 
 import type { SessionSnapshot, SessionSummary, TerminalStatus } from "../../shared/protocol.js";
+import { BellDetector } from "./bell-detector.js";
+
+const BELL_COALESCE_MS = 1000;
 
 interface TerminalSessionOptions {
   id: string;
@@ -17,6 +20,7 @@ interface TerminalSessionOptions {
 interface TerminalSessionEvents {
   output: [data: string];
   summary: [summary: SessionSummary];
+  bell: [];
 }
 
 function defaultArgs(shell: string): string[] {
@@ -39,6 +43,9 @@ export class TerminalSession extends EventEmitter<TerminalSessionEvents> {
   readonly #clientIds = new Set<string>();
   #title: string;
   #shellTitle: string | null = null;
+  #attentionPending = false;
+  #lastBellAt = 0;
+  #bellDetector = new BellDetector();
   #pty: IPty | null = null;
   #history = "";
   #status: TerminalStatus = "stopped";
@@ -65,6 +72,7 @@ export class TerminalSession extends EventEmitter<TerminalSessionEvents> {
       id: this.#id,
       title: this.#title,
       shellTitle: this.#shellTitle,
+      attentionPending: this.#attentionPending,
       status: this.#status,
       clientCount: this.#clientIds.size,
       shell: this.#shell,
@@ -104,9 +112,13 @@ export class TerminalSession extends EventEmitter<TerminalSessionEvents> {
         useConpty: true,
       });
 
+      this.#bellDetector = new BellDetector();
       this.#pty.onData((data) => {
         this.#appendHistory(data);
         this.emit("output", data);
+        if (this.#bellDetector.feed(data) > 0) {
+          this.#ring();
+        }
       });
 
       this.#pty.onExit(({ exitCode }) => {
@@ -179,6 +191,30 @@ export class TerminalSession extends EventEmitter<TerminalSessionEvents> {
 
     this.#shellTitle = title;
     this.#emitSummary();
+  }
+
+  clearAttention(): void {
+    if (!this.#attentionPending) {
+      return;
+    }
+
+    this.#attentionPending = false;
+    this.#emitSummary();
+  }
+
+  #ring(): void {
+    if (!this.#attentionPending) {
+      this.#attentionPending = true;
+      this.#emitSummary();
+    }
+
+    const now = Date.now();
+    if (now - this.#lastBellAt < BELL_COALESCE_MS) {
+      return;
+    }
+
+    this.#lastBellAt = now;
+    this.emit("bell");
   }
 
   dispose(): void {

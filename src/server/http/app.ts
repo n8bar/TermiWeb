@@ -234,6 +234,19 @@ export async function createHttpApp(options: CreateHttpAppOptions) {
     }
   });
 
+  options.terminalManager.on("bell", (sessionId) => {
+    for (const socket of clientSockets.values()) {
+      if (socket.readyState !== WebSocket.OPEN) {
+        continue;
+      }
+
+      send(socket, {
+        type: "session/bell",
+        sessionId,
+      });
+    }
+  });
+
   websocketServer.on("connection", (socket) => {
     const clientId = randomUUID();
     clientSockets.set(clientId, socket);

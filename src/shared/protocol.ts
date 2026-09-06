@@ -23,6 +23,7 @@ export const sessionSummarySchema = z.object({
   fixedCols: fixedColsSchema,
   fixedRows: fixedRowsSchema,
   shellTitle: z.string().max(MAX_SESSION_TITLE_LENGTH).nullable().default(null),
+  attentionPending: z.boolean().default(false),
 });
 
 export const sessionSnapshotSchema = z.object({
@@ -107,6 +108,10 @@ export const serverEventSchema = z.discriminatedUnion("type", [
     type: z.literal("session/output"),
     sessionId: z.string().uuid(),
     data: z.string(),
+  }),
+  z.object({
+    type: z.literal("session/bell"),
+    sessionId: z.string().uuid(),
   }),
 ]);
 

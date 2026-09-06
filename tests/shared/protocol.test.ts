@@ -165,3 +165,35 @@ describe("instance title protocol", () => {
     expect(event.title).toBe("vim README.md");
   });
 });
+
+describe("terminal bell protocol", () => {
+  it("defaults attentionPending to false on a session summary", () => {
+    const event = parseServerEvent({
+      type: "session/created",
+      session: {
+        id: "54fd93ae-0f1d-4dc4-af4a-547e8b87d2af",
+        title: "Instance 1",
+        status: "running",
+        clientCount: 1,
+        shell: "pwsh.exe",
+        lastExitCode: null,
+        fixedCols: 80,
+        fixedRows: 30,
+      },
+    });
+
+    if (event.type !== "session/created") {
+      throw new Error("Expected session/created event");
+    }
+    expect(event.session.attentionPending).toBe(false);
+  });
+
+  it("accepts a session bell event", () => {
+    const event = parseServerEvent({
+      type: "session/bell",
+      sessionId: "54fd93ae-0f1d-4dc4-af4a-547e8b87d2af",
+    });
+
+    expect(event.type).toBe("session/bell");
+  });
+});

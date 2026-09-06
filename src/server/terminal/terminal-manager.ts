@@ -15,6 +15,7 @@ interface SessionSize {
 interface ManagerEvents {
   sessions: [sessions: SessionSummary[]];
   output: [sessionId: string, data: string];
+  bell: [sessionId: string];
 }
 
 export class TerminalManager extends EventEmitter<ManagerEvents> {
@@ -112,6 +113,7 @@ export class TerminalManager extends EventEmitter<ManagerEvents> {
 
     this.#clientSessions.set(clientId, sessionId);
     session.attachClient(clientId);
+    session.clearAttention();
     await session.ensureStarted({
       cols: session.getFixedCols(),
       rows: session.getFixedRows(),
@@ -150,7 +152,13 @@ export class TerminalManager extends EventEmitter<ManagerEvents> {
       return;
     }
 
-    await this.#sessions.get(sessionId)?.write(data);
+    const session = this.#sessions.get(sessionId);
+    if (!session) {
+      return;
+    }
+
+    session.clearAttention();
+    await session.write(data);
   }
 
   setShellTitle(sessionId: string, title: string, clientId?: string): void {
@@ -222,6 +230,10 @@ export class TerminalManager extends EventEmitter<ManagerEvents> {
 
     session.on("output", (data) => {
       this.emit("output", sessionId, data);
+    });
+
+    session.on("bell", () => {
+      this.emit("bell", sessionId);
     });
 
     this.#sessions.set(sessionId, session);

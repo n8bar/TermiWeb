@@ -758,6 +758,7 @@ button {
 }
 
 .session-card {
+  position: relative;
   display: grid;
   gap: 0.7rem;
   width: 100%;
@@ -849,6 +850,19 @@ button {
 
 .side-panel-footer {
   margin-top: auto;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.side-panel-footer .side-panel-action-button {
+  flex: 1 1 0;
+  width: auto;
+  min-width: 0;
+}
+
+.side-panel-action-button.is-active {
+  border-color: rgba(122, 255, 178, 0.42);
+  background: var(--accent-soft);
 }
 
 .side-panel-action-button {
@@ -1346,6 +1360,10 @@ button {
   padding-inline: 0;
 }
 
+.workspace-layout.is-sidebar-collapsed .side-panel-footer {
+  flex-direction: column;
+}
+
 .workspace-layout.is-sidebar-collapsed .side-panel-action-button {
   justify-content: center;
   padding-inline: 0;
@@ -1531,6 +1549,61 @@ button {
 
   .is-title-overflowing .title-scroll {
     display: inline;
+    animation: none;
+  }
+}
+
+/* Terminal bell: attention badge and the double flash. */
+.attention-badge {
+  position: absolute;
+  top: 0.35rem;
+  right: 0.35rem;
+  font-size: 0.85rem;
+  line-height: 1;
+  pointer-events: none;
+}
+
+.session-card.is-bell-flash {
+  animation: bell-flash-card 0.9s ease-out;
+}
+
+.terminal-container.is-bell-flash {
+  animation: bell-flash-frame 0.9s ease-out;
+}
+
+@keyframes bell-flash-card {
+  0%,
+  40%,
+  80%,
+  100% {
+    box-shadow: none;
+  }
+
+  20%,
+  60% {
+    box-shadow:
+      0 0 0 2px #f4d35e,
+      0 0 14px rgba(244, 211, 94, 0.6);
+  }
+}
+
+@keyframes bell-flash-frame {
+  0%,
+  40%,
+  80%,
+  100% {
+    box-shadow: none;
+  }
+
+  20%,
+  60% {
+    box-shadow: inset 0 0 0 2px #f4d35e;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .session-card.is-bell-flash,
+  .terminal-container.is-bell-flash {
     animation: none;
   }
 }

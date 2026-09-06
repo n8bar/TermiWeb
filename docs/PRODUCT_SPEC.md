@@ -25,7 +25,7 @@ This section keeps only the durable product-level invariants. Detailed behavior 
 - The app manages named shared instances rather than a single throwaway shell.
 - Each device selects its own active instance locally; switching instances on one device does not force-switch others.
 
-Instance naming, empty-workspace seeding, default attach behavior, and browser-local UI state are detailed in [the 0.1 browser-terminal spec](specs/v0.1-browser-terminal.md). Stable instance numbering, shell-driven titles via OSC `0`/`2`, and title overflow display are detailed in [the instance-titles spec](specs/instance-titles.md).
+Instance naming, empty-workspace seeding, default attach behavior, and browser-local UI state are detailed in [the 0.1 browser-terminal spec](specs/v0.1-browser-terminal.md). Stable instance numbering, shell-driven titles via OSC `0`/`2`, and title overflow display are detailed in [the instance-titles spec](specs/instance-titles.md). Terminal bell detection, the per-instance attention state, and the client bell cues are detailed in [the terminal-bell spec](specs/terminal-bell.md).
 
 ### Access And Runtime
 

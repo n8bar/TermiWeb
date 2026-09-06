@@ -21,6 +21,7 @@ import {
   getExplicitSelectionText,
   isClipboardCopyShortcut,
 } from "./ui/selectionCopy.js";
+import { resolveBellReaction, resolveDocumentTitle } from "./ui/bell.js";
 import { captureVisibleTerminalText, resolveSnapshotFollowUp } from "./ui/terminalSnapshot.js";
 import {
   computeStageLayout,
@@ -110,6 +111,7 @@ const refreshButton = mustQuery<HTMLButtonElement>("#refresh-button");
 const logoutButton = mustQuery<HTMLButtonElement>("#logout-button");
 const newSessionButton = mustQuery<HTMLButtonElement>("#new-session-button");
 const focusTerminalButton = mustQuery<HTMLButtonElement>("#focus-terminal-button");
+const bellSoundButton = mustQuery<HTMLButtonElement>("#bell-sound-button");
 const collapsedCopyButton = mustQuery<HTMLButtonElement>("#collapsed-copy-button");
 const collapsedPasteButton = mustQuery<HTMLButtonElement>("#collapsed-paste-button");
 const toggleControlsButton = mustQuery<HTMLButtonElement>("#toggle-controls-button");
@@ -230,6 +232,12 @@ let pasteCaptureTimeout: number | undefined;
 const sidebarStorageKey = "termiweb.sidebar-collapsed";
 const controlsStorageKey = "termiweb.controls-collapsed";
 const topbarStorageKey = "termiweb.topbar-collapsed";
+const bellSoundStorageKey = "termiweb.bell-sound";
+const BELL_FLASH_MS = 900;
+let bellSoundEnabled = false;
+let bellAudioContext: AudioContext | null = null;
+let baseDocumentTitle = "TermiWeb";
+const bellFlashStartedAt = new Map<string, number>();
 const modifierDoubleTapWindowMs = 360;
 const defaultTerminalFontSize = 15;
 const minTerminalFontSize = 6;
@@ -285,7 +293,8 @@ function setVersionIdentity(): void {
   const versionLabel = `v${displayVersion}`;
   loginVersion.textContent = versionLabel;
   appVersion.textContent = versionLabel;
-  document.title = `TermiWeb ${versionLabel}`;
+  baseDocumentTitle = `TermiWeb ${versionLabel}`;
+  syncDocumentTitle();
 }
 
 function setFixedSize(nextFixedCols?: number, nextFixedRows?: number): void {
@@ -1625,7 +1634,153 @@ function updateActiveSessionMeta(): void {
   activeSessionStatus.className = `status-pill ${active ? `is-${active.status}` : ""}`.trim();
   shellLabel.textContent = `Shell: ${active?.shell ?? "detecting..."}`;
   syncSessionWidthControl();
+  syncDocumentTitle();
   scheduleTitleOverflowSync();
+}
+
+function prefersReducedMotion(): boolean {
+  return window.matchMedia?.("(prefers-reduced-motion: reduce)").matches === true;
+}
+
+function syncDocumentTitle(): void {
+  document.title = resolveDocumentTitle(
+    baseDocumentTitle,
+    sessions.some((session) => session.attentionPending),
+  );
+}
+
+function setBellSoundEnabled(
+  enabled: boolean,
+  options: {
+    persist?: boolean;
+  } = {},
+): void {
+  bellSoundEnabled = enabled;
+  bellSoundButton.setAttribute("aria-pressed", String(enabled));
+  bellSoundButton.classList.toggle("is-active", enabled);
+  bellSoundButton.title = enabled ? "Bell sound on" : "Bell sound off";
+
+  if (options.persist ?? true) {
+    try {
+      window.localStorage.setItem(bellSoundStorageKey, String(enabled));
+    } catch {
+      // Ignore local storage failures and keep the state in-memory for this device.
+    }
+  }
+}
+
+function initializeBellSoundPreference(): void {
+  try {
+    const stored = window.localStorage.getItem(bellSoundStorageKey);
+    if (stored === "true" || stored === "false") {
+      setBellSoundEnabled(stored === "true", {
+        persist: false,
+      });
+      return;
+    }
+  } catch {
+    // Fall through to the default: sound off.
+  }
+
+  setBellSoundEnabled(false, {
+    persist: false,
+  });
+}
+
+function isBellAudioUnlocked(): boolean {
+  return bellAudioContext?.state === "running";
+}
+
+function unlockBellAudio(): void {
+  if (!bellSoundEnabled || isBellAudioUnlocked()) {
+    return;
+  }
+
+  try {
+    bellAudioContext ??= new AudioContext();
+    if (bellAudioContext.state === "suspended") {
+      void bellAudioContext.resume();
+    }
+  } catch {
+    bellAudioContext = null;
+  }
+}
+
+function playBellTone(): void {
+  if (!bellAudioContext || bellAudioContext.state !== "running") {
+    return;
+  }
+
+  const now = bellAudioContext.currentTime;
+  const oscillator = bellAudioContext.createOscillator();
+  const gain = bellAudioContext.createGain();
+  oscillator.type = "sine";
+  oscillator.frequency.value = 880;
+  gain.gain.setValueAtTime(0.0001, now);
+  gain.gain.exponentialRampToValueAtTime(0.25, now + 0.01);
+  gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.18);
+  oscillator.connect(gain);
+  gain.connect(bellAudioContext.destination);
+  oscillator.start(now);
+  oscillator.stop(now + 0.2);
+}
+
+function applyBellFlash(element: HTMLElement, startedAt: number): void {
+  const elapsed = Date.now() - startedAt;
+  if (elapsed >= BELL_FLASH_MS) {
+    return;
+  }
+
+  element.classList.remove("is-bell-flash");
+  void element.offsetWidth;
+  element.style.animationDelay = `-${elapsed}ms`;
+  element.classList.add("is-bell-flash");
+  element.addEventListener(
+    "animationend",
+    () => {
+      element.classList.remove("is-bell-flash");
+      element.style.removeProperty("animation-delay");
+    },
+    { once: true },
+  );
+}
+
+function handleSessionBell(sessionId: string): void {
+  const reaction = resolveBellReaction({
+    sessionId,
+    activeSessionId,
+    soundEnabled: bellSoundEnabled,
+    audioUnlocked: isBellAudioUnlocked(),
+    coarsePointer: isCoarsePointerDevice(),
+    reducedMotion: prefersReducedMotion(),
+    vibrationSupported: typeof navigator.vibrate === "function",
+  });
+
+  if (reaction.animate) {
+    const startedAt = Date.now();
+    bellFlashStartedAt.set(sessionId, startedAt);
+    const card = sessionList.querySelector<HTMLElement>(
+      `.session-card[data-session-id="${sessionId}"]`,
+    );
+    if (card && reaction.flashCard) {
+      applyBellFlash(card, startedAt);
+    }
+    if (reaction.flashFrame) {
+      applyBellFlash(terminalContainer, startedAt);
+    }
+  }
+
+  if (reaction.playTone) {
+    playBellTone();
+  }
+
+  if (reaction.vibrate) {
+    try {
+      navigator.vibrate(120);
+    } catch {
+      // Vibration is best-effort.
+    }
+  }
 }
 
 function renderTitleSlot(slot: HTMLElement, text: string, scrollable: boolean): void {
@@ -1641,7 +1796,7 @@ function renderTitleSlot(slot: HTMLElement, text: string, scrollable: boolean): 
 
 function syncTitleOverflow(): void {
   const coarsePointer = isCoarsePointerDevice();
-  const reducedMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches === true;
+  const reducedMotion = prefersReducedMotion();
 
   for (const slot of document.querySelectorAll<HTMLElement>(".is-title-scroll-candidate")) {
     const key = `${slot.dataset.titleText ?? ""}|${slot.clientWidth}|${coarsePointer}|${reducedMotion}`;
@@ -1734,6 +1889,7 @@ function renderSessions(): void {
 
     const card = document.createElement("div");
     card.className = `session-card${session.id === activeSessionId ? " is-active" : ""}`;
+    card.dataset.sessionId = session.id;
     card.tabIndex = 0;
     card.role = "button";
     if (sidebarCollapsed && isActiveSession) {
@@ -1805,6 +1961,23 @@ function renderSessions(): void {
     });
 
     card.append(head, meta);
+    if (session.attentionPending) {
+      card.classList.add("has-attention");
+      const badge = document.createElement("span");
+      badge.className = "attention-badge";
+      badge.textContent = "🔔";
+      badge.setAttribute("role", "img");
+      badge.setAttribute("aria-label", "Bell rang");
+      card.append(badge);
+    }
+    const flashStartedAt = bellFlashStartedAt.get(session.id);
+    if (flashStartedAt !== undefined) {
+      if (Date.now() - flashStartedAt >= BELL_FLASH_MS) {
+        bellFlashStartedAt.delete(session.id);
+      } else {
+        applyBellFlash(card, flashStartedAt);
+      }
+    }
 
     const close = document.createElement("button");
     close.type = "button";
@@ -1931,6 +2104,9 @@ function handleServerEvent(event: ServerEvent): void {
       if (event.sessionId === activeSessionId) {
         terminal.write(event.data);
       }
+      return;
+    case "session/bell":
+      handleSessionBell(event.sessionId);
       return;
   }
 }
@@ -2073,6 +2249,14 @@ refreshButton.addEventListener("click", () => {
 newSessionButton.addEventListener("click", () => {
   sendEvent({ type: "session/create" });
 });
+
+bellSoundButton.addEventListener("click", () => {
+  setBellSoundEnabled(!bellSoundEnabled);
+  unlockBellAudio();
+});
+
+window.addEventListener("pointerdown", unlockBellAudio, { passive: true });
+window.addEventListener("keydown", unlockBellAudio);
 
 focusTerminalButton.addEventListener("click", () => {
   setSessionWidthPopoverOpen(false);
@@ -2376,6 +2560,7 @@ window.visualViewport?.addEventListener("resize", handleViewportResize);
 initializeSidebarPreference();
 initializeControlsPreference();
 initializeTopbarPreference();
+initializeBellSoundPreference();
 renderModifierControls();
 setVersionIdentity();
 syncViewportLayout();
