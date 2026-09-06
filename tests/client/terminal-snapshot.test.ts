@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
 
-import { captureVisibleTerminalText } from "../../src/client/ui/terminalSnapshot.js";
+import {
+  captureVisibleTerminalText,
+  resolveSnapshotFollowUp,
+} from "../../src/client/ui/terminalSnapshot.js";
 
 function line(text: string) {
   return {
@@ -52,5 +55,15 @@ describe("captureVisibleTerminalText", () => {
     });
 
     expect(text).toBe("prompt");
+  });
+});
+
+describe("resolveSnapshotFollowUp", () => {
+  it("keeps selection mode open and refreshes the captured text when a snapshot lands mid-selection", () => {
+    expect(resolveSnapshotFollowUp({ selectionMode: true })).toBe("refresh-selection-text");
+  });
+
+  it("refocuses the live terminal when no selection is in progress", () => {
+    expect(resolveSnapshotFollowUp({ selectionMode: false })).toBe("refocus-live-terminal");
   });
 });

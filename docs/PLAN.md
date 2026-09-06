@@ -2,7 +2,7 @@
 
 ## Current Focus
 
-`M1` through `M9` are complete. `0.1.1` is publicly released, the download site is live at `https://termiweb.com`, and the search/discovery foundation is in place for later outreach. `M10` is drafted to ship `0.1.2` covering a mobile Select-mode blocker, a real Windows installer with a passwordless auto-start fix, the instance-titles spec, terminal bell behavior, and verification closure of the lingering `0.1.1` mobile stabilization issues. `M11` holds the deliberate public outreach lane, resequenced behind the `0.1.2` release on 2026-08-06 so first impressions land on the improved install experience. `M12` is drafted as the `0.2` milestone, with the QR connect affordance pulled in as the first included feature candidate without defining the whole version scope.
+`M1` through `M9` are complete. `0.1.1` is publicly released, the download site is live at `https://termiweb.com`, and the search/discovery foundation is in place for later outreach. `M10` is in progress toward `0.1.2`, covering a mobile Select-mode blocker, a real Windows installer with a passwordless auto-start fix, the instance-titles spec, terminal bell behavior, and verification closure of the lingering `0.1.1` mobile stabilization issues. `M11` holds the deliberate public outreach lane, resequenced behind the `0.1.2` release on 2026-08-06 so first impressions land on the improved install experience. `M12` is drafted as the `0.2` milestone, with the QR connect affordance pulled in as the first included feature candidate without defining the whole version scope.
 
 ## Milestones
 
@@ -90,4 +90,4 @@ These are feature candidates for later version scope. Here, `candidate` means a 
 
 ## Next Action
 
-Start [M10 0.1.2 Select fix and titles](worklists/m10-0.1.2-select-fix-and-titles.md), beginning with the [#5](https://github.com/n8bar/TermiWeb/issues/5) Select-mode reproduction on a real mobile browser. User review of [the Windows-installer spec](specs/windows-installer.md) is the standing gate before installer implementation begins.
+Continue [M10 0.1.2 Select fix and titles](worklists/m10-0.1.2-select-fix-and-titles.md): the [#5](https://github.com/n8bar/TermiWeb/issues/5) Select-mode fix is verified on device, so the next step is worklist item `2`, re-testing [#2](https://github.com/n8bar/TermiWeb/issues/2) and [#3](https://github.com/n8bar/TermiWeb/issues/3) against the shipped `0.1.1` UI on a real mobile browser. User review of [the Windows-installer spec](specs/windows-installer.md) is the standing gate before installer implementation begins.

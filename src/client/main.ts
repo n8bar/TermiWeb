@@ -21,7 +21,7 @@ import {
   getExplicitSelectionText,
   isClipboardCopyShortcut,
 } from "./ui/selectionCopy.js";
-import { captureVisibleTerminalText } from "./ui/terminalSnapshot.js";
+import { captureVisibleTerminalText, resolveSnapshotFollowUp } from "./ui/terminalSnapshot.js";
 import {
   computeStageLayout,
   resolveEffectiveViewportWidth,
@@ -1840,13 +1840,17 @@ function handleServerEvent(event: ServerEvent): void {
         return;
       }
       setFollowCursor(true);
-      setSelectionMode(false);
       terminal.reset();
       terminal.write(event.snapshot.history, () => {
         scheduleTerminalPaintRefresh({
           clearTextureAtlas: true,
         });
         renderSessions();
+        if (resolveSnapshotFollowUp({ selectionMode }) === "refresh-selection-text") {
+          syncSelectionText();
+          return;
+        }
+
         ensureCursorVisible();
         focusLiveTerminalInput();
       });
