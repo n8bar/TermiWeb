@@ -117,7 +117,7 @@ describe("terminal manager", () => {
     expect(store.listTabs()[0]?.fixedRows).toBe(45);
   });
 
-  it("renumbers surviving auto-named sessions after a close", async () => {
+  it("keeps surviving session titles stable after a close", async () => {
     const store = new FakeWorkspaceStore(ensureWorkspaceHasTab(createEmptyWorkspaceState()));
     const manager = new TerminalManager(createConfig(), store as unknown as WorkspaceStore);
 
@@ -133,13 +133,44 @@ describe("terminal manager", () => {
 
     const sessionsAfterClose = manager.listSessions();
     expect(sessionsAfterClose).toHaveLength(1);
-    expect(sessionsAfterClose[0]?.title).toBe("Instance 1");
+    expect(sessionsAfterClose[0]?.title).toBe("Instance 2");
 
     const created = await manager.createSession();
     const finalTitles = manager.listSessions().map((session) => session.title);
 
-    expect(created.title).toBe("Instance 2");
-    expect(finalTitles).toEqual(["Instance 1", "Instance 2"]);
+    expect(created.title).toBe("Instance 1");
+    expect(finalTitles).toEqual(["Instance 2", "Instance 1"]);
+  });
+
+  it("applies a sanitized shell title to the session summary and clears it on an empty payload", async () => {
+    const store = new FakeWorkspaceStore(ensureWorkspaceHasTab(createEmptyWorkspaceState()));
+    const manager = new TerminalManager(createConfig(), store as unknown as WorkspaceStore);
+    await manager.initialize();
+
+    const broadcasts: Array<string | null> = [];
+    manager.on("sessions", (sessions) => {
+      broadcasts.push(sessions[0]?.shellTitle ?? null);
+    });
+    const sessionId = manager.listSessions()[0]!.id;
+
+    manager.setShellTitle(sessionId, "  build\u0007 watcher  ");
+    expect(manager.listSessions()[0]?.shellTitle).toBe("build watcher");
+    expect(manager.listSessions()[0]?.title).toBe("Instance 1");
+
+    manager.setShellTitle(sessionId, "");
+    expect(manager.listSessions()[0]?.shellTitle).toBeNull();
+    expect(broadcasts).toEqual(["build watcher", null]);
+  });
+
+  it("ignores a shell title from a client that is not attached to that session", async () => {
+    const store = new FakeWorkspaceStore(ensureWorkspaceHasTab(createEmptyWorkspaceState()));
+    const manager = new TerminalManager(createConfig(), store as unknown as WorkspaceStore);
+    await manager.initialize();
+    const sessionId = manager.listSessions()[0]!.id;
+
+    manager.setShellTitle(sessionId, "intruder", "unattached-client");
+
+    expect(manager.listSessions()[0]?.shellTitle).toBeNull();
   });
 
   it("can return a snapshot for an attached client without reattaching the session", async () => {

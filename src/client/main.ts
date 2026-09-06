@@ -42,7 +42,7 @@ import {
   computeCursorXtermScrollDelta,
 } from "./ui/cursorFollow.js";
 import { copyTextToClipboard, readTextFromClipboard } from "./ui/clipboard.js";
-import { getDisplaySessionTitle } from "./ui/sessionTitle.js";
+import { getDisplaySessionTitle, resolveDisplayedSessionTitle } from "./ui/sessionTitle.js";
 import { toDisplayVersion } from "./ui/version.js";
 
 type ConnectionState = "connecting" | "connected" | "offline" | "error";
@@ -1610,7 +1610,9 @@ function renderModifierControls(): void {
 
 function updateActiveSessionMeta(): void {
   const active = getActiveSession();
-  activeSessionTitle.textContent = active?.title ?? "No active instance";
+  const displayedTitle = active ? resolveDisplayedSessionTitle(active) : "No active instance";
+  activeSessionTitle.textContent = displayedTitle;
+  activeSessionTitle.title = active ? displayedTitle : "";
   activeSessionStatus.textContent = active ? statusLabels[active.status] : "Idle";
   activeSessionStatus.className = `status-pill ${active ? `is-${active.status}` : ""}`.trim();
   shellLabel.textContent = `Shell: ${active?.shell ?? "detecting..."}`;
@@ -1648,6 +1650,7 @@ function renderSessions(): void {
   }
 
   for (const session of sessions) {
+    const displayedTitle = resolveDisplayedSessionTitle(session);
     const row = document.createElement("div");
     row.className = `session-row${session.id === activeSessionId ? " is-active" : ""}`;
     const isActiveSession = session.id === activeSessionId;
@@ -1674,8 +1677,8 @@ function renderSessions(): void {
       card.setAttribute(
         "aria-label",
         showCollapsedControls
-          ? `Hide controls for ${session.title}`
-          : `Show controls for ${session.title}`,
+          ? `Hide controls for ${displayedTitle}`
+          : `Show controls for ${displayedTitle}`,
       );
     }
     const activateSessionCard = () => {
@@ -1706,7 +1709,10 @@ function renderSessions(): void {
     head.className = "session-card-head";
     const title = document.createElement("span");
     title.className = "session-title";
-    title.textContent = getDisplaySessionTitle(session.title, sidebarCollapsed);
+    title.textContent = sidebarCollapsed
+      ? getDisplaySessionTitle(session.title, true)
+      : displayedTitle;
+    title.title = displayedTitle;
     const status = document.createElement("span");
     status.className = `status-pill is-${session.status}`;
     status.textContent = statusLabels[session.status];
@@ -1720,7 +1726,7 @@ function renderSessions(): void {
     widthButton.type = "button";
     widthButton.className = "ghost-button compact session-width-button is-rail-button";
     widthButton.textContent = getSessionWidthButtonLabel(session.fixedCols);
-    widthButton.setAttribute("aria-label", `Change columns for ${session.title}`);
+    widthButton.setAttribute("aria-label", `Change columns for ${displayedTitle}`);
     widthButton.setAttribute("aria-expanded", "false");
     widthButton.setAttribute("aria-haspopup", "dialog");
     widthButton.setAttribute("aria-controls", "session-width-popover");
@@ -1738,8 +1744,8 @@ function renderSessions(): void {
     close.type = "button";
     close.className = "ghost-button compact icon-button session-close";
     close.textContent = "×";
-    close.setAttribute("aria-label", `Close ${session.title}`);
-    close.title = `Close ${session.title}`;
+    close.setAttribute("aria-label", `Close ${displayedTitle}`);
+    close.title = `Close ${displayedTitle}`;
     close.addEventListener("click", (event) => {
       event.stopPropagation();
       sendEvent({
@@ -2210,6 +2216,18 @@ terminal.onData((data) => {
   }
 
   sendTerminalInputData(data);
+});
+
+terminal.onTitleChange((title) => {
+  if (!activeSessionId) {
+    return;
+  }
+
+  sendEvent({
+    type: "terminal/title",
+    sessionId: activeSessionId,
+    title,
+  });
 });
 
 terminal.onWriteParsed(() => {

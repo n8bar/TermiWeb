@@ -103,3 +103,65 @@ describe("protocol parsing", () => {
     expect(event.rows).toBe(1);
   });
 });
+
+describe("instance title protocol", () => {
+  it("defaults a session summary's shell title to null when the field is absent", () => {
+    const event = parseServerEvent({
+      type: "session/list",
+      activeSessionId: null,
+      sessions: [
+        {
+          id: "54fd93ae-0f1d-4dc4-af4a-547e8b87d2af",
+          title: "Instance 1",
+          status: "running",
+          clientCount: 0,
+          shell: null,
+          lastExitCode: null,
+          fixedCols: 80,
+          fixedRows: 30,
+        },
+      ],
+    });
+
+    if (event.type !== "session/list") {
+      throw new Error("Expected session/list event");
+    }
+    expect(event.sessions[0]?.shellTitle).toBeNull();
+  });
+
+  it("accepts a session summary carrying a shell title", () => {
+    const event = parseServerEvent({
+      type: "session/created",
+      session: {
+        id: "54fd93ae-0f1d-4dc4-af4a-547e8b87d2af",
+        title: "Instance 3",
+        shellTitle: "build watcher",
+        status: "running",
+        clientCount: 1,
+        shell: "pwsh.exe",
+        lastExitCode: null,
+        fixedCols: 80,
+        fixedRows: 30,
+      },
+    });
+
+    if (event.type !== "session/created") {
+      throw new Error("Expected session/created event");
+    }
+    expect(event.session.shellTitle).toBe("build watcher");
+  });
+
+  it("accepts a terminal title event", () => {
+    const event = parseClientEvent({
+      type: "terminal/title",
+      sessionId: "54fd93ae-0f1d-4dc4-af4a-547e8b87d2af",
+      title: "vim README.md",
+    });
+
+    expect(event.type).toBe("terminal/title");
+    if (event.type !== "terminal/title") {
+      throw new Error("Expected terminal/title event");
+    }
+    expect(event.title).toBe("vim README.md");
+  });
+});

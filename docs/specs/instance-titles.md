@@ -28,12 +28,13 @@ Display precedence:
 - When the shell clears the title (empty OSC payload) or no shell title has ever been seen for this instance, the displayed title falls back to the workspace default.
 - The workspace default for an instance never changes after creation. It is not renumbered when other instances are closed.
 
-The shell-provided title is per-instance runtime state. It does not need to persist across server restarts; on reattach, the next program emit will repopulate it. The workspace default is the persistent identifier and stays in the workspace state file.
+The shell-provided title is per-instance runtime state. It does not need to persist across server restarts; on reattach, the next program emit will repopulate it. It is also cleared when the instance's process exits, so a title left behind by a finished program does not outlive it. The workspace default is the persistent identifier and stays in the workspace state file.
 
 ## Stable Instance Numbering
 
 - New auto-named instances pick the lowest positive integer not currently in use by any existing auto-named instance. Closing an instance does not free its number for reuse if doing so would cause renumbering of other instances.
 - Practical rule: no instance's workspace default ever changes as a side effect of another instance's lifecycle. The visible number may have gaps (`Instance 1`, `Instance 4`, `Instance 7`); that is acceptable and expected.
+- Legacy `Terminal N` titles normalize to `Instance N` and keep their number. If persisted state carries the same number twice, the first instance keeps it and the later one takes the lowest unused number; nothing else is renamed on load.
 - A future explicit user rename is out of scope here. This spec only addresses automatic naming and shell-driven titles.
 
 ## Overflow Display
@@ -45,7 +46,7 @@ The active-instance heading in the top bar (`#active-session-title`) has limited
 - The sidebar instance list already truncates with an ellipsis; it also gains the same tooltip-on-hover affordance for the full title.
 - Tooltip content is the full title currently in effect (shell-provided when present, workspace default otherwise). It is not a separate name.
 - When the displayed title fits without truncation, the tooltip is still allowed and harmless; implementations may set it unconditionally.
-- The collapsed-rail short label keeps its existing number-only display when the collapsed display rule applies. This spec does not change collapsed-rail compaction.
+- The collapsed-rail short label keeps its existing number-only display when the collapsed display rule applies. The collapsed label always derives from the workspace default, never from the shell-provided title; the tooltip still carries the displayed title. This spec does not change collapsed-rail compaction.
 
 Non-goals for overflow display:
 
@@ -55,8 +56,8 @@ Non-goals for overflow display:
 ## Protocol and State Changes
 
 - `SessionSummary` gains an optional shell title field separate from the workspace default title, so clients can render precedence themselves and the server stays the source of truth.
-- A new server event carries title changes for an existing session, or the existing `session/list` broadcast updates the summary. Either mechanism is acceptable; the implementation must not require a full snapshot re-send for a title change.
-- The xterm.js client wires `terminal.onTitleChange` and forwards it to the server as a new `terminal/title` client event for the active session id. The server clamps length, applies the same length bound already used for session titles, strips control characters from the payload, and broadcasts the updated summary to the rest of the workspace.
+- A new server event carries title changes for an existing session, or the existing `session/list` broadcast updates the summary. Either mechanism is acceptable; the implementation must not require a full snapshot re-send for a title change. The shipped implementation reuses the `session/list` broadcast, which the client applies without re-attaching or re-snapshotting the active instance.
+- The xterm.js client wires `terminal.onTitleChange` and forwards it to the server as a new `terminal/title` client event for the active session id. The server clamps length, applies the same length bound already used for session titles, strips control characters from the payload, and broadcasts the updated summary to the rest of the workspace. Every attached client forwards the title changes it parses, including those replayed from history on attach; the server ignores a `terminal/title` event from a client that is not attached to that session and skips the broadcast when the value is unchanged.
 
 ## Acceptance Checks
 
@@ -68,6 +69,7 @@ Non-goals for overflow display:
 - The sidebar instance list truncates each entry with an ellipsis when its title overflows the available width, and exposes the full title through a native browser tooltip.
 - After a server restart, the workspace default for each persisted instance is displayed immediately. Shell-provided titles are not persisted and repopulate the next time a running program in that instance emits an OSC `0` or `2` sequence.
 - Title payloads that exceed the workspace-managed length bound are clamped before being broadcast, and control characters in the payload are stripped, so a malformed sequence cannot break the UI.
+- When the process in an instance exits, the displayed title for that instance returns to its workspace default.
 
 ## Manual Verification
 

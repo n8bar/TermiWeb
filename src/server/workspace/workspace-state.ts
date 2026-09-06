@@ -59,21 +59,35 @@ function nextAvailableTitleIndex(usedIndices: Set<number>): number {
   return candidate;
 }
 
+/**
+ * Keeps every auto-named tab's number stable. A tab keeps the number already in
+ * its title (legacy `Terminal N` becomes `Instance N` with the same number);
+ * only a tab whose number is missing or already taken by an earlier tab gets the
+ * lowest unused number. Nothing here renumbers a tab because of another tab's
+ * lifecycle.
+ */
 function normalizeWorkspaceTabs(tabs: WorkspaceTab[]): WorkspaceTab[] {
   const usedIndices = new Set<number>();
+  const keptIndices = new Map<number, number>();
 
-  for (const tab of tabs) {
-    if (isAutoNamedTab(tab)) {
-      continue;
+  tabs.forEach((tab, position) => {
+    const index = parseDefaultTitleIndex(tab.title);
+    if (index !== null && !usedIndices.has(index)) {
+      usedIndices.add(index);
+      keptIndices.set(position, index);
+    }
+  });
+
+  return tabs.map((tab, position) => {
+    const keptIndex = keptIndices.get(position);
+    if (keptIndex !== undefined) {
+      return {
+        ...tab,
+        title: createDefaultTitle(keptIndex),
+        autoNamed: true,
+      };
     }
 
-    const reservedIndex = parseDefaultTitleIndex(tab.title);
-    if (reservedIndex !== null) {
-      usedIndices.add(reservedIndex);
-    }
-  }
-
-  return tabs.map((tab) => {
     if (!isAutoNamedTab(tab)) {
       return {
         ...tab,

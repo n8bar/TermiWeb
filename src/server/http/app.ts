@@ -281,6 +281,9 @@ export async function createHttpApp(options: CreateHttpAppOptions) {
           case "terminal/input":
             await options.terminalManager.write(parsed.sessionId, parsed.data, clientId);
             return;
+          case "terminal/title":
+            options.terminalManager.setShellTitle(parsed.sessionId, parsed.title, clientId);
+            return;
           case "terminal/resize":
             options.terminalManager.resize(
               parsed.sessionId,

@@ -38,6 +38,7 @@ export class TerminalSession extends EventEmitter<TerminalSessionEvents> {
   readonly #historyLimit: number;
   readonly #clientIds = new Set<string>();
   #title: string;
+  #shellTitle: string | null = null;
   #pty: IPty | null = null;
   #history = "";
   #status: TerminalStatus = "stopped";
@@ -63,6 +64,7 @@ export class TerminalSession extends EventEmitter<TerminalSessionEvents> {
     return {
       id: this.#id,
       title: this.#title,
+      shellTitle: this.#shellTitle,
       status: this.#status,
       clientCount: this.#clientIds.size,
       shell: this.#shell,
@@ -109,6 +111,7 @@ export class TerminalSession extends EventEmitter<TerminalSessionEvents> {
 
       this.#pty.onExit(({ exitCode }) => {
         this.#pty = null;
+        this.#shellTitle = null;
         this.#lastExitCode = exitCode;
         this.#status = "exited";
         this.#emitSummary();
@@ -169,10 +172,20 @@ export class TerminalSession extends EventEmitter<TerminalSessionEvents> {
     this.#emitSummary();
   }
 
+  setShellTitle(title: string | null): void {
+    if (this.#shellTitle === title) {
+      return;
+    }
+
+    this.#shellTitle = title;
+    this.#emitSummary();
+  }
+
   dispose(): void {
     this.#clientIds.clear();
     this.#pty?.kill();
     this.#pty = null;
+    this.#shellTitle = null;
     this.#status = "stopped";
     this.#emitSummary();
   }

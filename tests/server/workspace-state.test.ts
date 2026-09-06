@@ -32,14 +32,27 @@ describe("workspace state", () => {
     expect(withDefault.tab.title).toBe("Instance 2");
   });
 
-  it("reuses the lowest available default instance number", () => {
+  it("keeps surviving numbers stable after a close and gives the freed number to the next tab", () => {
     const initial = ensureWorkspaceHasTab(createEmptyWorkspaceState());
     const second = addWorkspaceTab(initial);
     const removed = removeWorkspaceTab(second.state, initial.tabs[0]!.id);
     const replacement = addWorkspaceTab(removed.state);
 
-    expect(removed.state.tabs.map((tab) => tab.title)).toEqual(["Instance 1"]);
-    expect(replacement.tab.title).toBe("Instance 2");
+    expect(removed.state.tabs.map((tab) => tab.title)).toEqual(["Instance 2"]);
+    expect(replacement.tab.title).toBe("Instance 1");
+    expect(replacement.state.tabs.map((tab) => tab.title)).toEqual(["Instance 2", "Instance 1"]);
+  });
+
+  it("never renames a remaining tab when a middle tab closes", () => {
+    const first = ensureWorkspaceHasTab(createEmptyWorkspaceState());
+    const second = addWorkspaceTab(first);
+    const third = addWorkspaceTab(second.state);
+    const removed = removeWorkspaceTab(third.state, second.tab.id);
+    const fourth = addWorkspaceTab(removed.state);
+
+    expect(removed.state.tabs.map((tab) => tab.title)).toEqual(["Instance 1", "Instance 3"]);
+    expect(fourth.tab.title).toBe("Instance 2");
+    expect(fourth.state.nextDefaultTitleIndex).toBe(4);
   });
 
   it("ignores a stale nextDefaultTitleIndex when creating the next auto-named tab", () => {
@@ -60,7 +73,7 @@ describe("workspace state", () => {
     expect(next.tab.title).toBe("Instance 2");
   });
 
-  it("normalizes legacy and sparse auto-generated titles on load", () => {
+  it("keeps persisted numbers on load and only normalizes the legacy prefix", () => {
     const normalized = ensureWorkspaceHasTab(
       workspaceStateSchema.parse({
         tabs: [
@@ -86,13 +99,37 @@ describe("workspace state", () => {
     );
 
     expect(normalized.tabs.map((tab) => tab.title)).toEqual([
-      "Instance 1",
+      "Instance 4",
       "Notes",
-      "Instance 2",
+      "Instance 9",
     ]);
+    expect(normalized.tabs.map((tab) => tab.autoNamed)).toEqual([true, false, true]);
     expect(normalized.tabs.map((tab) => tab.fixedCols)).toEqual([80, 120, 100]);
     expect(normalized.tabs.map((tab) => tab.fixedRows)).toEqual([30, 45, 38]);
-    expect(normalized.nextDefaultTitleIndex).toBe(3);
+    expect(normalized.nextDefaultTitleIndex).toBe(1);
+  });
+
+  it("resolves a duplicated persisted number by moving only the later tab", () => {
+    const normalized = ensureWorkspaceHasTab(
+      workspaceStateSchema.parse({
+        tabs: [
+          {
+            id: "d9bd267f-eef0-4dc3-813b-32dcb61de7dd",
+            title: "Instance 2",
+            fixedCols: 80,
+          },
+          {
+            id: "624e3107-42d4-468a-b825-cb8a3022af0a",
+            title: "Instance 2",
+            fixedCols: 80,
+          },
+        ],
+        lastActiveTabId: null,
+        nextDefaultTitleIndex: 1,
+      }),
+    );
+
+    expect(normalized.tabs.map((tab) => tab.title)).toEqual(["Instance 2", "Instance 1"]);
   });
 
   it("updates the fixed terminal size for a known tab", () => {

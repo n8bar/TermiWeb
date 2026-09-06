@@ -4,6 +4,7 @@ import type { SessionSnapshot, SessionSummary } from "../../shared/protocol.js";
 import type { TermiWebConfig } from "../config.js";
 import type { WorkspaceStore } from "../workspace/workspace-store.js";
 import { resolveShellCommand } from "./shell.js";
+import { sanitizeShellTitle } from "./shell-title.js";
 import { TerminalSession } from "./terminal-session.js";
 
 interface SessionSize {
@@ -150,6 +151,14 @@ export class TerminalManager extends EventEmitter<ManagerEvents> {
     }
 
     await this.#sessions.get(sessionId)?.write(data);
+  }
+
+  setShellTitle(sessionId: string, title: string, clientId?: string): void {
+    if (clientId && this.#clientSessions.get(clientId) !== sessionId) {
+      return;
+    }
+
+    this.#sessions.get(sessionId)?.setShellTitle(sanitizeShellTitle(title));
   }
 
   resize(sessionId: string, cols: number, rows: number, clientId?: string): void {

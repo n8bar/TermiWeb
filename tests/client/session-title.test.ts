@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
 
-import { getDisplaySessionTitle } from "../../src/client/ui/sessionTitle.js";
+import {
+  getDisplaySessionTitle,
+  resolveDisplayedSessionTitle,
+} from "../../src/client/ui/sessionTitle.js";
 
 describe("getDisplaySessionTitle", () => {
   it("keeps the full title when the sidebar is expanded", () => {
@@ -13,5 +16,29 @@ describe("getDisplaySessionTitle", () => {
 
   it("leaves custom titles unchanged when collapsed", () => {
     expect(getDisplaySessionTitle("CryptoZing", true)).toBe("CryptoZing");
+  });
+});
+
+describe("resolveDisplayedSessionTitle", () => {
+  it("prefers a non-empty shell title over the workspace default", () => {
+    expect(
+      resolveDisplayedSessionTitle({ title: "Instance 2", shellTitle: "build watcher" }),
+    ).toBe("build watcher");
+  });
+
+  it("falls back to the workspace default when no shell title has been seen", () => {
+    expect(resolveDisplayedSessionTitle({ title: "Instance 2", shellTitle: null })).toBe(
+      "Instance 2",
+    );
+    expect(resolveDisplayedSessionTitle({ title: "Instance 2" })).toBe("Instance 2");
+  });
+
+  it("falls back to the workspace default when the shell cleared the title", () => {
+    expect(resolveDisplayedSessionTitle({ title: "Instance 2", shellTitle: "" })).toBe(
+      "Instance 2",
+    );
+    expect(resolveDisplayedSessionTitle({ title: "Instance 2", shellTitle: "   " })).toBe(
+      "Instance 2",
+    );
   });
 });

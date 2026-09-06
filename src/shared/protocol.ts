@@ -8,6 +8,8 @@ export const terminalStatusSchema = z.enum([
   "error",
 ]);
 
+export const MAX_SESSION_TITLE_LENGTH = 64;
+
 const fixedColsSchema = z.number().int().min(20).max(240);
 const fixedRowsSchema = z.number().int().min(1).max(400);
 
@@ -20,6 +22,7 @@ export const sessionSummarySchema = z.object({
   lastExitCode: z.number().int().nullable(),
   fixedCols: fixedColsSchema,
   fixedRows: fixedRowsSchema,
+  shellTitle: z.string().max(MAX_SESSION_TITLE_LENGTH).nullable().default(null),
 });
 
 export const sessionSnapshotSchema = z.object({
@@ -71,6 +74,11 @@ export const clientEventSchema = z.discriminatedUnion("type", [
     sessionId: z.string().uuid(),
     cols: fixedColsSchema,
     rows: sizeFields.rows,
+  }),
+  z.object({
+    type: z.literal("terminal/title"),
+    sessionId: z.string().uuid(),
+    title: z.string(),
   }),
 ]);
 
