@@ -53,7 +53,7 @@
   - End: 2026-05-01
   - Worklist: [M9 0.1.1 mobile stabilization](worklists/m9-0.1.1-mobile-stabilization.md)
 - [ ] M10: `0.1.2` Select fix, Windows installer, instance titles, and bell
-  - Summary: This milestone ships `0.1.2` covering the mobile Select-mode release-blocker first, then verification closure of the lingering `0.1.1` mobile stabilization issues, a real Windows installer with a passwordless `SYSTEM` auto-start fix per [the Windows-installer spec](specs/windows-installer.md), implementation of the instance-titles spec, and a new bell-behavior spec plus implementation. Blocked by [#5 mobile Select](https://github.com/n8bar/TermiWeb/issues/5) until that fix lands; the rest of scope follows behind it.
+  - Summary: This milestone ships `0.1.2` covering the mobile Select-mode release-blocker first, then verification closure of the lingering `0.1.1` mobile stabilization issues, a real Windows installer with a passwordless `SYSTEM` auto-start fix per [the Windows-installer spec](specs/windows-installer.md), implementation of the instance-titles spec, and a new bell-behavior spec plus implementation. The [#5 mobile Select](https://github.com/n8bar/TermiWeb/issues/5) blocker is fixed and closed; the rest of scope follows.
   - Start: 2026-07-24
   - Target End: 2026-09-25
   - Notes: six-week window chosen on 2026-05-23 because the maintainer expects scope to expand beyond the initial drafted breakdown; extended by three weeks on 2026-08-06 when the Windows-installer scope joined after two real-world Windows 11 install failures ([#9](https://github.com/n8bar/TermiWeb/issues/9)); renumbered from M11 to M10 on 2026-08-06 when the release was resequenced ahead of outreach
@@ -86,7 +86,7 @@ These are feature candidates for later version scope. Here, `candidate` means a 
 ## Release Gate
 
 - Future releases should ship only after their documented local release checks pass.
-- Open release-blocker issues for the next release (`0.1.2` via `M10`): [#5 mobile Select button exits selection mode immediately on tap](https://github.com/n8bar/TermiWeb/issues/5), [#9 packaged setup fails on Windows 11 at the auto-start password step](https://github.com/n8bar/TermiWeb/issues/9), and [#10 failure-prone packaged zip setup](https://github.com/n8bar/TermiWeb/issues/10). ([FINDINGS.md](FINDINGS.md) is the closed historical archive of pre-`0.1.1` findings.)
+- Open release-blocker issues for the next release (`0.1.2` via `M10`): [#9 packaged setup fails on Windows 11 at the auto-start password step](https://github.com/n8bar/TermiWeb/issues/9) and [#10 failure-prone packaged zip setup](https://github.com/n8bar/TermiWeb/issues/10). The [#5 mobile Select](https://github.com/n8bar/TermiWeb/issues/5) blocker is fixed on `main` and closed. ([FINDINGS.md](FINDINGS.md) is the closed historical archive of pre-`0.1.1` findings.)
 
 ## Next Action
 
