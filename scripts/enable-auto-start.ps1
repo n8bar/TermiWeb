@@ -1,6 +1,5 @@
 param(
-  [switch]$Elevated,
-  [string]$TargetUserName
+  [switch]$Elevated
 )
 
 $ErrorActionPreference = "Stop"
@@ -38,21 +37,6 @@ function Test-IsAdministrator {
   return $principal.IsInRole([System.Security.Principal.WindowsBuiltInRole]::Administrator)
 }
 
-function ConvertTo-PlainText([Security.SecureString]$SecureString) {
-  if (-not $SecureString) {
-    return ""
-  }
-
-  $bstr = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($SecureString)
-  try {
-    return [Runtime.InteropServices.Marshal]::PtrToStringBSTR($bstr)
-  } finally {
-    if ($bstr -ne [IntPtr]::Zero) {
-      [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($bstr)
-    }
-  }
-}
-
 if (-not (Test-Path -LiteralPath $startScript)) {
   throw "Missing startup script at $startScript."
 }
@@ -60,20 +44,15 @@ if (-not (Test-Path -LiteralPath $startScript)) {
 $powerShellExecutable = Get-PowerShellExecutable
 $scriptPath = $MyInvocation.MyCommand.Path
 
-if ([string]::IsNullOrWhiteSpace($TargetUserName)) {
-  $TargetUserName = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
-}
-
 if (-not (Test-IsAdministrator)) {
   if ($Elevated) {
     throw "Administrator privileges are required to create the TermiWeb startup task on this machine."
   }
 
-  $escapedTargetUserName = $TargetUserName.Replace('"', '`"')
   try {
     $elevatedProcess = Start-Process `
       -FilePath $powerShellExecutable `
-      -ArgumentList "-NoLogo -NoProfile -ExecutionPolicy Bypass -File `"$scriptPath`" -Elevated -TargetUserName `"$escapedTargetUserName`"" `
+      -ArgumentList "-NoLogo -NoProfile -ExecutionPolicy Bypass -File `"$scriptPath`" -Elevated" `
       -WorkingDirectory $repoRoot `
       -Verb RunAs `
       -Wait `
@@ -85,19 +64,18 @@ if (-not (Test-IsAdministrator)) {
   }
 }
 
-$securePassword = Read-Host `
-  "Enter the Windows account password for $TargetUserName so TermiWeb can start before sign-in" `
-  -AsSecureString
-$plainPassword = ConvertTo-PlainText $securePassword
-if ([string]::IsNullOrWhiteSpace($plainPassword)) {
-  Write-Output "Auto-start remains off because no Windows account password was provided for $TargetUserName."
-  exit 2
-}
-
+# The task runs as the built-in SYSTEM account. SYSTEM exists on every machine,
+# is already running before anyone signs in, and has no password to collect or
+# validate, so registration succeeds on Hello-only and PIN-only sign-in setups
+# where a password-based task cannot be registered at all.
 $action = New-ScheduledTaskAction `
   -Execute $powerShellExecutable `
   -Argument "-NoLogo -NoProfile -ExecutionPolicy Bypass -File `"$startScript`""
 $trigger = New-ScheduledTaskTrigger -AtStartup
+$taskPrincipal = New-ScheduledTaskPrincipal `
+  -UserId "NT AUTHORITY\SYSTEM" `
+  -LogonType ServiceAccount `
+  -RunLevel Highest
 $settings = New-ScheduledTaskSettingsSet `
   -StartWhenAvailable `
   -AllowStartIfOnBatteries `
@@ -109,15 +87,13 @@ try {
     -TaskName $taskName `
     -Action $action `
     -Trigger $trigger `
+    -Principal $taskPrincipal `
     -Settings $settings `
-    -User $TargetUserName `
-    -Password $plainPassword `
-    -Description "Starts TermiWeb hidden at Windows startup on port $configuredPort for the installing user." `
-    -RunLevel Highest `
+    -Description "Starts TermiWeb hidden at Windows startup on port $configuredPort as SYSTEM, before anyone signs in." `
     -Force | Out-Null
 } catch {
-  Write-Output "Auto-start remains off because Windows could not register the startup task for $TargetUserName."
+  Write-Output "Auto-start remains off because Windows could not register the startup task."
   exit 1
 }
 
-Write-Output "Enabled TermiWeb auto-start task '$taskName' for $TargetUserName."
+Write-Output "Enabled TermiWeb auto-start task '$taskName'. It runs as SYSTEM before sign-in; no Windows account password is stored."

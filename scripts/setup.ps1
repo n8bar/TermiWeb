@@ -156,7 +156,7 @@ if ($enableAutoStart) {
       Write-Output "Before-sign-in auto-start is enabled."
     }
     2 {
-      Write-Output "Continuing with auto-start off because the Windows authorization step was canceled."
+      Write-Output "Continuing with auto-start off because the Windows elevation prompt was canceled."
     }
     default {
       Write-Output "Continuing with auto-start off because the startup-task setup did not complete successfully."
