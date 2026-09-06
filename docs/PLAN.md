@@ -77,7 +77,7 @@ These are feature candidates for later version scope. Here, `candidate` means a 
 
 - `0.2` feature candidate: isolated workstation-hosted `Browser` instances with one tab and basic browser chrome
 - `0.2` feature candidate: side-by-side instance view for very wide workstation windows
-- `0.2` feature candidate: Windows-service hosting mode for boot-start installs
+- `0.2` feature candidate: two-mode auto-start handoff so TermiWeb runs as the signed-in user after logon instead of staying `SYSTEM` in session 0 ([#8](https://github.com/n8bar/TermiWeb/issues/8))
 - `0.2` feature candidate: password-change UI for the configured app password
 - Contributor-readiness scope candidate: hosted CI for typecheck, tests, build, site build, and release-candidate checks before accepting outside PRs or when the project has multiple active contributors
 - Distribution candidate: code-sign the Windows installer (free open-source tier or low-cost option) to remove the SmartScreen warning, once the unsigned-with-documented-bypass path proves insufficient
@@ -90,4 +90,4 @@ These are feature candidates for later version scope. Here, `candidate` means a 
 
 ## Next Action
 
-Continue [M10 0.1.2 Select fix and titles](worklists/m10-0.1.2-select-fix-and-titles.md): the [#5](https://github.com/n8bar/TermiWeb/issues/5) Select-mode fix is verified on device, so the next step is worklist item `2`, re-testing [#2](https://github.com/n8bar/TermiWeb/issues/2) and [#3](https://github.com/n8bar/TermiWeb/issues/3) against the shipped `0.1.1` UI on a real mobile browser. User review of [the Windows-installer spec](specs/windows-installer.md) is the standing gate before installer implementation begins.
+Continue [M10 0.1.2 Select fix and titles](worklists/m10-0.1.2-select-fix-and-titles.md): [#2](https://github.com/n8bar/TermiWeb/issues/2) is closed and the instance-titles implementation (item `4`) is code-complete with automated checks passing. Waiting on the maintainer for the [#3](https://github.com/n8bar/TermiWeb/issues/3) mobile re-test (item `2.2`), the manual verification list in [the instance-titles spec](specs/instance-titles.md) (item `4.6`), and review of [the Windows-installer spec](specs/windows-installer.md) before installer work (item `3.1`) begins. User review of [the Windows-installer spec](specs/windows-installer.md) is the standing gate before installer implementation begins.

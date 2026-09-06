@@ -39,7 +39,7 @@ Each design element below exists to kill a known failure mode of the current zip
 ## Installer Flow
 
 - The installer elevates once through the normal UAC consent flow and requires administrative install. There is no per-user, non-elevated install mode; the product itself requires elevation to run.
-- On a fresh install, a required page collects the TermiWeb app password (non-empty) and the installer writes the ProgramData `.env` from the packaged template with that password set. The port stays at its default; changing it remains a config-file edit.
+- On a fresh install, a required page collects the TermiWeb app password (non-empty) and the installer writes the ProgramData `.env` from the packaged template with that password set. The port stays at its default; changing it remains a config-file edit, and updating the firewall rule and task name after a port change stays a documented manual step. Automation for both rides along with a future port-change UI.
 - An optional checkbox (default off, matching the current setup script's opt-in posture) enables before-sign-in auto-start. Enabling it never asks for a Windows account password.
 - The installer creates an inbound firewall rule for the configured port on the private profile, named so upgrade and uninstall can find it.
 - The finish page offers to start TermiWeb and open the local URL.
@@ -47,7 +47,7 @@ Each design element below exists to kill a known failure mode of the current zip
 ## Auto-Start Without a Windows Password
 
 - The auto-start scheduled task runs as the `SYSTEM` principal with no stored credentials, triggered at startup, highest run level. Registration must succeed on machines where password validation is impossible (Hello-only or PIN-only sign-in).
-- Under `SYSTEM` auto-start, the server and its spawned shells run as `SYSTEM` rather than the installing admin user. This is an accepted consequence for the before-sign-in path; the session-identity question is tracked separately in issue `#8`, and manual starts keep today's elevated-as-user behavior.
+- Under `SYSTEM` auto-start, the server and its spawned shells run as `SYSTEM` in the services session rather than as the installing admin user, and because the auto-started server keeps running after sign-in, so does every shell opened on it until it is stopped and started manually. `0.1.2` accepts this and states it in the first-run guide; manual starts keep today's elevated-as-user behavior, and the two-mode handoff that returns shells to the signed-in user is tracked in issue `#8`.
 - The portable layout's enable-auto-start script adopts the same `SYSTEM` registration, so the fix for issue `#9` reaches zip users too.
 
 ## Upgrade and Uninstall
@@ -59,7 +59,7 @@ Each design element below exists to kill a known failure mode of the current zip
 
 ## Distribution Surface
 
-- The installer executable is the primary download on the website and the GitHub release. The portable zip remains published as a secondary, clearly-labeled alternative.
+- The installer executable is the primary download on the website and the GitHub release. The portable zip remains published as a secondary, clearly-labeled alternative until the installer has proven itself across a release cycle, after which the zip is retired.
 - Because the installer is unsigned, the download page and the first-run docs show the SmartScreen "More info → Run anyway" flow with a screenshot, positioned where a user sees it before their first blocked launch.
 - Release assembly produces both artifacts from one staged layout so the installer and the zip cannot drift apart.
 
@@ -82,9 +82,3 @@ Each design element below exists to kill a known failure mode of the current zip
 - Uninstall run: confirm the task, firewall rule, and binaries are gone, and ProgramData honored the removal choice.
 - Portable regression: unpack the zip on the same machine profile, complete setup, and enable auto-start without any Windows password prompt.
 - SmartScreen path: on a machine that has never seen the file, confirm the documented "More info → Run anyway" flow matches the published screenshot.
-
-## Open Decisions
-
-- Whether the portable zip stays published long-term or is retired once the installer has proven itself across a release cycle.
-- Whether a later port change should get tooling that updates the firewall rule and task name, or stays a documented manual step.
-- Whether shells spawned under `SYSTEM` auto-start need session/identity work sooner than the separate tracking in issue `#8` implies.
