@@ -42,7 +42,11 @@ import {
   computeCursorXtermScrollDelta,
 } from "./ui/cursorFollow.js";
 import { copyTextToClipboard, readTextFromClipboard } from "./ui/clipboard.js";
-import { getDisplaySessionTitle, resolveDisplayedSessionTitle } from "./ui/sessionTitle.js";
+import {
+  getDisplaySessionTitle,
+  resolveDisplayedSessionTitle,
+  resolveTitleScroll,
+} from "./ui/sessionTitle.js";
 import { toDisplayVersion } from "./ui/version.js";
 
 type ConnectionState = "connecting" | "connected" | "offline" | "error";
@@ -1011,6 +1015,8 @@ function syncViewportLayout(options: {
     ensureCursorVisible();
   }
 
+  scheduleTitleOverflowSync();
+
   if (options.scrollToOrigin) {
     window.scrollTo(0, 0);
   }
@@ -1611,12 +1617,70 @@ function renderModifierControls(): void {
 function updateActiveSessionMeta(): void {
   const active = getActiveSession();
   const displayedTitle = active ? resolveDisplayedSessionTitle(active) : "No active instance";
-  activeSessionTitle.textContent = displayedTitle;
+  if (activeSessionTitle.dataset.titleText !== displayedTitle) {
+    renderTitleSlot(activeSessionTitle, displayedTitle, Boolean(active));
+  }
   activeSessionTitle.title = active ? displayedTitle : "";
   activeSessionStatus.textContent = active ? statusLabels[active.status] : "Idle";
   activeSessionStatus.className = `status-pill ${active ? `is-${active.status}` : ""}`.trim();
   shellLabel.textContent = `Shell: ${active?.shell ?? "detecting..."}`;
   syncSessionWidthControl();
+  scheduleTitleOverflowSync();
+}
+
+function renderTitleSlot(slot: HTMLElement, text: string, scrollable: boolean): void {
+  const inner = document.createElement("span");
+  inner.className = "title-scroll";
+  inner.textContent = text;
+  slot.replaceChildren(inner);
+  slot.dataset.titleText = text;
+  slot.classList.toggle("is-title-scroll-candidate", scrollable);
+  slot.classList.remove("is-title-overflowing");
+  delete slot.dataset.titleScrollKey;
+}
+
+function syncTitleOverflow(): void {
+  const coarsePointer = isCoarsePointerDevice();
+  const reducedMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches === true;
+
+  for (const slot of document.querySelectorAll<HTMLElement>(".is-title-scroll-candidate")) {
+    const key = `${slot.dataset.titleText ?? ""}|${slot.clientWidth}|${coarsePointer}|${reducedMotion}`;
+    if (slot.dataset.titleScrollKey === key) {
+      continue;
+    }
+
+    // Measure with the animation off so the transform cannot skew the width.
+    slot.classList.remove("is-title-overflowing");
+    const plan = resolveTitleScroll({
+      contentWidth: slot.scrollWidth,
+      slotWidth: slot.clientWidth,
+      coarsePointer,
+      reducedMotion,
+    });
+    slot.dataset.titleScrollKey = key;
+    if (!plan) {
+      slot.style.removeProperty("--title-scroll-distance");
+      slot.style.removeProperty("--title-scroll-duration");
+      continue;
+    }
+
+    slot.style.setProperty("--title-scroll-distance", `${plan.distancePx}px`);
+    slot.style.setProperty("--title-scroll-duration", `${plan.durationMs}ms`);
+    slot.classList.add("is-title-overflowing");
+  }
+}
+
+let titleOverflowSyncFrame: number | undefined;
+
+function scheduleTitleOverflowSync(): void {
+  if (typeof titleOverflowSyncFrame === "number") {
+    return;
+  }
+
+  titleOverflowSyncFrame = window.requestAnimationFrame(() => {
+    titleOverflowSyncFrame = undefined;
+    syncTitleOverflow();
+  });
 }
 
 function setCollapsedSessionControlsOpen(sessionId: string | null): void {
@@ -1709,9 +1773,11 @@ function renderSessions(): void {
     head.className = "session-card-head";
     const title = document.createElement("span");
     title.className = "session-title";
-    title.textContent = sidebarCollapsed
-      ? getDisplaySessionTitle(session.title, true)
-      : displayedTitle;
+    renderTitleSlot(
+      title,
+      sidebarCollapsed ? getDisplaySessionTitle(session.title, true) : displayedTitle,
+      !sidebarCollapsed,
+    );
     title.title = displayedTitle;
     const status = document.createElement("span");
     status.className = `status-pill is-${session.status}`;

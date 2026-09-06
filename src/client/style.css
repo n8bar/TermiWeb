@@ -797,6 +797,7 @@ button {
 .session-title {
   font-weight: 650;
   min-width: 0;
+  max-width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -1492,4 +1493,44 @@ button {
   border-color: rgba(255, 123, 114, 0.42);
   color: #fff;
   font-size: calc(1.45rem * var(--ui-font-scale));
+}
+
+/* Overflowing titles scroll back and forth where hover does not exist. */
+.title-scroll {
+  display: inline;
+}
+
+#active-session-title.is-title-overflowing,
+.session-title.is-title-overflowing {
+  text-overflow: clip;
+}
+
+.is-title-overflowing .title-scroll {
+  display: inline-block;
+  white-space: nowrap;
+  animation: title-scroll var(--title-scroll-duration, 6s) ease-in-out infinite alternate;
+}
+
+@keyframes title-scroll {
+  0%,
+  12% {
+    transform: translateX(0);
+  }
+
+  88%,
+  100% {
+    transform: translateX(calc(-1 * var(--title-scroll-distance, 0px)));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #active-session-title.is-title-overflowing,
+  .session-title.is-title-overflowing {
+    text-overflow: ellipsis;
+  }
+
+  .is-title-overflowing .title-scroll {
+    display: inline;
+    animation: none;
+  }
 }

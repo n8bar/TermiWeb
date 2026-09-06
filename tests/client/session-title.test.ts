@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import {
   getDisplaySessionTitle,
   resolveDisplayedSessionTitle,
+  resolveTitleScroll,
 } from "../../src/client/ui/sessionTitle.js";
 
 describe("getDisplaySessionTitle", () => {
@@ -40,5 +41,37 @@ describe("resolveDisplayedSessionTitle", () => {
     expect(resolveDisplayedSessionTitle({ title: "Instance 2", shellTitle: "   " })).toBe(
       "Instance 2",
     );
+  });
+});
+
+describe("resolveTitleScroll", () => {
+  it("scrolls an overflowing title on a coarse-pointer device", () => {
+    expect(
+      resolveTitleScroll({ contentWidth: 520, slotWidth: 200, coarsePointer: true, reducedMotion: false }),
+    ).toEqual({ distancePx: 320, durationMs: 8000 });
+  });
+
+  it("never travels faster than the minimum duration allows", () => {
+    expect(
+      resolveTitleScroll({ contentWidth: 210, slotWidth: 200, coarsePointer: true, reducedMotion: false }),
+    ).toEqual({ distancePx: 10, durationMs: 2500 });
+  });
+
+  it("does not move a title that fits", () => {
+    expect(
+      resolveTitleScroll({ contentWidth: 180, slotWidth: 200, coarsePointer: true, reducedMotion: false }),
+    ).toBeNull();
+    expect(
+      resolveTitleScroll({ contentWidth: 200, slotWidth: 200, coarsePointer: true, reducedMotion: false }),
+    ).toBeNull();
+  });
+
+  it("leaves the ellipsis alone on fine-pointer devices and under reduced motion", () => {
+    expect(
+      resolveTitleScroll({ contentWidth: 520, slotWidth: 200, coarsePointer: false, reducedMotion: false }),
+    ).toBeNull();
+    expect(
+      resolveTitleScroll({ contentWidth: 520, slotWidth: 200, coarsePointer: true, reducedMotion: true }),
+    ).toBeNull();
   });
 });

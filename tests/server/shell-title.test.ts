@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
 
-import { sanitizeShellTitle } from "../../src/server/terminal/shell-title.js";
+import {
+  isDefaultConsoleTitle,
+  sanitizeShellTitle,
+} from "../../src/server/terminal/shell-title.js";
 import { MAX_SESSION_TITLE_LENGTH } from "../../src/shared/protocol.js";
 
 describe("sanitizeShellTitle", () => {
@@ -27,5 +30,26 @@ describe("sanitizeShellTitle", () => {
     expect(clamped.length).toBeLessThanOrEqual(MAX_SESSION_TITLE_LENGTH);
     expect(clamped.length % 2).toBe(0);
     expect([...clamped].every((codePoint) => codePoint === "\u{1F600}")).toBe(true);
+  });
+});
+
+describe("isDefaultConsoleTitle", () => {
+  it("treats the elevated pwsh startup title as the shell naming itself", () => {
+    expect(
+      isDefaultConsoleTitle("Administrator: C:\\Program Files\\PowerShell\\7\\pwsh.exe", "pwsh.exe"),
+    ).toBe(true);
+    expect(isDefaultConsoleTitle("pwsh", "C:\\Program Files\\PowerShell\\7\\pwsh.exe")).toBe(true);
+  });
+
+  it("treats stock Windows console titles as no title", () => {
+    expect(isDefaultConsoleTitle("Administrator: Windows PowerShell", "powershell.exe")).toBe(true);
+    expect(isDefaultConsoleTitle("Command Prompt", "cmd.exe")).toBe(true);
+    expect(isDefaultConsoleTitle("Administrator: ", "pwsh.exe")).toBe(true);
+  });
+
+  it("keeps titles that carry information", () => {
+    expect(isDefaultConsoleTitle("build watcher", "pwsh.exe")).toBe(false);
+    expect(isDefaultConsoleTitle("Administrator: build watcher", "pwsh.exe")).toBe(false);
+    expect(isDefaultConsoleTitle("vim README.md", "C:\\Windows\\system32\\cmd.exe")).toBe(false);
   });
 });

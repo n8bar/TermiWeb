@@ -162,6 +162,24 @@ describe("terminal manager", () => {
     expect(broadcasts).toEqual(["build watcher", null]);
   });
 
+  it("treats the shell's default console title as no title and lets it clear a program title", async () => {
+    const store = new FakeWorkspaceStore(ensureWorkspaceHasTab(createEmptyWorkspaceState()));
+    const manager = new TerminalManager(createConfig(), store as unknown as WorkspaceStore);
+    await manager.initialize();
+    const sessionId = manager.listSessions()[0]!.id;
+    const exeName = manager.getShellLabel().split(/[\\/]/).pop() ?? "pwsh.exe";
+    const defaultTitle = `Administrator: C:\\Program Files\\Shell\\${exeName}`;
+
+    manager.setShellTitle(sessionId, defaultTitle);
+    expect(manager.listSessions()[0]?.shellTitle).toBeNull();
+
+    manager.setShellTitle(sessionId, "build watcher");
+    expect(manager.listSessions()[0]?.shellTitle).toBe("build watcher");
+
+    manager.setShellTitle(sessionId, defaultTitle);
+    expect(manager.listSessions()[0]?.shellTitle).toBeNull();
+  });
+
   it("ignores a shell title from a client that is not attached to that session", async () => {
     const store = new FakeWorkspaceStore(ensureWorkspaceHasTab(createEmptyWorkspaceState()));
     const manager = new TerminalManager(createConfig(), store as unknown as WorkspaceStore);

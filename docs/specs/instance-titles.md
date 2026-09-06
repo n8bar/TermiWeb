@@ -26,6 +26,7 @@ Display precedence:
 
 - When a shell-provided title is present and non-empty, it is the displayed title.
 - When the shell clears the title (empty OSC payload) or no shell title has ever been seen for this instance, the displayed title falls back to the workspace default.
+- A title that only names the shell itself counts as no title: the shell executable's name or path, with or without the `Administrator: ` prefix, or a stock console title such as `Windows PowerShell` or `Command Prompt`. Windows emits the console's default title when the shell starts and again when a program hands the console back, and that value carries nothing the shell label does not already show.
 - The workspace default for an instance never changes after creation. It is not renumbered when other instances are closed.
 
 The shell-provided title is per-instance runtime state. It does not need to persist across server restarts; on reattach, the next program emit will repopulate it. It is also cleared when the instance's process exits, so a title left behind by a finished program does not outlive it. The workspace default is the persistent identifier and stays in the workspace state file.
@@ -43,15 +44,16 @@ The active-instance heading in the top bar (`#active-session-title`) has limited
 
 - The active-instance heading truncates with an ellipsis when the full title does not fit on a single line.
 - The heading element exposes the full untruncated title via a native browser tooltip (`title` attribute) so a hover on desktop reveals the complete value.
-- The sidebar instance list already truncates with an ellipsis; it also gains the same tooltip-on-hover affordance for the full title.
+- The sidebar instance list truncates each entry with an ellipsis and carries the same tooltip-on-hover affordance for the full title.
 - Tooltip content is the full title currently in effect (shell-provided when present, workspace default otherwise). It is not a separate name.
 - When the displayed title fits without truncation, the tooltip is still allowed and harmless; implementations may set it unconditionally.
+- On coarse-pointer devices, where hover does not exist, a title that overflows its slot scrolls back and forth so the full value can be read. A title that fits does not move. This applies to the active-instance heading and to expanded sidebar entries. A reduced-motion preference disables the scroll and leaves the ellipsis.
 - The collapsed-rail short label keeps its existing number-only display when the collapsed display rule applies. The collapsed label always derives from the workspace default, never from the shell-provided title; the tooltip still carries the displayed title. This spec does not change collapsed-rail compaction.
 
 Non-goals for overflow display:
 
-- No custom popover, marquee, or expand-on-click behavior. Native tooltip is sufficient.
-- No mobile-specific tooltip behavior is required; mobile browsers do not surface `title` attributes consistently, and the collapsed-rail number is the primary mobile affordance.
+- No custom popover or expand-on-click behavior.
+- No mobile tooltip. Mobile browsers do not surface `title` attributes consistently; the back-and-forth scroll is the mobile affordance for reading a long title, and the collapsed-rail number remains the primary mobile identifier.
 
 ## Protocol and State Changes
 
@@ -67,9 +69,11 @@ Non-goals for overflow display:
 - A newly created auto-named instance takes the lowest positive integer not currently in use by another auto-named instance, even when prior closures have produced gaps in the existing numbering.
 - The active-instance heading occupies a single line. When the displayed title exceeds the available width, the visible value ends in an ellipsis and the full title is available through a native browser tooltip on that element.
 - The sidebar instance list truncates each entry with an ellipsis when its title overflows the available width, and exposes the full title through a native browser tooltip.
+- On a coarse-pointer device, an overflowing title in the heading or in an expanded sidebar entry scrolls back and forth so the full value becomes readable, and a title that fits does not move.
 - After a server restart, the workspace default for each persisted instance is displayed immediately. Shell-provided titles are not persisted and repopulate the next time a running program in that instance emits an OSC `0` or `2` sequence.
 - Title payloads that exceed the workspace-managed length bound are clamped before being broadcast, and control characters in the payload are stripped, so a malformed sequence cannot break the UI.
 - When the process in an instance exits, the displayed title for that instance returns to its workspace default.
+- A fresh instance displays its workspace default even though the shell emits its default console title at startup, and a program's title returns to the workspace default when the console reverts to that default.
 
 ## Manual Verification
 
@@ -77,7 +81,7 @@ Non-goals for overflow display:
 - Desktop browser: emit an empty title (`printf '\e]0;\a'`) and confirm the heading returns to the workspace default.
 - Desktop browser: open a workspace with at least three auto-named instances, close the middle one, and confirm the remaining instances' workspace defaults are unchanged. Create a new instance and confirm it takes the first unused integer.
 - Desktop browser: emit a long shell title and confirm the topbar heading shows ellipsis truncation and the full value on hover.
-- Mobile browser: emit a long shell title and confirm the topbar heading still ellipsizes without wrapping. Tooltip surfacing is not required on mobile.
+- Mobile browser: emit a long shell title and confirm the topbar heading and the expanded sidebar entry scroll back and forth so the whole title can be read, without wrapping.
 - Multi-client: with two clients attached, emit a title in one client and confirm the change appears in the other.
 - Reconnect: restart the server and confirm workspace defaults remain stable across the restart and shell-provided titles repopulate as programs run.
 
