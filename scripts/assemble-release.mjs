@@ -13,6 +13,9 @@ const artifactRoot = path.join(repoRoot, "artifacts", "release");
 const packageDirName = `TermiWeb-${packageJson.version}-windows-x64`;
 const stageRoot = path.join(artifactRoot, packageDirName);
 const zipPath = path.join(artifactRoot, `${packageDirName}.zip`);
+const installerBaseName = `${packageDirName}-setup`;
+const installerPath = path.join(artifactRoot, `${installerBaseName}.exe`);
+const installerScript = path.join(repoRoot, "installer", "TermiWeb.iss");
 const npmExecutable = process.platform === "win32" ? "npm.cmd" : "npm";
 const powerShellExecutable = process.platform === "win32" ? "powershell.exe" : "pwsh";
 
@@ -47,6 +50,8 @@ const scriptFiles = [
   "scripts/auto-start-common.ps1",
   "scripts/disable-auto-start.ps1",
   "scripts/enable-auto-start.ps1",
+  "scripts/layout-common.ps1",
+  "scripts/set-firewall-rule.ps1",
   "scripts/setup.ps1",
   "scripts/start-hidden.ps1",
   "scripts/stop-hidden.ps1",
@@ -126,6 +131,47 @@ function createZip() {
   ]);
 }
 
+function findInnoSetupCompiler() {
+  const candidates = [
+    process.env.TERMIWEB_ISCC,
+    process.env["ProgramFiles(x86)"] && path.join(process.env["ProgramFiles(x86)"], "Inno Setup 6", "ISCC.exe"),
+    process.env.ProgramFiles && path.join(process.env.ProgramFiles, "Inno Setup 6", "ISCC.exe"),
+    process.env.LOCALAPPDATA && path.join(process.env.LOCALAPPDATA, "Programs", "Inno Setup 6", "ISCC.exe"),
+  ].filter(Boolean);
+
+  const found = candidates.find((candidate) => fs.existsSync(candidate));
+  if (!found) {
+    throw new Error(
+      "Inno Setup 6 was not found. Install it (winget install JRSoftware.InnoSetup) or set TERMIWEB_ISCC to the ISCC.exe path.",
+    );
+  }
+
+  return found;
+}
+
+// The installer is compiled from the same staged layout as the zip so the two
+// artifacts cannot drift apart.
+function buildInstaller() {
+  fs.rmSync(installerPath, { force: true });
+  const compiler = findInnoSetupCompiler();
+  execFileSync(
+    compiler,
+    [
+      "/Qp",
+      `/DAppVersion=${packageJson.version}`,
+      `/DStageDir=${stageRoot}`,
+      `/DOutputDir=${artifactRoot}`,
+      `/DOutputBaseFilename=${installerBaseName}`,
+      installerScript,
+    ],
+    { cwd: repoRoot, stdio: "inherit" },
+  );
+
+  if (!fs.existsSync(installerPath)) {
+    throw new Error(`Inno Setup finished without producing ${installerPath}.`);
+  }
+}
+
 console.log(`Assembling ${packageDirName}...`);
 fs.mkdirSync(artifactRoot, { recursive: true });
 ensureCleanDirectory(stageRoot);
@@ -145,6 +191,8 @@ for (const relativePath of scriptFiles) {
 }
 
 createZip();
+buildInstaller();
 
 console.log(`Release folder: ${stageRoot}`);
+console.log(`Release installer: ${installerPath}`);
 console.log(`Release zip: ${zipPath}`);
