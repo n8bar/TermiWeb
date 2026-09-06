@@ -8,7 +8,7 @@ It was created for power users, especially vibe-coders who want to continue "wor
 
 - Live shared terminals in the browser
 - Cross-device attachment to the same live shell
-- A Windows packaged run surface with setup, start, restart, stop, uninstall, and optional before-sign-in auto-start
+- A Windows installer plus a run surface with start, restart, stop, uninstall, and optional before-sign-in auto-start
 - Mobile-oriented terminal controls plus selection/clipboard support
 - `0.1.1` includes mobile stabilization fixes for collapsed instance controls and keyboard text-assistance interference.
 - `0.1` targets Windows hosts only.
@@ -18,21 +18,33 @@ It was created for power users, especially vibe-coders who want to continue "wor
 
 ## Download
 
-The public download path for the packaged release is:
+The public download path for the Windows installer is:
 
 `https://termiweb.com/download/`
 
-Repo users can also build the packaged release locally with:
+The installer is unsigned, so the first time you run it Windows SmartScreen shows "Windows protected your PC". Choose `More info`, then `Run anyway`. Each GitHub release also carries the portable zip as a secondary download for people who prefer a folder they manage themselves.
+
+Repo users can also build both artifacts locally with:
 
 ```bash
 npm run package:release
 ```
 
-That command produces the Windows release folder and zip under `artifacts/release/`.
+That command produces the Windows installer, the release folder, and the portable zip under `artifacts/release/`. It needs Inno Setup 6, which `winget install JRSoftware.InnoSetup` provides.
 
-## Packaged quick start
+## Installer quick start
 
-Once you have the packaged release:
+1. Run the installer and approve the Windows elevation prompt. If SmartScreen appears, choose `More info`, then `Run anyway`.
+2. Choose the TermiWeb password when the installer asks for it. Every browser that connects enters this password.
+3. Decide whether TermiWeb should start before anyone signs in. That registers a Windows startup task running as `SYSTEM`; no Windows account password is requested.
+4. Let the finish page start TermiWeb and open `http://127.0.0.1:22443`.
+5. From another device on the same LAN, browse to the host's LAN URL. The installer already allowed the port through the Windows firewall on private networks.
+
+The installer places binaries under `%ProgramFiles%\TermiWeb` and keeps config and workspace state under `%ProgramData%\TermiWeb`, where `.env` lives. The Start Menu group offers Open, Start, Restart, Stop, Enable Auto Start, and Disable Auto Start. Uninstall from Apps & Features; the uninstaller asks whether to remove the ProgramData config and state too and keeps them by default.
+
+## Portable zip quick start
+
+The zip keeps its config and state inside its own folder:
 
 1. Unpack it into a user-writable folder.
 2. Open `1.Start-Here.md`. It walks through the rest of the setup path.
@@ -40,10 +52,12 @@ Once you have the packaged release:
 4. Approve the Windows elevation prompt when TermiWeb starts.
 5. Open `http://127.0.0.1:22443` if setup does not open it for you.
 
+Moving from the zip to the installer: copy the zip folder's `.env` and `.termiweb` folder into `%ProgramData%\TermiWeb`, run the zip's `Uninstall TermiWeb.cmd`, then run the installer. It keeps the copied password and workspace state and skips the password page.
+
 ## What `0.1` supports
 
 - Shared terminal instances through the browser UI
-- A Windows packaged run surface with setup, start, restart, stop, uninstall, and optional before-sign-in auto-start
+- A Windows installer plus a run surface with start, restart, stop, uninstall, and optional before-sign-in auto-start
 - Elevated-only shell launch path for `0.1`
 - One configured app password for local and LAN use
 - Authenticated browser sessions that survive normal server restarts until logout or expiry
@@ -79,6 +93,7 @@ TermiWeb stands on strong existing work, especially `xterm.js`, `node-pty`, Type
 - `.env.dev.example` moves the repo checkout to port `32443`, which keeps it off the product default port.
 - Nondefault ports automatically get a matching session-cookie name, so browser login state does not bleed between the two copies.
 - Optional before-sign-in auto-start uses a matching port-derived Task Scheduler name too, so the packaged default and a repo checkout do not fight over one startup-task registration when both keep their supported ports.
+- The install-time firewall rule follows the same port-derived naming, so two copies on different ports get separate rules.
 - Set `TERMIWEB_SESSION_COOKIE_NAME` explicitly only if you need a custom cookie name instead of the port-based default.
 
 ## LAN Access
@@ -107,14 +122,15 @@ TermiWeb stands on strong existing work, especially `xterm.js`, `node-pty`, Type
 - `npm run restart:hidden` restarts that hidden Windows background server and requests elevation when needed.
 - `npm run stop:hidden` stops that hidden Windows background server and requests elevation when needed.
 - `npm run notices:third-party` regenerates `THIRD_PARTY_NOTICES.md` from the installed production dependency graph.
-- `npm run package:release` assembles the Windows release folder and zip under `artifacts/release/`.
+- `npm run package:release` assembles the Windows installer, the release folder, and the portable zip under `artifacts/release/`. It needs Inno Setup 6.
 - `npm run typecheck` runs both client and server TypeScript checks.
 - `npm test` runs the local test suite.
 - `npm run lint` runs the repo lint rules.
 - `Set Up TermiWeb.cmd` is the lightweight packaged setup flow: it creates `.env` if needed, prompts for the app password when still unset, offers before-sign-in auto-start, and can start the app for you.
 - `Enable TermiWeb Auto Start.cmd` and `Disable TermiWeb Auto Start.cmd` manage the optional before-sign-in startup task for this copy of TermiWeb.
 - `Start TermiWeb.cmd`, `Restart TermiWeb.cmd`, and `Stop TermiWeb.cmd` are the Windows launchers intended for the packaged run surface and also work from a built repo checkout. They request elevation because `0.1` runs elevated shells only.
-- `Uninstall TermiWeb.cmd` is the packaged uninstall entry point and intentionally refuses to run from a source checkout.
+- `Uninstall TermiWeb.cmd` is the portable-zip uninstall entry point and intentionally refuses to run from a source checkout. Installer users uninstall from Apps & Features instead.
+- `scripts/set-firewall-rule.ps1` adds the private-network firewall rule for this copy's port, or removes it with `-Remove`. The installer runs it; zip users can run it to skip the first-launch firewall prompt.
 
 ## Additional Info
 

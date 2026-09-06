@@ -105,7 +105,7 @@
               <p>No desktop remoting.</p>
             </div>
             <div class="hero-actions">
-              <a class="button button-primary" href="#download">Download the Windows package</a>
+              <a class="button button-primary" href="#download">Download the Windows installer</a>
               <a
                 class="button button-secondary"
                 href="https://github.com/n8bar/TermiWeb"
@@ -160,10 +160,11 @@
               </p>
             </article>
             <article class="feature-card">
-              <h3>Packaged Windows run surface</h3>
+              <h3>Windows installer and run surface</h3>
               <p>
-                Setup, start, restart, stop, uninstall, and optional before-sign-in
-                auto-start are part of the packaged run surface.
+                The installer sets your password, allows the port through the firewall,
+                and offers before-sign-in auto-start. Start, restart, stop, and uninstall
+                live in the Start Menu and Apps &amp; Features.
               </p>
             </article>
             <article class="feature-card">
@@ -225,33 +226,47 @@
         <section id="download" class="section">
           <div class="section-heading">
             <p class="eyebrow">Download</p>
-            <h2>Ships as one Windows x64 package.</h2>
+            <h2>Ships as a Windows x64 installer.</h2>
           </div>
           <div class="download-card">
             <div>
               <p class="download-label">Release artifact</p>
-              <h3>TermiWeb-0.1.1-windows-x64.zip</h3>
+              <h3>TermiWeb-0.1.2-windows-x64-setup.exe</h3>
               <p class="download-note">
                 The public download path is locked to this exact artifact name and
-                routes through the current release package.
+                routes through the current release. A portable zip,
+                <code>TermiWeb-0.1.2-windows-x64.zip</code>, stays on the
+                <a href="https://github.com/n8bar/TermiWeb/releases/tag/v0.1.2">GitHub release</a>
+                as a secondary download.
               </p>
             </div>
-            <a class="button button-primary" href="./download/">Download TermiWeb 0.1.1</a>
+            <a class="button button-primary" href="./download/">Download TermiWeb 0.1.2</a>
+          </div>
+          <div class="download-card">
+            <div>
+              <p class="download-label">SmartScreen</p>
+              <h3>“Windows protected your PC” is expected.</h3>
+              <p class="download-note">
+                The installer is not code-signed yet, so Windows SmartScreen blocks its
+                first launch. Choose <strong>More info</strong>, then
+                <strong>Run anyway</strong>. The Windows elevation prompt follows, because
+                TermiWeb installs to Program Files and runs elevated shells.
+              </p>
+            </div>
           </div>
         </section>
 
         <section id="first-run" class="section">
           <div class="section-heading">
             <p class="eyebrow">First Run</p>
-            <h2>Start from the package root and let the setup path do the heavy lifting.</h2>
+            <h2>Run the installer and let it do the heavy lifting.</h2>
           </div>
           <ol class="steps-list">
-            <li>Unpack the release into a user-writable folder.</li>
-            <li>Open <code>1.Start-Here.md</code> and read <code>DISCLAIMER.md</code>.</li>
-            <li>Run <code>Set Up TermiWeb.cmd</code> for the guided first-run path.</li>
-            <li>Approve the Windows elevation prompt when TermiWeb starts.</li>
-            <li>Open <code>http://127.0.0.1:22443</code> if setup does not open it for you.</li>
-            <li>From another device on the same LAN, browse to the host device’s LAN URL to attach to the same live shell.</li>
+            <li>Run the installer. If SmartScreen appears, choose <strong>More info</strong>, then <strong>Run anyway</strong>, and approve the Windows elevation prompt.</li>
+            <li>Read the disclaimer page, then choose the TermiWeb password. Every browser that connects enters it.</li>
+            <li>Decide whether TermiWeb starts before sign-in. That startup task runs as <code>SYSTEM</code>; no Windows account password is requested.</li>
+            <li>Let the finish page start TermiWeb and open <code>http://127.0.0.1:22443</code>.</li>
+            <li>From another device on the same LAN, browse to the host device’s LAN URL to attach to the same live shell. The installer already allowed the port through the firewall on private networks.</li>
           </ol>
         </section>
 
