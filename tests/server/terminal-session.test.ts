@@ -18,6 +18,11 @@ vi.mock("node-pty", () => ({
 
 import { afterEach } from "vitest";
 
+import os from "node:os";
+import path from "node:path";
+
+import { spawn } from "node-pty";
+
 import { TerminalSession } from "../../src/server/terminal/terminal-session.js";
 
 describe("terminal session row handling", () => {
@@ -213,5 +218,44 @@ describe("terminal session bell", () => {
     session.clearAttention();
     expect(session.getSummary().attentionPending).toBe(false);
     expect(attention).toEqual([false]);
+  });
+});
+describe("terminal session start directory", () => {
+  function lastSpawnCwd(): string | undefined {
+    const call = vi.mocked(spawn).mock.calls.at(-1) as unknown[] | undefined;
+    return (call?.[2] as { cwd?: string } | undefined)?.cwd;
+  }
+
+  it("spawns in the configured directory when it exists", async () => {
+    const session = new TerminalSession({
+      id: "session-cwd-1",
+      title: "Instance 1",
+      shell: "pwsh",
+      historyLimit: 10_000,
+      fixedCols: 80,
+      fixedRows: 30,
+      startDirectory: os.tmpdir(),
+    });
+
+    await session.ensureStarted({ cols: 80, rows: 30 });
+
+    expect(lastSpawnCwd()).toBe(os.tmpdir());
+  });
+
+  it("falls back to the running account's home when the configured directory is missing", async () => {
+    const missing = path.join(os.tmpdir(), `termiweb-missing-${process.pid}-${Date.now()}`);
+    const session = new TerminalSession({
+      id: "session-cwd-2",
+      title: "Instance 2",
+      shell: "pwsh",
+      historyLimit: 10_000,
+      fixedCols: 80,
+      fixedRows: 30,
+      startDirectory: missing,
+    });
+
+    await session.ensureStarted({ cols: 80, rows: 30 });
+
+    expect(lastSpawnCwd()).toBe(process.env.USERPROFILE ?? process.env.HOME ?? os.homedir());
   });
 });

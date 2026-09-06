@@ -5,6 +5,7 @@ import type { TermiWebConfig } from "../config.js";
 import type { WorkspaceStore } from "../workspace/workspace-store.js";
 import { resolveShellCommand } from "./shell.js";
 import { isDefaultConsoleTitle, sanitizeShellTitle } from "./shell-title.js";
+import { isExistingDirectory } from "./start-directory.js";
 import { TerminalSession } from "./terminal-session.js";
 
 interface SessionSize {
@@ -30,6 +31,11 @@ export class TerminalManager extends EventEmitter<ManagerEvents> {
     this.#workspaceStore = workspaceStore;
     this.#config = config;
     this.#shell = resolveShellCommand(config.defaultShell);
+    if (config.startDirectory && !isExistingDirectory(config.startDirectory)) {
+      console.warn(
+        `[TermiWeb] Start directory ${config.startDirectory} does not exist; new shells will start in the running account's home directory.`,
+      );
+    }
   }
 
   async initialize(): Promise<void> {
@@ -222,6 +228,7 @@ export class TerminalManager extends EventEmitter<ManagerEvents> {
       historyLimit: this.#config.historyLimit,
       fixedCols,
       fixedRows,
+      startDirectory: this.#config.startDirectory,
     });
 
     session.on("summary", () => {

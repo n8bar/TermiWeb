@@ -1,10 +1,10 @@
-import os from "node:os";
 import { EventEmitter } from "node:events";
 
 import { spawn, type IPty } from "node-pty";
 
 import type { SessionSnapshot, SessionSummary, TerminalStatus } from "../../shared/protocol.js";
 import { BellDetector } from "./bell-detector.js";
+import { resolveHomeDirectory, resolveStartDirectory } from "./start-directory.js";
 
 const BELL_COALESCE_MS = 1000;
 
@@ -15,6 +15,7 @@ interface TerminalSessionOptions {
   historyLimit: number;
   fixedCols: number;
   fixedRows: number;
+  startDirectory?: string | undefined;
 }
 
 interface TerminalSessionEvents {
@@ -32,14 +33,11 @@ function defaultArgs(shell: string): string[] {
   return [];
 }
 
-function defaultWorkingDirectory(): string {
-  return process.env.USERPROFILE ?? process.env.HOME ?? os.homedir() ?? process.cwd();
-}
-
 export class TerminalSession extends EventEmitter<TerminalSessionEvents> {
   readonly #id: string;
   readonly #shell: string;
   readonly #historyLimit: number;
+  readonly #startDirectory: string | undefined;
   readonly #clientIds = new Set<string>();
   #title: string;
   #shellTitle: string | null = null;
@@ -59,6 +57,7 @@ export class TerminalSession extends EventEmitter<TerminalSessionEvents> {
     this.#title = options.title;
     this.#shell = options.shell;
     this.#historyLimit = options.historyLimit;
+    this.#startDirectory = options.startDirectory;
     this.#cols = options.fixedCols;
     this.#rows = options.fixedRows;
   }
@@ -107,7 +106,10 @@ export class TerminalSession extends EventEmitter<TerminalSessionEvents> {
         name: "xterm-color",
         cols: this.#cols,
         rows: this.#rows,
-        cwd: defaultWorkingDirectory(),
+        cwd: resolveStartDirectory({
+          configured: this.#startDirectory,
+          fallback: resolveHomeDirectory(),
+        }),
         env: process.env as Record<string, string>,
         useConpty: true,
       });

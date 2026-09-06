@@ -39,7 +39,7 @@ Each design element below exists to kill a known failure mode of the current zip
 ## Installer Flow
 
 - The installer elevates once through the normal UAC consent flow and requires administrative install. There is no per-user, non-elevated install mode; the product itself requires elevation to run.
-- On a fresh install, a required page collects the TermiWeb app password (non-empty) and the installer writes the ProgramData `.env` from the packaged template with that password set. The port stays at its default; changing it remains a config-file edit, and updating the firewall rule and task name after a port change stays a documented manual step. Automation for both rides along with a future port-change UI.
+- On a fresh install, a required page collects the TermiWeb app password (non-empty) and the installer writes the ProgramData `.env` from the packaged template with that password set and with the installing user's profile directory as the shell start directory, so shells on an auto-started `SYSTEM` server open there instead of the `SYSTEM` profile. The port stays at its default; changing it remains a config-file edit, and updating the firewall rule and task name after a port change stays a documented manual step. Automation for both rides along with a future port-change UI.
 - An optional checkbox (default off, matching the current setup script's opt-in posture) enables before-sign-in auto-start. Enabling it never asks for a Windows account password.
 - The installer creates an inbound firewall rule for the configured port on the private profile, named so upgrade and uninstall can find it.
 - The finish page offers to start TermiWeb and open the local URL.
@@ -70,6 +70,7 @@ Each design element below exists to kill a known failure mode of the current zip
 - The auto-start task is registered as `SYSTEM` with no stored credentials, on both the installer path and the portable-zip path.
 - After install, a device on the same LAN reaches the app without any firewall prompt having appeared on first launch.
 - The app password collected during install is in effect on first launch; the default path requires no manual config editing.
+- On an auto-started install, a new instance opens in the installing user's profile directory.
 - An upgrade install preserves the app password, port, and workspace state, and replaces any pre-existing password-based auto-start task with the `SYSTEM` task.
 - After uninstall, no TermiWeb scheduled task, firewall rule, or Program Files directory remains; ProgramData contents follow the uninstall-time choice.
 - The portable zip still works from any folder with folder-relative config and state, and its auto-start path never asks for a Windows account password.

@@ -1,3 +1,5 @@
+import path from "node:path";
+
 import { describe, expect, it } from "vitest";
 
 import { resolveConfig } from "../../src/server/config.js";
@@ -30,6 +32,24 @@ describe("resolveConfig", () => {
     });
 
     expect(config.host).toBe("192.168.68.68");
+  });
+
+  it("resolves the start directory to an absolute path", () => {
+    const config = resolveConfig({
+      TERMIWEB_PASSWORD: "let-me-in",
+      TERMIWEB_START_DIRECTORY: " C:\\Users\\someone ",
+    });
+
+    expect(config.startDirectory).toBe(path.resolve("C:\\Users\\someone"));
+  });
+
+  it("leaves the start directory unset when blank", () => {
+    const config = resolveConfig({
+      TERMIWEB_PASSWORD: "let-me-in",
+      TERMIWEB_START_DIRECTORY: "  ",
+    });
+
+    expect(config.startDirectory).toBeUndefined();
   });
 
   it("defaults to a fixed 80-column terminal width", () => {

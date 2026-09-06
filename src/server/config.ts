@@ -27,6 +27,7 @@ const envSchema = z.object({
     .optional()
     .transform((value) => (value === undefined ? true : value === "true")),
   TERMIWEB_DEFAULT_SHELL: optionalTrimmedString,
+  TERMIWEB_START_DIRECTORY: optionalTrimmedString,
   TERMIWEB_FIXED_COLS: z.coerce.number().int().min(20).max(240).default(80),
   TERMIWEB_MAX_SESSIONS: z.coerce.number().int().min(1).max(32).default(8),
   TERMIWEB_SESSION_TTL_HOURS: z.coerce
@@ -51,6 +52,7 @@ export interface TermiWebConfig {
   password: string;
   allowLan: boolean;
   defaultShell?: string | undefined;
+  startDirectory?: string | undefined;
   fixedCols: number;
   maxSessions: number;
   sessionTtlHours: number;
@@ -76,6 +78,10 @@ export function resolveConfig(
     password: parsed.TERMIWEB_PASSWORD,
     allowLan: parsed.TERMIWEB_ALLOW_LAN,
     defaultShell: parsed.TERMIWEB_DEFAULT_SHELL,
+    startDirectory:
+      parsed.TERMIWEB_START_DIRECTORY === undefined
+        ? undefined
+        : path.resolve(parsed.TERMIWEB_START_DIRECTORY),
     fixedCols: parsed.TERMIWEB_FIXED_COLS,
     maxSessions: parsed.TERMIWEB_MAX_SESSIONS,
     sessionTtlHours: parsed.TERMIWEB_SESSION_TTL_HOURS,
