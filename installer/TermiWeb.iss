@@ -203,15 +203,27 @@ begin
   end;
 end;
 
+{ Runs an operational script and copies its output into the setup log, so a
+  failed post-install step can be diagnosed from the log alone. }
 function RunScript(const ScriptName, Arguments: String; var ResultCode: Integer): Boolean;
+var
+  OutputPath: String;
+  Lines: TArrayOfString;
+  I: Integer;
 begin
-  Result := Exec(ExpandConstant('{#PowerShellExe}'),
-    '-NoLogo -NoProfile -ExecutionPolicy Bypass -File "' + ExpandConstant('{app}\scripts\') + ScriptName + '" ' + Arguments,
+  OutputPath := ExpandConstant('{tmp}\') + ScriptName + '.log';
+  Result := Exec(ExpandConstant('{cmd}'),
+    '/c ""' + ExpandConstant('{#PowerShellExe}') + '" -NoLogo -NoProfile -ExecutionPolicy Bypass -File "' +
+    ExpandConstant('{app}\scripts\') + ScriptName + '" ' + Arguments + ' > "' + OutputPath + '" 2>&1"',
     ExpandConstant('{app}'), SW_HIDE, ewWaitUntilTerminated, ResultCode);
   if Result then
     Log(Format('%s %s exited with code %d', [ScriptName, Arguments, ResultCode]))
   else
     Log(Format('%s %s could not be started (error %d)', [ScriptName, Arguments, ResultCode]));
+  if LoadStringsFromFile(OutputPath, Lines) then
+    for I := 0 to GetArrayLength(Lines) - 1 do
+      if Trim(Lines[I]) <> '' then
+        Log('  ' + ScriptName + ': ' + Lines[I]);
 end;
 
 { An upgrade replaces node.exe and the server files, so a running server from
@@ -313,6 +325,7 @@ begin
   begin
     WriteLayoutFile;
     WriteEnv;
+    Log(Format('Auto-start: parameter=%d checkbox=%d', [Integer(AutoStartParameter), Integer(AutoStartPage.Values[0])]));
     RunScript('set-firewall-rule.ps1', '', ResultCode);
     if AutoStartPage.Values[0] then
       RunScript('enable-auto-start.ps1', '', ResultCode)
