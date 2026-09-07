@@ -393,6 +393,16 @@ function positionSessionWidthPopover(): void {
   sessionWidthPopover.style.top = `${Math.round(top)}px`;
 }
 
+/**
+ * Moves an open width popover to a rebuilt anchor button without touching focus
+ * or the value the user may be typing.
+ */
+function reanchorSessionWidthPopover(anchorButton: HTMLButtonElement): void {
+  sessionWidthAnchorButton = anchorButton;
+  anchorButton.setAttribute("aria-expanded", "true");
+  positionSessionWidthPopover();
+}
+
 function setSessionWidthPopoverOpen(
   isOpen: boolean,
   anchorButton: HTMLButtonElement | null = sessionWidthAnchorButton,
@@ -1867,13 +1877,17 @@ function getOpenCollapsedSessionCloseButton(): HTMLButtonElement | null {
 }
 
 function renderSessions(): void {
-  if (!sessionWidthPopover.classList.contains("is-hidden")) {
-    setSessionWidthPopoverOpen(false);
-  }
+  // A rail refresh is not a user action, so it must not disturb device-local UI:
+  // an open width popover survives and is re-anchored to the rebuilt button (#12).
+  const widthPopoverWasOpen = !sessionWidthPopover.classList.contains("is-hidden");
+  let rebuiltWidthAnchor: HTMLButtonElement | null = null;
 
   sessionList.innerHTML = "";
 
   if (sessions.length === 0) {
+    if (widthPopoverWasOpen) {
+      setSessionWidthPopoverOpen(false);
+    }
     const empty = document.createElement("p");
     empty.className = "session-meta";
     empty.textContent = "No instances yet.";
@@ -1973,6 +1987,9 @@ function renderSessions(): void {
         sessionWidthAnchorButton !== widthButton;
       setSessionWidthPopoverOpen(shouldOpen, widthButton);
     });
+    if (showWidthButton) {
+      rebuiltWidthAnchor = widthButton;
+    }
 
     card.append(head, meta);
     if (session.attentionPending) {
@@ -2021,6 +2038,14 @@ function renderSessions(): void {
     sessionList.append(row);
   }
 
+  if (widthPopoverWasOpen) {
+    if (rebuiltWidthAnchor) {
+      reanchorSessionWidthPopover(rebuiltWidthAnchor);
+    } else {
+      setSessionWidthPopoverOpen(false);
+    }
+  }
+
   updateActiveSessionMeta();
 }
 
@@ -2032,6 +2057,7 @@ function attachToSession(sessionId: string): void {
 
   setFollowCursor(true);
   activeSessionId = sessionId;
+  lastReportedShellTitle = null;
   collapsedSessionControlsOpenId = null;
   setSessionWidthPopoverOpen(false);
   setSelectionMode(false);
@@ -2488,16 +2514,48 @@ terminal.onData((data) => {
   sendTerminalInputData(data);
 });
 
+// Agents rotate a spinner glyph in their title many times a second. Reports are
+// coalesced so the server, and every browser's rail, see at most a few a second,
+// and a title from one instance is never attributed to the next one attached.
+const SHELL_TITLE_REPORT_INTERVAL_MS = 250;
+let lastReportedShellTitle: string | null = null;
+let pendingShellTitle: string | null = null;
+let pendingShellTitleSessionId: string | null = null;
+let shellTitleReportTimer: number | undefined;
+
+function reportShellTitle(title: string): void {
+  pendingShellTitle = title;
+  pendingShellTitleSessionId = activeSessionId;
+  if (typeof shellTitleReportTimer === "number") {
+    return;
+  }
+
+  shellTitleReportTimer = window.setTimeout(() => {
+    shellTitleReportTimer = undefined;
+    if (
+      pendingShellTitle === null ||
+      pendingShellTitleSessionId === null ||
+      pendingShellTitleSessionId !== activeSessionId ||
+      pendingShellTitle === lastReportedShellTitle
+    ) {
+      return;
+    }
+
+    lastReportedShellTitle = pendingShellTitle;
+    sendEvent({
+      type: "terminal/title",
+      sessionId: pendingShellTitleSessionId,
+      title: pendingShellTitle,
+    });
+  }, SHELL_TITLE_REPORT_INTERVAL_MS);
+}
+
 terminal.onTitleChange((title) => {
   if (!activeSessionId || !features.shellTitles) {
     return;
   }
 
-  sendEvent({
-    type: "terminal/title",
-    sessionId: activeSessionId,
-    title,
-  });
+  reportShellTitle(title);
 });
 
 terminal.onWriteParsed(() => {

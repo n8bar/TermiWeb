@@ -71,5 +71,6 @@ After-restart page recovery behavior is detailed in [the 0.1 browser-terminal sp
 - Mobile users must have access to terminal-essential keys even when the OS keyboard is limited.
 - Workstation and mobile browsers should use the same core layout rather than switching into a separate mobile-specific arrangement.
 - The host machine identity and current product version should remain visible before and after login on every device.
+- Nothing a shell prints may disturb device-local UI outside the terminal itself. Output, title changes, and bells never close an open popover, exit a mode, reset selection, or change sidebar state; only the user's own actions do.
 
 Detailed mobile keyboard tray, viewport, instance rail, control surfaces, and text-assistance behavior live in [the 0.1 browser-terminal spec](specs/v0.1-browser-terminal.md) and [the 0.1.1 mobile stabilization spec](specs/v0.1.1-mobile-stabilization.md).
