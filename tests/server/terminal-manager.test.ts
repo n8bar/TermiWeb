@@ -67,6 +67,8 @@ function createConfig(): TermiWebConfig {
     sessionTtlHours: 24,
     dataDir: "C:\\Projects\\TermiWeb\\.termiweb-test",
     historyLimit: 200_000,
+    bell: true,
+    shellTitles: true,
   };
 }
 

@@ -14,6 +14,28 @@ describe("resolveConfig", () => {
     expect(config.host).toBe("0.0.0.0");
   });
 
+  it("keeps the bell and shell titles on unless a switch is explicitly false", () => {
+    const defaults = resolveConfig({ TERMIWEB_PASSWORD: "let-me-in" });
+    expect(defaults.bell).toBe(true);
+    expect(defaults.shellTitles).toBe(true);
+
+    const blank = resolveConfig({
+      TERMIWEB_PASSWORD: "let-me-in",
+      TERMIWEB_BELL: "",
+      TERMIWEB_SHELL_TITLES: " ",
+    });
+    expect(blank.bell).toBe(true);
+    expect(blank.shellTitles).toBe(true);
+
+    const off = resolveConfig({
+      TERMIWEB_PASSWORD: "let-me-in",
+      TERMIWEB_BELL: "false",
+      TERMIWEB_SHELL_TITLES: "FALSE",
+    });
+    expect(off.bell).toBe(false);
+    expect(off.shellTitles).toBe(false);
+  });
+
   it("uses the LAN host when allow-lan is enabled and host is blank", () => {
     const config = resolveConfig({
       TERMIWEB_HOST: "",

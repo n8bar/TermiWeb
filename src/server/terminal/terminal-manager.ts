@@ -168,6 +168,10 @@ export class TerminalManager extends EventEmitter<ManagerEvents> {
   }
 
   setShellTitle(sessionId: string, title: string, clientId?: string): void {
+    if (!this.#config.shellTitles) {
+      return;
+    }
+
     if (clientId && this.#clientSessions.get(clientId) !== sessionId) {
       return;
     }
@@ -229,6 +233,7 @@ export class TerminalManager extends EventEmitter<ManagerEvents> {
       fixedCols,
       fixedRows,
       startDirectory: this.#config.startDirectory,
+      bellEnabled: this.#config.bell,
     });
 
     session.on("summary", () => {

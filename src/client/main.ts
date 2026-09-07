@@ -235,6 +235,20 @@ const topbarStorageKey = "termiweb.topbar-collapsed";
 const bellSoundStorageKey = "termiweb.bell-sound";
 const BELL_FLASH_MS = 900;
 let bellSoundEnabled = false;
+// Server-side feature switches (`TERMIWEB_BELL`, `TERMIWEB_SHELL_TITLES`); on until told otherwise.
+interface ClientFeatures {
+  bell: boolean;
+  shellTitles: boolean;
+}
+let features: ClientFeatures = { bell: true, shellTitles: true };
+
+function setFeatures(next?: Partial<ClientFeatures>): void {
+  features = {
+    bell: next?.bell ?? true,
+    shellTitles: next?.shellTitles ?? true,
+  };
+  bellSoundButton.hidden = !features.bell;
+}
 let bellAudioContext: AudioContext | null = null;
 let baseDocumentTitle = "TermiWeb";
 const bellFlashStartedAt = new Map<string, number>();
@@ -2106,7 +2120,9 @@ function handleServerEvent(event: ServerEvent): void {
       }
       return;
     case "session/bell":
-      handleSessionBell(event.sessionId);
+      if (features.bell) {
+        handleSessionBell(event.sessionId);
+      }
       return;
   }
 }
@@ -2172,9 +2188,11 @@ async function refreshAuthState(): Promise<void> {
     authenticated: boolean;
     hostname?: string;
     fixedCols?: number;
+    features?: Partial<ClientFeatures>;
   };
   setHostIdentity(body.hostname);
   setFixedSize(body.fixedCols);
+  setFeatures(body.features);
   setView(body.authenticated);
   if (body.authenticated) {
     recoveryReloadRequested = false;
@@ -2207,6 +2225,7 @@ loginForm.addEventListener("submit", async (event) => {
     error?: string;
     hostname?: string;
     fixedCols?: number;
+    features?: Partial<ClientFeatures>;
   };
   if (!response.ok) {
     setFormMessage(body.error ?? "Unable to authenticate.", true);
@@ -2215,6 +2234,7 @@ loginForm.addEventListener("submit", async (event) => {
 
   setHostIdentity(body.hostname);
   setFixedSize(body.fixedCols);
+  setFeatures(body.features);
   passwordInput.value = "";
   setView(true);
   connectSocket();
@@ -2469,7 +2489,7 @@ terminal.onData((data) => {
 });
 
 terminal.onTitleChange((title) => {
-  if (!activeSessionId) {
+  if (!activeSessionId || !features.shellTitles) {
     return;
   }
 

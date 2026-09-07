@@ -35,6 +35,8 @@ const config: TermiWebConfig = {
   sessionTtlHours: 168,
   dataDir: ".termiweb",
   historyLimit: 200_000,
+  bell: true,
+  shellTitles: true,
 };
 
 const tempDirs: string[] = [];

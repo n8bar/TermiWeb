@@ -14,6 +14,7 @@ import type { TermiWebConfig } from "../config.js";
 import type { SessionStore } from "../auth/session-store.js";
 import { verifySharedPassword } from "../auth/password.js";
 import { clearSessionCookie, createSessionCookie, readSessionCookie } from "./cookies.js";
+import { resolveClientDir } from "./client-dir.js";
 import type { TerminalManager } from "../terminal/terminal-manager.js";
 import { appendClientEventLog } from "../logging/client-event-log.js";
 
@@ -85,6 +86,10 @@ export async function createHttpApp(options: CreateHttpAppOptions) {
       authenticated: authenticateRequest(request),
       hostname,
       fixedCols: options.config.fixedCols,
+      features: {
+        bell: options.config.bell,
+        shellTitles: options.config.shellTitles,
+      },
     });
   });
 
@@ -113,6 +118,10 @@ export async function createHttpApp(options: CreateHttpAppOptions) {
       authenticated: true,
       hostname,
       fixedCols: options.config.fixedCols,
+      features: {
+        bell: options.config.bell,
+        shellTitles: options.config.shellTitles,
+      },
     });
   });
 
@@ -184,7 +193,7 @@ export async function createHttpApp(options: CreateHttpAppOptions) {
       }
     });
   } else {
-    const clientDir = path.resolve("dist/client");
+    const clientDir = resolveClientDir(import.meta.url);
     app.use(express.static(clientDir));
     app.get(/^(?!\/api\/).*/, (_request, response) => {
       response.sendFile(path.join(clientDir, "index.html"));

@@ -22,6 +22,8 @@ function createConfig(dataDir: string): TermiWebConfig {
     sessionTtlHours: 24,
     dataDir,
     historyLimit: 200_000,
+    bell: true,
+    shellTitles: true,
   };
 }
 

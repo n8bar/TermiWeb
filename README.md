@@ -144,3 +144,5 @@ TermiWeb stands on strong existing work, especially `xterm.js`, `node-pty`, Type
 `v0.1` prefers PowerShell 7 from `PATH`, then falls back to the standard install path at `C:\Program Files\PowerShell\7\pwsh.exe`, and only then falls back to Windows PowerShell.
 
 New instances open in the running account's home directory. Set `TERMIWEB_START_DIRECTORY` in `.env` to start them somewhere else, for example your own profile folder when TermiWeb auto-starts as `SYSTEM`. A path that does not exist is ignored.
+
+Two features can be switched off in `.env` for troubleshooting: `TERMIWEB_BELL=false` stops bell detection, bell alerts, and attention badges; `TERMIWEB_SHELL_TITLES=false` stops shell-provided titles from replacing the default instance names. Restart the server after changing either.

@@ -16,6 +16,8 @@ interface TerminalSessionOptions {
   fixedCols: number;
   fixedRows: number;
   startDirectory?: string | undefined;
+  /** When false, output is not scanned for bells and no attention state is kept. */
+  bellEnabled?: boolean;
 }
 
 interface TerminalSessionEvents {
@@ -38,6 +40,7 @@ export class TerminalSession extends EventEmitter<TerminalSessionEvents> {
   readonly #shell: string;
   readonly #historyLimit: number;
   readonly #startDirectory: string | undefined;
+  readonly #bellEnabled: boolean;
   readonly #clientIds = new Set<string>();
   #title: string;
   #shellTitle: string | null = null;
@@ -58,6 +61,7 @@ export class TerminalSession extends EventEmitter<TerminalSessionEvents> {
     this.#shell = options.shell;
     this.#historyLimit = options.historyLimit;
     this.#startDirectory = options.startDirectory;
+    this.#bellEnabled = options.bellEnabled ?? true;
     this.#cols = options.fixedCols;
     this.#rows = options.fixedRows;
   }
@@ -118,7 +122,7 @@ export class TerminalSession extends EventEmitter<TerminalSessionEvents> {
       this.#pty.onData((data) => {
         this.#appendHistory(data);
         this.emit("output", data);
-        if (this.#bellDetector.feed(data) > 0) {
+        if (this.#bellEnabled && this.#bellDetector.feed(data) > 0) {
           this.#ring();
         }
       });

@@ -17,6 +17,12 @@ const optionalCookieName = z.string().optional().transform((value) => {
 
 const DEFAULT_SESSION_COOKIE_NAME = "termiweb_session";
 
+// Feature switches default on; only an explicit `false` turns one off.
+const featureSwitch = z
+  .string()
+  .optional()
+  .transform((value) => value === undefined || value.trim().toLowerCase() !== "false");
+
 const envSchema = z.object({
   TERMIWEB_HOST: optionalTrimmedString,
   TERMIWEB_PORT: z.coerce.number().int().min(1).max(65535).default(22443),
@@ -28,6 +34,8 @@ const envSchema = z.object({
     .transform((value) => (value === undefined ? true : value === "true")),
   TERMIWEB_DEFAULT_SHELL: optionalTrimmedString,
   TERMIWEB_START_DIRECTORY: optionalTrimmedString,
+  TERMIWEB_BELL: featureSwitch,
+  TERMIWEB_SHELL_TITLES: featureSwitch,
   TERMIWEB_FIXED_COLS: z.coerce.number().int().min(20).max(240).default(80),
   TERMIWEB_MAX_SESSIONS: z.coerce.number().int().min(1).max(32).default(8),
   TERMIWEB_SESSION_TTL_HOURS: z.coerce
@@ -58,6 +66,10 @@ export interface TermiWebConfig {
   sessionTtlHours: number;
   dataDir: string;
   historyLimit: number;
+  /** Terminal bell detection, attention badges, and bell events. */
+  bell: boolean;
+  /** Shell-provided titles (OSC 0/2) shown in the rail instead of the default names. */
+  shellTitles: boolean;
 }
 
 export function resolveConfig(
@@ -87,5 +99,7 @@ export function resolveConfig(
     sessionTtlHours: parsed.TERMIWEB_SESSION_TTL_HOURS,
     dataDir: path.resolve(parsed.TERMIWEB_DATA_DIR),
     historyLimit: parsed.TERMIWEB_HISTORY_LIMIT,
+    bell: parsed.TERMIWEB_BELL,
+    shellTitles: parsed.TERMIWEB_SHELL_TITLES,
   };
 }
