@@ -54,7 +54,7 @@ if (-not (Test-IsAdministrator)) {
     "-ExecutionPolicy",
     "Bypass",
     "-File",
-    $scriptPath
+    "`"$scriptPath`""
   )
   if ($Restart) {
     $argumentList += "-Restart"
@@ -150,8 +150,10 @@ function Stop-RunningServer {
     return
   }
 
+  # A pid file can outlive its server (after a reboot, for example) and the id
+  # can belong to an unrelated process by now, so only a Node process is stopped.
   $existing = Get-Process -Id ([int]$pidValue) -ErrorAction SilentlyContinue
-  if ($existing) {
+  if ($existing -and $existing.ProcessName -eq "node") {
     Stop-Process -Id $existing.Id -Force
     Start-Sleep -Milliseconds 500
   }
@@ -172,7 +174,7 @@ if (Test-Path -LiteralPath $pidFile) {
       $existing = Get-Process -Id ([int]$pidValue) -ErrorAction SilentlyContinue
     }
 
-    if ($existing) {
+    if ($existing -and $existing.ProcessName -eq "node") {
       throw "TermiWeb is already running with PID $($existing.Id). Use -Restart or run npm run restart:hidden."
     }
 
@@ -194,9 +196,10 @@ if (-not (Test-Path -LiteralPath $serverEntry)) {
   throw "Missing built server entrypoint at $serverEntry. Run npm run build first."
 }
 
+# Quoted because an installed copy lives under Program Files, whose path has a space.
 $process = Start-Process `
   -FilePath $nodeExecutable `
-  -ArgumentList $serverEntry `
+  -ArgumentList "`"$serverEntry`"" `
   -WorkingDirectory $configRoot `
   -RedirectStandardOutput $stdoutLog `
   -RedirectStandardError $stderrLog `

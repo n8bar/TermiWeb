@@ -45,7 +45,7 @@ if (-not (Test-IsAdministrator)) {
         "-ExecutionPolicy",
         "Bypass",
         "-File",
-        $scriptPath
+        "`"$scriptPath`""
       ) `
       -WorkingDirectory $repoRoot `
       -Verb RunAs `
@@ -113,10 +113,14 @@ if (-not $pidValue) {
   exit 0
 }
 
+# A pid file can outlive its server (after a reboot, for example) and the id
+# can belong to an unrelated process by now, so only a Node process is stopped.
 $existing = Get-Process -Id ([int]$pidValue) -ErrorAction SilentlyContinue
-if ($existing) {
+if ($existing -and $existing.ProcessName -eq "node") {
   Stop-Process -Id $existing.Id -Force
   Write-Output "Stopped hidden TermiWeb server PID $($existing.Id)."
+} elseif ($existing) {
+  Write-Output "PID $pidValue now belongs to $($existing.ProcessName), not TermiWeb; leaving it alone."
 } else {
   Write-Output "No running TermiWeb server found for PID $pidValue."
 }

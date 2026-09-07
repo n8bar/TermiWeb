@@ -54,6 +54,7 @@ LicenseFile={#StageDir}\LICENSE
 InfoBeforeFile={#StageDir}\DISCLAIMER.md
 UninstallDisplayName={#AppName}
 CloseApplications=no
+SetupLogging=yes
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -79,7 +80,10 @@ Name: "{group}\Enable TermiWeb Auto Start"; Filename: "{app}\Enable TermiWeb Aut
 Name: "{group}\Disable TermiWeb Auto Start"; Filename: "{app}\Disable TermiWeb Auto Start.cmd"; WorkingDir: "{app}"; Flags: runminimized; Comment: "Stop starting TermiWeb before sign-in"
 
 [Run]
-Filename: "{#PowerShellExe}"; Parameters: "-NoLogo -NoProfile -ExecutionPolicy Bypass -File ""{app}\scripts\start-hidden.ps1"" -Restart -WaitForPort"; WorkingDir: "{app}"; Flags: postinstall runhidden skipifsilent; Description: "Start TermiWeb now"
+; runascurrentuser keeps the start elevated inside Setup's context; postinstall
+; entries otherwise run de-elevated as the original user, which would make the
+; start script raise a second UAC prompt.
+Filename: "{#PowerShellExe}"; Parameters: "-NoLogo -NoProfile -ExecutionPolicy Bypass -File ""{app}\scripts\start-hidden.ps1"" -Restart -WaitForPort"; WorkingDir: "{app}"; Flags: postinstall runhidden runascurrentuser skipifsilent; Description: "Start TermiWeb now"
 Filename: "{code:GetLocalUrl}"; Flags: postinstall shellexec nowait skipifsilent; Description: "Open TermiWeb in your browser"
 
 [UninstallRun]
@@ -204,6 +208,10 @@ begin
   Result := Exec(ExpandConstant('{#PowerShellExe}'),
     '-NoLogo -NoProfile -ExecutionPolicy Bypass -File "' + ExpandConstant('{app}\scripts\') + ScriptName + '" ' + Arguments,
     ExpandConstant('{app}'), SW_HIDE, ewWaitUntilTerminated, ResultCode);
+  if Result then
+    Log(Format('%s %s exited with code %d', [ScriptName, Arguments, ResultCode]))
+  else
+    Log(Format('%s %s could not be started (error %d)', [ScriptName, Arguments, ResultCode]));
 end;
 
 { An upgrade replaces node.exe and the server files, so a running server from
