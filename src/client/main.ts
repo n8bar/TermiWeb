@@ -347,14 +347,22 @@ function getSessionWidthButtonLabel(cols: number): string {
   return sidebarCollapsed ? `Cols ${cols}` : `Columns ${cols}`;
 }
 
-function syncSessionWidthControl(): void {
+// The width the custom input was last set to. A rail refresh (a title tick, an
+// attachment count) must not wipe a width the user is typing, so the input is
+// rewritten only when the width it shows changes or the popover opens.
+let syncedSessionWidthCols: number | null = null;
+
+function syncSessionWidthControl(options: { resetInput?: boolean } = {}): void {
   const active = getActiveSession();
   const cols = active?.fixedCols ?? fixedCols;
   const isEnabled = Boolean(active);
 
   sessionWidthApply.disabled = !isEnabled;
   sessionWidthInput.disabled = !isEnabled;
-  sessionWidthInput.value = String(cols);
+  if (options.resetInput || syncedSessionWidthCols !== cols) {
+    sessionWidthInput.value = String(cols);
+    syncedSessionWidthCols = cols;
+  }
 
   if (sessionWidthAnchorButton) {
     sessionWidthAnchorButton.textContent = getSessionWidthButtonLabel(cols);
@@ -428,7 +436,7 @@ function setSessionWidthPopoverOpen(
   sessionWidthPopover.classList.remove("is-hidden");
   sessionWidthAnchorButton.setAttribute("aria-expanded", "true");
 
-  syncSessionWidthControl();
+  syncSessionWidthControl({ resetInput: true });
   window.requestAnimationFrame(() => {
     positionSessionWidthPopover();
     if (isCoarsePointerDevice()) {
