@@ -58,12 +58,13 @@ Non-goals for overflow display:
 ## Protocol and State Changes
 
 - `SessionSummary` gains an optional shell title field separate from the workspace default title, so clients can render precedence themselves and the server stays the source of truth.
-- A new server event carries title changes for an existing session, or the existing `session/list` broadcast updates the summary. Either mechanism is acceptable; the implementation must not require a full snapshot re-send for a title change. The shipped implementation reuses the `session/list` broadcast, which the client applies without re-attaching or re-snapshotting the active instance.
+- A new server event carries title changes for an existing session, or the existing `session/list` broadcast updates the summary. Either mechanism is acceptable; the implementation must not require a full snapshot re-send for a title change. The shipped implementation reuses the `session/list` broadcast, which the client applies without re-attaching or re-snapshotting the active instance, and, when nothing but titles changed, without rebuilding the sidebar list.
 - The xterm.js client wires `terminal.onTitleChange` and forwards it to the server as a new `terminal/title` client event for the active session id. The server clamps length, applies the same length bound already used for session titles, strips control characters from the payload, and broadcasts the updated summary to the rest of the workspace. Every attached client forwards the title changes it parses, including those replayed from history on attach; the server ignores a `terminal/title` event from a client that is not attached to that session and skips the broadcast when the value is unchanged.
 
 ## Acceptance Checks
 
 - A shell-emitted OSC `0` or `2` title sequence on an instance updates the displayed title for that instance in the topbar heading and the sidebar entry across every connected client.
+- A program that changes its title several times a second leaves the sidebar entries in place: a tap or click on an entry, keyboard focus in the list, and any open control there survive the stream, and the displayed titles keep up with it.
 - An OSC `0` or `2` sequence with an empty title payload returns the displayed title for that instance to its workspace default.
 - Closing any instance leaves the workspace default of every remaining instance unchanged.
 - A newly created auto-named instance takes the lowest positive integer not currently in use by another auto-named instance, even when prior closures have produced gaps in the existing numbering.

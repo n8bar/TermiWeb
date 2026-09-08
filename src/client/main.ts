@@ -17,6 +17,7 @@ import {
   type TerminalControlAction,
 } from "./ui/mobileControls.js";
 import { resolvePreferredSessionId } from "./ui/sessionSelection.js";
+import { describeRailStructure, resolveRailRefresh } from "./ui/sessionRail.js";
 import {
   getExplicitSelectionText,
   isClipboardCopyShortcut,
@@ -252,6 +253,8 @@ function setFeatures(next?: Partial<ClientFeatures>): void {
 let bellAudioContext: AudioContext | null = null;
 let baseDocumentTitle = "TermiWeb";
 const bellFlashStartedAt = new Map<string, number>();
+// Structure of the rail as last rebuilt; see renderSessions.
+let renderedRailStructure: string | null = null;
 const modifierDoubleTapWindowMs = 360;
 const defaultTerminalFontSize = 15;
 const minTerminalFontSize = 6;
@@ -1876,7 +1879,75 @@ function getOpenCollapsedSessionCloseButton(): HTMLButtonElement | null {
   );
 }
 
+function activeBellFlashSessionIds(): Set<string> {
+  const now = Date.now();
+  const flashing = new Set<string>();
+  for (const [sessionId, startedAt] of bellFlashStartedAt) {
+    if (now - startedAt < BELL_FLASH_MS) {
+      flashing.add(sessionId);
+    }
+  }
+  return flashing;
+}
+
+// A busy program changes its title several times a second and every report
+// comes back as a session list update. Only the text changes here, so the
+// existing entries are updated in place; the entry under a tap, a click, or
+// keyboard focus stays put (#11).
+function refreshSessionTitlesInPlace(): void {
+  for (const card of sessionList.querySelectorAll<HTMLElement>(".session-card")) {
+    const session = sessions.find((candidate) => candidate.id === card.dataset.sessionId);
+    if (!session) {
+      continue;
+    }
+
+    const displayedTitle = resolveDisplayedSessionTitle(session);
+    const slot = card.querySelector<HTMLElement>(".session-title");
+    if (slot) {
+      const text = sidebarCollapsed
+        ? getDisplaySessionTitle(session.title, true)
+        : displayedTitle;
+      if (slot.dataset.titleText !== text) {
+        renderTitleSlot(slot, text, !sidebarCollapsed);
+      }
+      slot.title = displayedTitle;
+    }
+    if (card.hasAttribute("aria-expanded")) {
+      card.setAttribute(
+        "aria-label",
+        card.getAttribute("aria-expanded") === "true"
+          ? `Hide controls for ${displayedTitle}`
+          : `Show controls for ${displayedTitle}`,
+      );
+    }
+
+    const row = card.parentElement;
+    row
+      ?.querySelector<HTMLButtonElement>(".session-width-button")
+      ?.setAttribute("aria-label", `Change columns for ${displayedTitle}`);
+    const close = row?.querySelector<HTMLButtonElement>(".session-close");
+    if (close) {
+      close.setAttribute("aria-label", `Close ${displayedTitle}`);
+      close.title = `Close ${displayedTitle}`;
+    }
+  }
+
+  updateActiveSessionMeta();
+}
+
 function renderSessions(): void {
+  const railStructure = describeRailStructure(sessions, {
+    activeSessionId,
+    sidebarCollapsed,
+    collapsedControlsOpenId: collapsedSessionControlsOpenId,
+    flashingSessionIds: activeBellFlashSessionIds(),
+  });
+  if (resolveRailRefresh(renderedRailStructure, railStructure) === "titles-in-place") {
+    refreshSessionTitlesInPlace();
+    return;
+  }
+  renderedRailStructure = railStructure;
+
   // A rail refresh is not a user action, so it must not disturb device-local UI:
   // an open width popover survives and is re-anchored to the rebuilt button (#12).
   const widthPopoverWasOpen = !sessionWidthPopover.classList.contains("is-hidden");
