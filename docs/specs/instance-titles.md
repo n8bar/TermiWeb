@@ -48,6 +48,7 @@ The active-instance heading in the top bar (`#active-session-title`) has limited
 - Tooltip content is the full title currently in effect (shell-provided when present, workspace default otherwise). It is not a separate name.
 - When the displayed title fits without truncation, the tooltip is still allowed and harmless; implementations may set it unconditionally.
 - On coarse-pointer devices, where hover does not exist, a title that overflows its slot scrolls back and forth so the full value can be read. A title that fits does not move. This applies to the active-instance heading and to expanded sidebar entries. A reduced-motion preference disables the scroll and leaves the ellipsis.
+- A title change while a title is scrolling does not restart the scroll. The text changes in place, the scroll continues, and its travel adjusts to the new length.
 - The collapsed-rail short label keeps its existing number-only display when the collapsed display rule applies. The collapsed label always derives from the workspace default, never from the shell-provided title; the tooltip still carries the displayed title. This spec does not change collapsed-rail compaction.
 
 Non-goals for overflow display:
@@ -71,6 +72,7 @@ Non-goals for overflow display:
 - The active-instance heading occupies a single line. When the displayed title exceeds the available width, the visible value ends in an ellipsis and the full title is available through a native browser tooltip on that element.
 - The sidebar instance list truncates each entry with an ellipsis when its title overflows the available width, and exposes the full title through a native browser tooltip.
 - On a coarse-pointer device, an overflowing title in the heading or in an expanded sidebar entry scrolls back and forth so the full value becomes readable, and a title that fits does not move.
+- On a coarse-pointer device, a program that changes an overflowing title several times a second still lets the title complete its passes: each change updates the text without restarting the scroll.
 - After a server restart, the workspace default for each persisted instance is displayed immediately. Shell-provided titles are not persisted and repopulate the next time a running program in that instance emits an OSC `0` or `2` sequence.
 - Title payloads that exceed the workspace-managed length bound are clamped before being broadcast, and control characters in the payload are stripped, so a malformed sequence cannot break the UI.
 - When the process in an instance exits, the displayed title for that instance returns to its workspace default.

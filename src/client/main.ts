@@ -45,9 +45,12 @@ import {
 } from "./ui/cursorFollow.js";
 import { copyTextToClipboard, readTextFromClipboard } from "./ui/clipboard.js";
 import {
+  applyTitleScrollPlan,
   getDisplaySessionTitle,
+  measureTitleSlotContentWidth,
   resolveDisplayedSessionTitle,
   resolveTitleScroll,
+  setTitleSlotText,
 } from "./ui/sessionTitle.js";
 import { toDisplayVersion } from "./ui/version.js";
 
@@ -1662,7 +1665,7 @@ function updateActiveSessionMeta(): void {
   const active = getActiveSession();
   const displayedTitle = active ? resolveDisplayedSessionTitle(active) : "No active instance";
   if (activeSessionTitle.dataset.titleText !== displayedTitle) {
-    renderTitleSlot(activeSessionTitle, displayedTitle, Boolean(active));
+    setTitleSlotText(activeSessionTitle, displayedTitle, Boolean(active));
   }
   activeSessionTitle.title = active ? displayedTitle : "";
   activeSessionStatus.textContent = active ? statusLabels[active.status] : "Idle";
@@ -1818,17 +1821,6 @@ function handleSessionBell(sessionId: string): void {
   }
 }
 
-function renderTitleSlot(slot: HTMLElement, text: string, scrollable: boolean): void {
-  const inner = document.createElement("span");
-  inner.className = "title-scroll";
-  inner.textContent = text;
-  slot.replaceChildren(inner);
-  slot.dataset.titleText = text;
-  slot.classList.toggle("is-title-scroll-candidate", scrollable);
-  slot.classList.remove("is-title-overflowing");
-  delete slot.dataset.titleScrollKey;
-}
-
 function syncTitleOverflow(): void {
   const coarsePointer = isCoarsePointerDevice();
   const reducedMotion = prefersReducedMotion();
@@ -1839,24 +1831,16 @@ function syncTitleOverflow(): void {
       continue;
     }
 
-    // Measure with the animation off so the transform cannot skew the width.
-    slot.classList.remove("is-title-overflowing");
+    // The text span's layout width is measured, not the slot's scroll extent, so
+    // a running scroll transform cannot skew it and the scroll is left running.
     const plan = resolveTitleScroll({
-      contentWidth: slot.scrollWidth,
+      contentWidth: measureTitleSlotContentWidth(slot),
       slotWidth: slot.clientWidth,
       coarsePointer,
       reducedMotion,
     });
     slot.dataset.titleScrollKey = key;
-    if (!plan) {
-      slot.style.removeProperty("--title-scroll-distance");
-      slot.style.removeProperty("--title-scroll-duration");
-      continue;
-    }
-
-    slot.style.setProperty("--title-scroll-distance", `${plan.distancePx}px`);
-    slot.style.setProperty("--title-scroll-duration", `${plan.durationMs}ms`);
-    slot.classList.add("is-title-overflowing");
+    applyTitleScrollPlan(slot, plan);
   }
 }
 
@@ -1916,7 +1900,7 @@ function refreshSessionTitlesInPlace(): void {
         ? getDisplaySessionTitle(session.title, true)
         : displayedTitle;
       if (slot.dataset.titleText !== text) {
-        renderTitleSlot(slot, text, !sidebarCollapsed);
+        setTitleSlotText(slot, text, !sidebarCollapsed);
       }
       slot.title = displayedTitle;
     }
@@ -2036,7 +2020,7 @@ function renderSessions(): void {
     head.className = "session-card-head";
     const title = document.createElement("span");
     title.className = "session-title";
-    renderTitleSlot(
+    setTitleSlotText(
       title,
       sidebarCollapsed ? getDisplaySessionTitle(session.title, true) : displayedTitle,
       !sidebarCollapsed,
