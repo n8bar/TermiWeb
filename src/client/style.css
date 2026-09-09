@@ -514,6 +514,10 @@ button {
 
 .side-panel {
   display: grid;
+  /* One capped column: nothing inside the rail may widen it. Without this the
+     implicit auto column grows to the widest item's minimum width and every
+     row, the 100%-wide instance list included, runs past the rail's edge. */
+  grid-template-columns: minmax(0, 1fr);
   grid-template-rows: auto minmax(0, 1fr) auto auto;
   gap: 1rem;
   min-height: 0;
@@ -851,13 +855,16 @@ button {
 .side-panel-footer {
   margin-top: auto;
   display: flex;
+  flex-wrap: wrap;
   gap: 0.5rem;
 }
 
+/* Equal halves when both actions fit on one line; a label is never squeezed,
+   so when they do not fit the second action wraps under the first. */
 .side-panel-footer .side-panel-action-button {
-  flex: 1 1 0;
+  flex: 1 1 calc(50% - 0.25rem);
   width: auto;
-  min-width: 0;
+  min-width: max-content;
 }
 
 .side-panel-action-button.is-active {
