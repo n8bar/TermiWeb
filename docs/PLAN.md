@@ -55,7 +55,7 @@
 - [x] M10: `0.1.2` Select fix, Windows installer, instance titles, and bell
   - Summary: Shipped `0.1.2` with the mobile Select fix, Windows installer, passwordless `SYSTEM` auto-start, instance titles, and terminal bell. Closed the remaining mobile stabilization and installer findings after hardware and clean Windows 11 verification.
   - Start: 2026-07-24
-  - End: 2026-09-11 (target was 2026-09-25)
+  - End: 2026-09-11
   - Notes: six-week window chosen on 2026-05-23 because the maintainer expects scope to expand beyond the initial drafted breakdown; extended by three weeks on 2026-08-06 when the Windows-installer scope joined after two real-world Windows 11 install failures ([#9](https://github.com/n8bar/TermiWeb/issues/9)); renumbered from M11 to M10 on 2026-08-06 when the release was resequenced ahead of outreach
   - Worklist: [M10 0.1.2 Select fix and titles](worklists/m10-0.1.2-select-fix-and-titles.md)
 - [ ] M11: Post-`0.1.2` public outreach
