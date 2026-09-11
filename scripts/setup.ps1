@@ -185,7 +185,7 @@ if (-not (Test-Path -LiteralPath $startLauncher)) {
   throw "Missing launcher at $startLauncher."
 }
 
-Write-Output "If Windows shows a firewall prompt on first launch, allow private-network access if you want other devices on your LAN to reach TermiWeb."
+Write-Output "If Windows shows a firewall prompt on first launch, allow access if you want other devices on your LAN to reach TermiWeb."
 Start-Process `
   -FilePath "cmd.exe" `
   -ArgumentList "/c", "`"$startLauncher`"" `

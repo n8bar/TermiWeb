@@ -87,7 +87,7 @@ These are feature candidates for later version scope. Here, `candidate` means a 
 ## Release Gate
 
 - Future releases should ship only after their documented local release checks pass.
-- Open release-blocker issues for the next release (`0.1.2` via `M10`): [#9 packaged setup fails on Windows 11 at the auto-start password step](https://github.com/n8bar/TermiWeb/issues/9) and [#10 failure-prone packaged zip setup](https://github.com/n8bar/TermiWeb/issues/10). The [#5 mobile Select](https://github.com/n8bar/TermiWeb/issues/5) blocker is fixed on `main` and closed. ([FINDINGS.md](FINDINGS.md) is the closed historical archive of pre-`0.1.1` findings.)
+- Open release-blocker issues for the next release (`0.1.2` via `M10`): [#9 packaged setup fails on Windows 11 at the auto-start password step](https://github.com/n8bar/TermiWeb/issues/9), [#10 failure-prone packaged zip setup](https://github.com/n8bar/TermiWeb/issues/10), and [#13 installed copy unreachable from the LAN on a Public-profile network](https://github.com/n8bar/TermiWeb/issues/13), found on the clean-VM run and fixed on `main` pending the rerun. The [#5 mobile Select](https://github.com/n8bar/TermiWeb/issues/5) blocker is fixed on `main` and closed. ([FINDINGS.md](FINDINGS.md) is the closed historical archive of pre-`0.1.1` findings.)
 
 ## Next Action
 

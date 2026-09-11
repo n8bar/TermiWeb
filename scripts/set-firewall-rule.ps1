@@ -84,16 +84,16 @@ if ($Remove) {
 try {
   New-NetFirewallRule `
     -DisplayName $ruleName `
-    -Description "Allows devices on private networks to reach TermiWeb on TCP port $configuredPort." `
+    -Description "Allows devices on the local network to reach TermiWeb on TCP port $configuredPort." `
     -Direction Inbound `
     -Action Allow `
     -Protocol TCP `
     -LocalPort $configuredPort `
-    -Profile Private `
+    -Profile Any `
     -ErrorAction Stop | Out-Null
 } catch {
   Write-Output "Windows could not create the firewall rule '$ruleName'."
   exit 1
 }
 
-Write-Output "Allowed inbound TCP port $configuredPort on private networks through the firewall rule '$ruleName'."
+Write-Output "Allowed inbound TCP port $configuredPort on every network profile through the firewall rule '$ruleName'."

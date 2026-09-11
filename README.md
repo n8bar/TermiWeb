@@ -38,7 +38,7 @@ That command produces the Windows installer, the release folder, and the portabl
 2. Choose the TermiWeb password when the installer asks for it. Every browser that connects enters this password.
 3. Decide whether TermiWeb should start before anyone signs in. That registers a Windows startup task running as `SYSTEM`; no Windows account password is requested.
 4. Let the finish page start TermiWeb and open `http://127.0.0.1:22443`.
-5. From another device on the same LAN, browse to the host's LAN URL. The installer already allowed the port through the Windows firewall on private networks.
+5. From another device on the same LAN, browse to the host's LAN URL. The installer already allowed the port through the Windows firewall on every network profile.
 
 The installer places binaries under `%ProgramFiles%\TermiWeb` and keeps config and workspace state under `%ProgramData%\TermiWeb`, where `.env` lives. The Start Menu group offers Open, Start, Restart, Stop, Enable Auto Start, and Disable Auto Start. Uninstall from Apps & Features; the uninstaller asks whether to remove the ProgramData config and state too and keeps them by default.
 
@@ -100,7 +100,7 @@ TermiWeb stands on strong existing work, especially `xterm.js`, `node-pty`, Type
 
 - TermiWeb binds to your LAN by default.
 - On the first LAN-bound launch, Windows may show a firewall prompt for the Node-hosted server process.
-- Allow private-network access at that prompt if you want phones or other devices on the same LAN to reach TermiWeb.
+- Allow access at that prompt if you want phones or other devices on the same LAN to reach TermiWeb. Windows classifies most home networks as Public, so do not limit the allowance to private networks.
 - Leave `TERMIWEB_HOST` blank unless you want an explicit bind address.
 - Browse to `http://<your-pc-lan-ip>:22443` from another device, such as your phone, on the same network.
 
@@ -130,7 +130,7 @@ TermiWeb stands on strong existing work, especially `xterm.js`, `node-pty`, Type
 - `Enable TermiWeb Auto Start.cmd` and `Disable TermiWeb Auto Start.cmd` manage the optional before-sign-in startup task for this copy of TermiWeb.
 - `Start TermiWeb.cmd`, `Restart TermiWeb.cmd`, and `Stop TermiWeb.cmd` are the Windows launchers intended for the packaged run surface and also work from a built repo checkout. They request elevation because `0.1` runs elevated shells only.
 - `Uninstall TermiWeb.cmd` is the portable-zip uninstall entry point and intentionally refuses to run from a source checkout. Installer users uninstall from Apps & Features instead.
-- `scripts/set-firewall-rule.ps1` adds the private-network firewall rule for this copy's port, or removes it with `-Remove`. The installer runs it; zip users can run it to skip the first-launch firewall prompt.
+- `scripts/set-firewall-rule.ps1` adds the firewall rule for this copy's port on every network profile, or removes it with `-Remove`. The installer runs it; zip users can run it to skip the first-launch firewall prompt.
 
 ## Additional Info
 

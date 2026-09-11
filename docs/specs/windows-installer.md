@@ -26,7 +26,7 @@ Each design element below exists to kill a known failure mode of the current zip
 2. Users run `Set Up TermiWeb.cmd` from inside the zip preview in Explorer without extracting, so the script runs against a temp folder containing only itself. Eliminated by distributing a single installer executable.
 3. Mark-of-the-Web on many extracted scripts triggers SmartScreen or execution-policy friction at unpredictable points mid-setup. Reduced to a single, documented SmartScreen prompt on the installer executable itself.
 4. Extraction-location hazards: OneDrive-redirected folders, long paths, and per-folder permissions vary per machine. Eliminated by a fixed Program Files install location.
-5. Users deny or miss the first-launch firewall prompt and LAN access silently fails. Eliminated by creating the firewall rule at install time under elevation.
+5. Users deny or miss the first-launch firewall prompt and LAN access silently fails. Eliminated by creating the firewall rule at install time under elevation, on every network profile: Windows classifies a home network as Public unless the person opted into discovery, and a rule limited to the Private profile leaves the prompt in place there and the LAN unreachable if it is dismissed.
 6. Manual `.env` editing (copy the template, set the password) fails silently when skipped or mistyped. Eliminated by collecting the app password in the installer and writing the config for the user.
 
 ## Install Layout
@@ -42,7 +42,7 @@ Each design element below exists to kill a known failure mode of the current zip
 - On a fresh install, a required page collects the TermiWeb app password (non-empty) and the installer writes the ProgramData `.env` from the packaged template with that password set and with the installing user's profile directory as the shell start directory, so shells on an auto-started `SYSTEM` server open there instead of the `SYSTEM` profile. The port stays at its default; changing it remains a config-file edit, and updating the firewall rule and task name after a port change stays a documented manual step. Automation for both rides along with a future port-change UI.
 - An optional checkbox (default off, matching the current setup script's opt-in posture) enables before-sign-in auto-start. Enabling it never asks for a Windows account password. On an upgrade, leaving it unchecked keeps an existing auto-start task (re-registered as `SYSTEM`) rather than disabling it; disabling stays an explicit Start Menu action.
 - Unattended installs can supply the password and the auto-start choice on the command line, in which case the wizard pages that collect them are skipped.
-- The installer creates an inbound firewall rule for the configured port on the private profile, named so upgrade and uninstall can find it.
+- The installer creates an inbound firewall rule for the configured port on every network profile (Domain, Private, and Public), named so upgrade and uninstall can find it. The app password is the access control; restricting reach further stays a config choice (`TERMIWEB_ALLOW_LAN`).
 - The finish page offers to start TermiWeb and open the local URL.
 
 ## Auto-Start Without a Windows Password
