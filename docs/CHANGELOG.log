@@ -370,3 +370,4 @@
 2026-09-11 #14 verified on the VM after the upgrade: a new elevated Windows PowerShell instance carries the workspace default name. Closed.
 2026-09-11 M10 3.7 phase 4 on the VM: after a reboot with nobody signed in, the SYSTEM auto-start task started the server within 16 s and the phone reached it; the auto-started node process runs at BelowNormal priority. The SYSTEM-instance environment capture for #8 is still to come.
 2026-09-11 M10 3.7 phase 4 complete: the SYSTEM instance opens in the configured home directory while its profile variables point at the SYSTEM profile; the capture is on #8 for the handoff spec.
+2026-09-11 M10 3.7 phase 6 first uninstall on the VM: Apps & Features removed the scheduled task, the firewall rule, the Start Menu group, and the Program Files directory, stopped the server, and kept ProgramData with .env and .termiweb as chosen.
