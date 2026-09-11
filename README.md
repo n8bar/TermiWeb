@@ -10,7 +10,7 @@ It was created for power users, especially vibe-coders who want to continue "wor
 - Cross-device attachment to the same live shell
 - A Windows installer plus a run surface with start, restart, stop, uninstall, and optional before-sign-in auto-start
 - Mobile-oriented terminal controls plus selection/clipboard support
-- `0.1.1` includes mobile stabilization fixes for collapsed instance controls and keyboard text-assistance interference.
+- `0.1.2` adds shell-provided instance titles and a terminal bell, and fixes mobile Select mode dropping out when the phone keyboard changes.
 - `0.1` targets Windows hosts only.
 - Every shell in `0.1` is elevated.
 - `0.1` assumes a trusted Windows machine on a private network.
@@ -59,6 +59,7 @@ Moving from the zip to the installer: copy the zip folder's `.env` and `.termiwe
 ## What `0.1` supports
 
 - Shared terminal instances through the browser UI
+- Shell-provided instance titles with stable numbered fallbacks
 - A Windows installer plus a run surface with start, restart, stop, uninstall, and optional before-sign-in auto-start
 - Elevated-only shell launch path for `0.1`
 - One configured app password for local and LAN use
@@ -66,6 +67,7 @@ Moving from the zip to the installer: copy the zip folder's `.env` and `.termiwe
 - Cross-device attachment to the same live shell
 - Mobile-oriented terminal controls plus selection/copy support
 - Per-instance shared width (as column counts) with `80` as the default for new instances
+- A terminal bell with visual alerts and attention badges, plus an optional sound, off by default, that also vibrates on phones
 - Clipboard controls, including a fallback paste field when direct browser paste is blocked
 
 ## Constraints
