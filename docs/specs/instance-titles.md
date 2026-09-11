@@ -26,7 +26,7 @@ Display precedence:
 
 - When a shell-provided title is present and non-empty, it is the displayed title.
 - When the shell clears the title (empty OSC payload) or no shell title has ever been seen for this instance, the displayed title falls back to the workspace default.
-- A title that only names the shell itself counts as no title: the shell executable's name or path, with or without the `Administrator: ` prefix, or a stock console title such as `Windows PowerShell` or `Command Prompt`. Windows emits the console's default title when the shell starts and again when a program hands the console back, and that value carries nothing the shell label does not already show.
+- A title that only names the shell itself counts as no title: the shell executable's name or path, with or without the `Administrator: ` prefix, or a stock console title such as `Windows PowerShell` or `Command Prompt`. Windows emits the console's default title when the shell starts and again when a program hands the console back, and that value carries nothing the shell label does not already show. This judgement is made on the full reported title, before the length clamp, since the elevated Windows PowerShell path is longer than the clamp allows.
 - The workspace default for an instance never changes after creation. It is not renumbered when other instances are closed.
 
 The shell-provided title is per-instance runtime state. It does not need to persist across server restarts; on reattach, the next program emit will repopulate it. It is also cleared when the instance's process exits, so a title left behind by a finished program does not outlive it. The workspace default is the persistent identifier and stays in the workspace state file.

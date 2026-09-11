@@ -4,7 +4,7 @@ import type { SessionSnapshot, SessionSummary } from "../../shared/protocol.js";
 import type { TermiWebConfig } from "../config.js";
 import type { WorkspaceStore } from "../workspace/workspace-store.js";
 import { resolveShellCommand } from "./shell.js";
-import { isDefaultConsoleTitle, sanitizeShellTitle } from "./shell-title.js";
+import { resolveShellTitle } from "./shell-title.js";
 import { isExistingDirectory } from "./start-directory.js";
 import { TerminalSession } from "./terminal-session.js";
 
@@ -176,10 +176,7 @@ export class TerminalManager extends EventEmitter<ManagerEvents> {
       return;
     }
 
-    const sanitized = sanitizeShellTitle(title);
-    const effective =
-      sanitized !== null && isDefaultConsoleTitle(sanitized, this.#shell) ? null : sanitized;
-    this.#sessions.get(sessionId)?.setShellTitle(effective);
+    this.#sessions.get(sessionId)?.setShellTitle(resolveShellTitle(title, this.#shell));
   }
 
   resize(sessionId: string, cols: number, rows: number, clientId?: string): void {

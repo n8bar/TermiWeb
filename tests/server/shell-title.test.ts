@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   isDefaultConsoleTitle,
+  resolveShellTitle,
   sanitizeShellTitle,
 } from "../../src/server/terminal/shell-title.js";
 import { MAX_SESSION_TITLE_LENGTH } from "../../src/shared/protocol.js";
@@ -51,5 +52,26 @@ describe("isDefaultConsoleTitle", () => {
     expect(isDefaultConsoleTitle("build watcher", "pwsh.exe")).toBe(false);
     expect(isDefaultConsoleTitle("Administrator: build watcher", "pwsh.exe")).toBe(false);
     expect(isDefaultConsoleTitle("vim README.md", "C:\\Windows\\system32\\cmd.exe")).toBe(false);
+  });
+});
+
+describe("resolveShellTitle", () => {
+  const elevatedWindowsPowerShell =
+    "Administrator: C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe";
+
+  it("filters the elevated Windows PowerShell path even though it exceeds the title bound", () => {
+    expect(elevatedWindowsPowerShell.length).toBeGreaterThan(MAX_SESSION_TITLE_LENGTH);
+    expect(resolveShellTitle(elevatedWindowsPowerShell, "powershell.exe")).toBeNull();
+    expect(resolveShellTitle(elevatedWindowsPowerShell + "\u0007", "powershell.exe")).toBeNull();
+  });
+
+  it("clamps an informative title that exceeds the bound instead of dropping it", () => {
+    const long = "build watcher " + "x".repeat(MAX_SESSION_TITLE_LENGTH);
+    expect(resolveShellTitle(long, "powershell.exe")).toBe(long.slice(0, MAX_SESSION_TITLE_LENGTH));
+  });
+
+  it("returns the sanitized title otherwise", () => {
+    expect(resolveShellTitle("  vim README.md\u0000 ", "pwsh.exe")).toBe("vim README.md");
+    expect(resolveShellTitle("Administrator: Windows PowerShell", "powershell.exe")).toBeNull();
   });
 });

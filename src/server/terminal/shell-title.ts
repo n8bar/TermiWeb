@@ -9,7 +9,7 @@ const controlCharacterPattern = /[\u0000-\u001f\u007f-\u009f]/g;
  * workspace default applies.
  */
 export function sanitizeShellTitle(raw: string): string | null {
-  const stripped = raw.replace(controlCharacterPattern, "").trim();
+  const stripped = stripShellTitle(raw);
   let clamped = "";
   for (const codePoint of stripped) {
     if (clamped.length + codePoint.length > MAX_SESSION_TITLE_LENGTH) {
@@ -21,6 +21,25 @@ export function sanitizeShellTitle(raw: string): string | null {
 
   const result = clamped.trimEnd();
   return result.length > 0 ? result : null;
+}
+
+function stripShellTitle(raw: string): string {
+  return raw.replace(controlCharacterPattern, "").trim();
+}
+
+/**
+ * The title a session should carry after a shell reports `raw`: null when the
+ * report only names the shell itself, otherwise the sanitized, clamped text.
+ * The default-title check runs on the unclamped text, because an elevated
+ * Windows PowerShell path is longer than the title bound and would otherwise
+ * lose the executable name that identifies it.
+ */
+export function resolveShellTitle(raw: string, shellCommand: string): string | null {
+  if (isDefaultConsoleTitle(stripShellTitle(raw), shellCommand)) {
+    return null;
+  }
+
+  return sanitizeShellTitle(raw);
 }
 
 const stockConsoleTitles = new Set(["windows powershell", "powershell", "command prompt", "cmd"]);
