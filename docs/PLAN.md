@@ -2,7 +2,7 @@
 
 ## Current Focus
 
-`M1` through `M9` are complete. `0.1.1` is publicly released, the download site is live at `https://termiweb.com`, and the search/discovery foundation is in place for later outreach. `M10` is in progress toward `0.1.2`, covering a mobile Select-mode blocker, a real Windows installer with a passwordless auto-start fix, the instance-titles spec, terminal bell behavior, and verification closure of the lingering `0.1.1` mobile stabilization issues. `M11` holds the deliberate public outreach lane, resequenced behind the `0.1.2` release on 2026-08-06 so first impressions land on the improved install experience. `M12` is drafted as the `0.2` milestone, with the QR connect affordance pulled in as the first included feature candidate without defining the whole version scope.
+`M1` through `M10` are complete. `0.1.2` is publicly released with a Windows installer, passwordless auto-start, mobile Select fix, instance titles, and terminal bell; the download site is live at `https://termiweb.com`. The next focus is `M11` public outreach, scheduled for 2026-09-25 through 2026-10-09. `M12` remains the drafted `0.2` milestone, with the QR connect affordance as its first included feature candidate.
 
 ## Milestones
 
@@ -52,18 +52,18 @@
   - Start: 2026-04-27
   - End: 2026-05-01
   - Worklist: [M9 0.1.1 mobile stabilization](worklists/m9-0.1.1-mobile-stabilization.md)
-- [ ] M10: `0.1.2` Select fix, Windows installer, instance titles, and bell
-  - Summary: This milestone ships `0.1.2` covering the mobile Select-mode release-blocker first, then verification closure of the lingering `0.1.1` mobile stabilization issues, a real Windows installer with a passwordless `SYSTEM` auto-start fix per [the Windows-installer spec](specs/windows-installer.md), implementation of the instance-titles spec, and a new bell-behavior spec plus implementation. The [#5 mobile Select](https://github.com/n8bar/TermiWeb/issues/5) blocker is fixed and closed; the rest of scope follows.
+- [x] M10: `0.1.2` Select fix, Windows installer, instance titles, and bell
+  - Summary: Shipped `0.1.2` with the mobile Select fix, Windows installer, passwordless `SYSTEM` auto-start, instance titles, and terminal bell. Closed the remaining mobile stabilization and installer findings after hardware and clean Windows 11 verification.
   - Start: 2026-07-24
-  - Target End: 2026-09-25
+  - End: 2026-09-11 (target was 2026-09-25)
   - Notes: six-week window chosen on 2026-05-23 because the maintainer expects scope to expand beyond the initial drafted breakdown; extended by three weeks on 2026-08-06 when the Windows-installer scope joined after two real-world Windows 11 install failures ([#9](https://github.com/n8bar/TermiWeb/issues/9)); renumbered from M11 to M10 on 2026-08-06 when the release was resequenced ahead of outreach
   - Worklist: [M10 0.1.2 Select fix and titles](worklists/m10-0.1.2-select-fix-and-titles.md)
-- [ ] M11: Post-`0.1.1` public outreach
+- [ ] M11: Post-`0.1.2` public outreach
   - Summary: This milestone turns the M8 positioning and reusable copy into deliberate outreach once the `0.1.2` release has shipped, so first impressions land on the improved install experience. It includes direct sharing, feedback capture, first public technical post preparation, community-rule review, and a later Product Hunt decision.
   - Start: 2026-09-25
   - Target End: 2026-10-09
   - Notes: originally scheduled 2026-05-11 to 2026-07-24 (after a two-month extension on 2026-05-23 so other projects could take priority); renumbered from M10 to M11 and resequenced behind the `0.1.2` release on 2026-08-06 because the observed install failures ([#9](https://github.com/n8bar/TermiWeb/issues/9), [#10](https://github.com/n8bar/TermiWeb/issues/10)) would undermine outreach first impressions
-  - Worklist: [M11 post-0.1.1 public outreach](worklists/m11-post-0.1.1-public-outreach.md)
+  - Worklist: [M11 post-0.1.2 public outreach](worklists/m11-post-0.1.1-public-outreach.md)
 - [ ] M12: `0.2`
   - Summary: This milestone ships the first `0.2` release. The QR connect affordance is already pulled in as the easiest included feature candidate, and the milestone leaves room to add other bounded `0.2` features before the release surface is locked.
   - Start: 2026-10-09
@@ -87,8 +87,8 @@ These are feature candidates for later version scope. Here, `candidate` means a 
 ## Release Gate
 
 - Future releases should ship only after their documented local release checks pass.
-- Open release-blocker issues for the next release (`0.1.2` via `M10`): [#9 packaged setup fails on Windows 11 at the auto-start password step](https://github.com/n8bar/TermiWeb/issues/9), [#10 failure-prone packaged zip setup](https://github.com/n8bar/TermiWeb/issues/10), and [#13 installed copy unreachable from the LAN on a Public-profile network](https://github.com/n8bar/TermiWeb/issues/13), found on the clean-VM run and fixed on `main` pending the rerun. The [#5 mobile Select](https://github.com/n8bar/TermiWeb/issues/5) blocker is fixed on `main` and closed. ([FINDINGS.md](FINDINGS.md) is the closed historical archive of pre-`0.1.1` findings.)
+- `0.1.2` passed its local release gate and shipped on 2026-09-11 with all release blockers closed. Remaining issue [#8](https://github.com/n8bar/TermiWeb/issues/8) is a `0.2` candidate, not a `0.1.2` blocker. GitHub Issues holds current blocker state. ([FINDINGS.md](FINDINGS.md) is the closed historical archive of pre-`0.1.1` findings.)
 
 ## Next Action
 
-Continue [M10 0.1.2 Select fix and titles](worklists/m10-0.1.2-select-fix-and-titles.md): items `1`, `2`, `4`, and `5` are complete and [#2](https://github.com/n8bar/TermiWeb/issues/2), [#3](https://github.com/n8bar/TermiWeb/issues/3), [#5](https://github.com/n8bar/TermiWeb/issues/5), [#6](https://github.com/n8bar/TermiWeb/issues/6), and [#7](https://github.com/n8bar/TermiWeb/issues/7) are closed. Installer work (item `3`) is built: the `SYSTEM` auto-start registration passed its live test on the maintainer's workstation, the ProgramData layout, the Inno Setup script, and the release assembly are done, and the release surface (item `6`) is drafted at `0.1.2`. What remains is the maintainer's clean Windows 11 VM verification of [the Windows-installer spec](specs/windows-installer.md) (with the SmartScreen screenshot), closing [#9](https://github.com/n8bar/TermiWeb/issues/9) and [#10](https://github.com/n8bar/TermiWeb/issues/10), the local release gate, and publishing `0.1.2`.
+Begin [M11 public outreach](worklists/m11-post-0.1.1-public-outreach.md) with release-readiness review and announcement-copy preparation for the shipped `0.1.2` installer. The outreach schedule remains unchanged; `M10` closed early.

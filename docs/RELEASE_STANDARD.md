@@ -73,7 +73,7 @@ The app should survive real use before release:
 
 ## Current Assessment
 
-TermiWeb shipped both `0.1` and the `0.1.1` mobile stabilization release against the `0.1` release bar above. Current release-blocker state lives in `docs/PLAN.md` and on GitHub Issues; future release standards (`0.2` and beyond) will need their own categories of release-blocker added to this doc when their scope is defined.
+TermiWeb shipped `0.1`, `0.1.1`, and `0.1.2` against the `0.1` release bar above. Current release-blocker state lives in the project plan and on GitHub Issues; future release standards (`0.2` and beyond) will need their own categories of release-blocker added to this doc when their scope is defined.
 
 ## Out Of Scope For 0.1
 
