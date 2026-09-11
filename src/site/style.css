@@ -481,6 +481,15 @@ h3 {
   line-height: 1.5;
 }
 
+.download-figure {
+  width: 100%;
+  max-width: 26rem;
+  height: auto;
+  margin-top: 1rem;
+  border-radius: calc(var(--radius-lg) - 8px);
+  border: 1px solid var(--line);
+}
+
 .download-card {
   display: flex;
   flex-wrap: wrap;

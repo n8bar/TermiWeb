@@ -24,6 +24,8 @@ The public download path for the Windows installer is:
 
 The installer is unsigned, so the first time you run it Windows SmartScreen shows "Windows protected your PC". Choose `More info`, then `Run anyway`. Each GitHub release also carries the portable zip as a secondary download for people who prefer a folder they manage themselves.
 
+![The Windows SmartScreen dialog reading "Windows protected your PC", with a More info link](assets/screenshots/smartscreen.png)
+
 Repo users can also build both artifacts locally with:
 
 ```bash
