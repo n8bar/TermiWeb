@@ -369,3 +369,4 @@
 2026-09-11 M10 3.7 phase 5 done on the VM with the rebuilt installer: SmartScreen dialog captured to assets/screenshots/smartscreen.png, password page skipped on upgrade, no firewall prompt, TermiWeb rule on every profile, phone reached the installed copy on a Public-profile network. #13 verified; #14 awaits the instance-name check.
 2026-09-11 #14 verified on the VM after the upgrade: a new elevated Windows PowerShell instance carries the workspace default name. Closed.
 2026-09-11 M10 3.7 phase 4 on the VM: after a reboot with nobody signed in, the SYSTEM auto-start task started the server within 16 s and the phone reached it; the auto-started node process runs at BelowNormal priority. The SYSTEM-instance environment capture for #8 is still to come.
+2026-09-11 M10 3.7 phase 4 complete: the SYSTEM instance opens in the configured home directory while its profile variables point at the SYSTEM profile; the capture is on #8 for the handoff spec.
