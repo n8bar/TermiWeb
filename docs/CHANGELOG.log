@@ -380,3 +380,4 @@
 2026-09-11 Wired the SmartScreen figure captured on the clean VM into the site download section and the README download guidance, so people see the dialog before they meet it.
 2026-09-11 M10 release-surface pass: the SmartScreen figure is wired in and the screenshot review is done. Wizard-page captures dropped as unreferenced by any surface. Verification items 7.7 and 7.8 closed out, leaving only the release gate and publication.
 2026-09-11 Release wording pass for 0.1.2: the release body gained the blank-console and instance-name fixes and a verification paragraph naming what the clean Windows 11 run covered. Worklist item 6.1 closed; only the release gate and publication remain.
+2026-09-11 0.1.2 local release gate passed: typecheck, 204 tests, client build, site build, and release assembly emitting the installer and the portable zip.
