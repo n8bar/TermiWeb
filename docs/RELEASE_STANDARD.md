@@ -44,7 +44,7 @@ The Windows run story should feel intentional:
 
 - the app can be started, restarted, and stopped predictably
 - the intended elevated-only launch path should be explicit and reliable
-- hidden/background launch should not spawn an extra empty console window
+- hidden/background launch should not spawn an extra empty console window, including the launcher's own console while it waits on an elevated child
 - logs should exist and be usable
 - the documented LAN access path should work
 

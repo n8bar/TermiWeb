@@ -74,6 +74,7 @@ if (-not (Test-IsAdministrator)) {
       -ArgumentList $arguments `
       -WorkingDirectory $repoRoot `
       -Verb RunAs `
+      -WindowStyle Hidden `
       -Wait `
       -PassThru
     exit $elevatedProcess.ExitCode

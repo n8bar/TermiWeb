@@ -12,7 +12,7 @@ $configRoot = Get-TermiWebConfigRoot -AppRoot $repoRoot
 $envPath = Join-Path $configRoot ".env"
 $packageTemplatePath = Join-Path $repoRoot ".env.example"
 $repoTemplatePath = Join-Path $repoRoot ".env.dev.example"
-$startLauncher = Join-Path $repoRoot "Start TermiWeb.cmd"
+$startHiddenScript = Join-Path $repoRoot "scripts\start-hidden.ps1"
 $enableAutoStartScript = Join-Path $repoRoot "scripts\enable-auto-start.ps1"
 
 function Test-IsSourceCheckout {
@@ -181,15 +181,16 @@ if (-not $startNow) {
   exit 0
 }
 
-if (-not (Test-Path -LiteralPath $startLauncher)) {
-  throw "Missing launcher at $startLauncher."
+if (-not (Test-Path -LiteralPath $startHiddenScript)) {
+  throw "Missing launcher at $startHiddenScript."
 }
 
 Write-Output "If Windows shows a firewall prompt on first launch, allow access if you want other devices on your LAN to reach TermiWeb."
 Start-Process `
-  -FilePath "cmd.exe" `
-  -ArgumentList "/c", "`"$startLauncher`"" `
-  -WorkingDirectory $repoRoot | Out-Null
+  -FilePath (Get-PowerShellExecutable) `
+  -ArgumentList "-NoLogo", "-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "`"$startHiddenScript`"" `
+  -WorkingDirectory $repoRoot `
+  -WindowStyle Hidden | Out-Null
 
 $port = Get-EnvValue (Read-EnvLines) "TERMIWEB_PORT"
 if ([string]::IsNullOrWhiteSpace($port)) {

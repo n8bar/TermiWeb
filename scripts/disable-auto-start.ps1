@@ -61,6 +61,7 @@ if (-not (Test-IsAdministrator)) {
       -ArgumentList "-NoLogo -NoProfile -ExecutionPolicy Bypass -File `"$scriptPath`" -Elevated" `
       -WorkingDirectory $repoRoot `
       -Verb RunAs `
+      -WindowStyle Hidden `
       -Wait `
       -PassThru
     exit $elevatedProcess.ExitCode
