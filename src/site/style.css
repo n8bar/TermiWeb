@@ -498,6 +498,10 @@ h3 {
   align-items: center;
 }
 
+.download-card + .download-card {
+  margin-top: clamp(2rem, 4vw, 3.2rem);
+}
+
 .download-label {
   margin-bottom: 0.5rem;
   color: var(--accent-hot);
@@ -505,6 +509,19 @@ h3 {
   font-size: 0.82rem;
   text-transform: uppercase;
   letter-spacing: 0.1em;
+}
+
+.download-note a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.18em;
+  transition: color 140ms ease;
+}
+
+.download-note a:hover,
+.download-note a:focus-visible {
+  color: var(--accent-hot);
 }
 
 .download-card h3 {
